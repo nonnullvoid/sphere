@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sphere — Give your AI a world to live in</title>
+  <style>
+    :root {
+      --bg: #080c14;
+      --bg2: #0d1420;
+      --surface: #111827;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8eaf0;
+      --muted: #8b9ab8;
+      --accent: #6ba3ff;
+      --glow: rgba(79,142,247,0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(8,12,20,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-size: 1.1rem; font-weight: 600; letter-spacing: 0.02em;
+      color: var(--text);
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
+    .nav-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #8ab8ff, #4f8ef7);
+      box-shadow: 0 0 8px var(--glow);
+      animation: pulse 3s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      color: var(--muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 0.5rem 1.25rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text); text-decoration: none; font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(79,142,247,0.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(124,92,191,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* ── SPHERE ── */
+    .sphere-container {
+      position: relative;
+      width: 160px; height: 160px;
+      margin: 0 auto 3rem;
+    }
+    .sphere-orb {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%,
+        rgba(180,210,255,0.95) 0%,
+        rgba(100,160,255,0.9) 18%,
+        rgba(60,110,240,0.85) 40%,
+        rgba(30,60,180,0.8) 65%,
+        rgba(10,20,80,0.9) 100%
+      );
+      box-shadow:
+        0 0 60px rgba(79,142,247,0.4),
+        0 0 120px rgba(79,142,247,0.15),
+        inset 0 0 30px rgba(0,0,40,0.4);
+      animation: spherePulse 4s ease-in-out infinite, sphereFloat 6s ease-in-out infinite;
+      position: relative; z-index: 2;
+    }
+    .sphere-ring {
+      position: absolute; border-radius: 50%;
+      border: 1px solid rgba(79,142,247,0.2);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: ringPulse 4s ease-in-out infinite;
+    }
+    .sphere-ring:nth-child(1) { width: 210px; height: 210px; animation-delay: 0.3s; border-color: rgba(79,142,247,0.12); }
+    .sphere-ring:nth-child(2) { width: 265px; height: 265px; animation-delay: 0.6s; border-color: rgba(79,142,247,0.07); }
+    .sphere-ring:nth-child(3) { width: 320px; height: 320px; animation-delay: 0.9s; border-color: rgba(79,142,247,0.04); }
+
+    @keyframes spherePulse {
+      0%, 100% { box-shadow: 0 0 60px rgba(79,142,247,0.4), 0 0 120px rgba(79,142,247,0.15), inset 0 0 30px rgba(0,0,40,0.4); }
+      50%       { box-shadow: 0 0 80px rgba(79,142,247,0.6), 0 0 160px rgba(79,142,247,0.25), inset 0 0 30px rgba(0,0,40,0.4); }
+    }
+    @keyframes sphereFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    @keyframes ringPulse {
+      0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      50%       { opacity: 0.6; transform: translate(-50%, -50%) scale(1.02); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.5; }
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 0.35rem 0.9rem;
+      background: rgba(107,163,255,0.12);
+      border: 1px solid rgba(107,163,255,0.3);
+      border-radius: 20px;
+      font-size: 0.8rem; color: #a8caff;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(135deg, #ffffff 0%, #a0b8e8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted); max-width: 540px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-sub span {
+      color: rgba(160,184,232,0.75); font-size: 0.85em;
+    }
+    .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 0.75rem 1.75rem;
+      background: #4f8ef7; color: #fff;
+      text-decoration: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px rgba(79,142,247,0.3);
+    }
+    .btn-primary:hover {
+      background: #6ba3ff;
+      box-shadow: 0 0 30px rgba(79,142,247,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      padding: 0.75rem 1.75rem;
+      background: transparent; color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 8px; font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2rem; }
+    .section-inner { max-width: 960px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--accent); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .section-body {
+      color: var(--muted); font-size: 1.05rem;
+      max-width: 620px; margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.75rem;
+    }
+    .step-num {
+      font-size: 0.75rem; font-weight: 700;
+      color: var(--accent); letter-spacing: 0.08em; margin-bottom: 0.75rem;
+    }
+    .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step p { color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+
+    /* ── COMPARISON ── */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 640px) { .comparison { grid-template-columns: 1fr; } }
+
+    .compare-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .compare-col.after { border-color: rgba(107,163,255,0.2); }
+
+    .compare-head {
+      padding: 0.6rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .compare-col.before .compare-head { color: var(--muted); }
+    .compare-col.after  .compare-head { color: var(--accent); background: rgba(107,163,255,0.04); }
+
+    .compare-body { padding: 1.25rem; }
+    .chat-line { display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: flex-start; }
+    .chat-line:last-child { margin-bottom: 0; }
+    .chat-who {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding-top: 0.15rem;
+      min-width: 28px; flex-shrink: 0;
+    }
+    .chat-who.you  { color: var(--muted); }
+    .chat-who.ai   { color: var(--accent); }
+    .chat-text { font-size: 0.85rem; line-height: 1.55; color: var(--text); }
+    .chat-text.dim { color: var(--muted); }
+
+    /* ── ANATOMY ── */
+    .anatomy {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; align-items: center;
+    }
+    @media (max-width: 640px) { .anatomy { grid-template-columns: 1fr; } }
+
+    .anatomy-visual {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1.25rem;
+    }
+    .diagram-wrap {
+      position: relative; width: 200px; height: 200px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .diagram-ring-outer {
+      position: absolute; width: 190px; height: 190px;
+      border-radius: 50%;
+      border: 1px dashed rgba(79,142,247,0.2);
+    }
+    .diagram-ring-mid {
+      position: absolute; width: 130px; height: 130px;
+      border-radius: 50%;
+      border: 1px dashed rgba(79,142,247,0.35);
+    }
+    .diagram-sphere {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%,
+        rgba(150,190,255,0.95), rgba(60,110,230,0.9) 50%, rgba(15,30,100,0.95)
+      );
+      box-shadow: 0 0 20px rgba(79,142,247,0.35);
+      position: relative; z-index: 2;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .diagram-core {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, #fff, rgba(160,210,255,0.8));
+      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+    }
+    .diagram-legend {
+      display: flex; gap: 1.25rem; align-items: center;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.72rem; color: var(--muted);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      letter-spacing: 0.02em;
+    }
+    .legend-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .legend-dot.core   { background: #a0c8ff; box-shadow: 0 0 4px rgba(160,200,255,0.5); }
+    .legend-dot.layers { background: transparent; border: 1.5px dashed rgba(79,142,247,0.5); }
+    .legend-dot.surface{ background: transparent; border: 1.5px dashed rgba(79,142,247,0.25); }
+
+    .anatomy-text h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .anatomy-row { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; align-items: flex-start; }
+    .anatomy-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; flex-shrink: 0;
+    }
+    .anatomy-icon.core    { background: rgba(79,142,247,0.15); }
+    .anatomy-icon.layers  { background: rgba(124,92,191,0.15); }
+    .anatomy-icon.surface { background: rgba(61,191,154,0.15); }
+    .anatomy-label { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .anatomy-desc  { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85em; color: #a8caff;
+    }
+
+    /* ── TEMPLATES ── */
+    .templates {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+    .template-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.75rem;
+      position: relative; overflow: hidden;
+    }
+    .template-card.featured {
+      border-color: rgba(107,163,255,0.25);
+      background: linear-gradient(135deg, rgba(79,142,247,0.04) 0%, var(--surface) 60%);
+    }
+    .template-badge {
+      position: absolute; top: 1rem; right: 1rem;
+      padding: 0.2rem 0.6rem;
+      background: rgba(107,163,255,0.12); border: 1px solid rgba(107,163,255,0.25);
+      border-radius: 20px; font-size: 0.68rem; color: var(--accent);
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .template-icon { width: 52px; height: 52px; margin-bottom: 1rem; }
+    .template-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .template-card .template-desc { color: var(--muted); font-size: 0.88rem; margin-bottom: 1rem; line-height: 1.5; }
+    .template-features { list-style: none; }
+    .template-features li {
+      font-size: 0.83rem; color: var(--muted);
+      padding: 0.3rem 0; border-bottom: 1px solid var(--border);
+      display: flex; gap: 0.5rem; align-items: flex-start;
+    }
+    .template-features li:last-child { border-bottom: none; }
+    .template-features li::before { content: '·'; color: var(--accent); flex-shrink: 0; }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: #0a0e18; border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 0.85rem; line-height: 1.7; overflow-x: auto;
+    }
+    .code-comment { color: #5a6a8a; }
+    .code-cmd     { color: #7ac8f5; }
+    .code-str     { color: #98d982; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem; text-align: center;
+      color: var(--muted); font-size: 0.875rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--text); }
+    .footer-inner { max-width: 960px; margin: 0 auto; }
+    .footer-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.5rem; margin-bottom: 1rem;
+      font-weight: 600; font-size: 1rem; color: var(--text);
+    }
+    .footer-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #8ab8ff, #4f8ef7);
+      box-shadow: 0 0 8px var(--glow);
+    }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 1rem; }
+      .nav-links { display: none; }
+      .sphere-container { width: 120px; height: 120px; }
+      .sphere-orb { width: 120px; height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-dot"></div>
+    Sphere
+  </a>
+  <div class="nav-links">
+    <a href="#how">How it works</a>
+    <a href="#anatomy">Architecture</a>
+    <a href="#start">Get started</a>
+  </div>
+  <a href="https://github.com/rutvij47/sphere" class="nav-cta" target="_blank">GitHub →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="sphere-container">
+    <div class="sphere-ring"></div>
+    <div class="sphere-ring"></div>
+    <div class="sphere-ring"></div>
+    <div class="sphere-orb"></div>
+  </div>
+
+  <span class="hero-tag">Context-aware identity layer for AI</span>
+  <h1>Give your AI a world<br>to live in.</h1>
+  <p class="hero-sub">
+    Sphere gives your AI a persistent home — a place it comes back to at the start of every session, already knowing who you are. File-based, local, yours.
+    <br><br>
+    <span>Built for Claude Code. The file architecture works with any AI.</span>
+  </p>
+  <div class="hero-actions">
+    <a href="#start" class="btn-primary">Get started</a>
+    <a href="#how" class="btn-secondary">See how it works</a>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Your AI reads your files.<br>Every session starts oriented.</h2>
+    <p class="section-body">
+      Sphere is a folder of markdown files. A single <code>CLAUDE.md</code> at the root tells your AI to read them at startup — your profile, your principles, how you like to work. The AI arrives already knowing the context. You pick up where you left off.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Write your context once</h3>
+        <p>Fill in <code>core/user/</code> — your profile, your principles, how you like to work. The onboard skill walks you through it in conversation so you're not staring at blank files.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>CLAUDE.md loads it at startup</h3>
+        <p>A single file at the root instructs your AI to read your sphere when you open the directory. No configuration. No plugins. It just reads the files.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>The difference is immediate</h3>
+        <p>Your AI doesn't ask who you are. It doesn't need to be caught up. It starts from your context, not from zero — and it stays that way every session.</p>
+      </div>
+    </div>
+
+    <!-- Before / After comparison -->
+    <div class="comparison">
+      <div class="compare-col before">
+        <div class="compare-head">Without Sphere</div>
+        <div class="compare-body">
+          <div class="chat-line">
+            <div class="chat-who you">You</div>
+            <div class="chat-text">Help me think through whether to take this consulting project.</div>
+          </div>
+          <div class="chat-line">
+            <div class="chat-who ai">AI</div>
+            <div class="chat-text dim">Sure! Could you tell me about your current situation, your goals, your workload, and what the project involves?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-col after">
+        <div class="compare-head">With Sphere</div>
+        <div class="compare-body">
+          <div class="chat-line">
+            <div class="chat-who you">You</div>
+            <div class="chat-text">Help me think through whether to take this consulting project.</div>
+          </div>
+          <div class="chat-line">
+            <div class="chat-who ai">AI</div>
+            <div class="chat-text">You've written that you're in a building year and you don't optimize for comfort. A consulting project is a real trade-off on both. What's making you hesitate?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ANATOMY -->
+<section id="anatomy">
+  <div class="section-inner">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">A sphere has structure.</h2>
+    <p class="section-body">Three layers. Everything in the right place.</p>
+
+    <div class="anatomy">
+      <div class="anatomy-visual">
+        <div class="diagram-wrap">
+          <div class="diagram-ring-outer"></div>
+          <div class="diagram-ring-mid"></div>
+          <div class="diagram-sphere">
+            <div class="diagram-core"></div>
+          </div>
+        </div>
+        <div class="diagram-legend">
+          <div class="legend-item">
+            <div class="legend-dot core"></div>
+            core/
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot layers"></div>
+            layers/
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot surface"></div>
+            surface/
+          </div>
+        </div>
+      </div>
+
+      <div class="anatomy-text">
+        <h3>Inside every sphere</h3>
+
+        <div class="anatomy-row">
+          <div class="anatomy-icon core">⬤</div>
+          <div>
+            <div class="anatomy-label">core/</div>
+            <div class="anatomy-desc">The fixed center. Your identity (<code>user/</code>) and the AI persona (<code>ai/persona.md</code>). Loaded at every session start — this is what makes the AI know you.</div>
+          </div>
+        </div>
+
+        <div class="anatomy-row">
+          <div class="anatomy-icon layers">◎</div>
+          <div>
+            <div class="anatomy-label">layers/</div>
+            <div class="anatomy-desc">Optional domain extensions — philosophy, wellness, financial, projects. Loaded on-demand when the work requires them. Install only what fits your life.</div>
+          </div>
+        </div>
+
+        <div class="anatomy-row">
+          <div class="anatomy-icon surface">◯</div>
+          <div>
+            <div class="anatomy-label">surface/</div>
+            <div class="anatomy-desc">Artifacts and outputs — documents, research, drafts. What the sphere produces, kept separate from what it is.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- GET STARTED -->
+<section id="start">
+  <div class="section-inner">
+    <div class="section-label">Get started</div>
+    <h2 class="section-title">Clone a template. Fill it in.</h2>
+    <p class="section-body">
+      Two starting points. Start with the blank template if you want to build from scratch. Start with a pre-structured template if you want more scaffolding for a specific context.
+    </p>
+
+    <div class="templates">
+
+      <!-- SEED -->
+      <div class="template-card">
+        <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
+          <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.6)"/>
+        </svg>
+        <h3>Blank template</h3>
+        <div class="template-desc">The minimal starting point — structure only. The onboard skill fills it in through conversation so you're not staring at empty files.</div>
+        <ul class="template-features">
+          <li>Core structure, no pre-filled content</li>
+          <li>Onboard skill — guided conversational setup</li>
+          <li>Reflect skill — periodic sphere evolution</li>
+        </ul>
+      </div>
+
+      <!-- SHELL -->
+      <div class="template-card featured">
+        <div class="template-badge">Recommended</div>
+        <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
+          <circle cx="26" cy="26" r="13" stroke="rgba(107,163,255,0.55)" stroke-width="1.5"/>
+          <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.85)"/>
+        </svg>
+        <h3>Pre-structured templates</h3>
+        <div class="template-desc">Two templates with domain-specific scaffolding — one for life context, one for professional work. More structure to guide what goes where.</div>
+        <ul class="template-features">
+          <li>LifeSphere — identity, roles, values, reflection</li>
+          <li>WorkSphere — domain, projects, professional context</li>
+          <li>Both base skills included</li>
+          <li>Fork and replicate skills for sharing and cloning</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Code block -->
+    <div style="margin-top: 3rem;">
+      <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--muted);">Clone and set up</h3>
+      <div class="code-block">
+        <span class="code-comment"># Clone the repo</span><br>
+        <span class="code-cmd">git clone</span> <span class="code-str">https://github.com/rutvij47/sphere.git</span><br>
+        <br>
+        <span class="code-comment"># Copy the template you want</span><br>
+        <span class="code-cmd">cp -r</span> sphere/templates/seed ~/my-sphere<br>
+        <span class="code-comment"># or: cp -r sphere/templates/life-sphere ~/my-sphere</span><br>
+        <span class="code-comment"># or: cp -r sphere/templates/work-sphere ~/my-work-sphere</span><br>
+        <br>
+        <span class="code-comment"># Open in Claude Code — sphere loads automatically</span><br>
+        <span class="code-cmd">cd</span> ~/my-sphere &amp;&amp; <span class="code-cmd">claude</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-dot"></div>
+      Sphere
+    </div>
+    <p style="margin-bottom: 0.5rem;">
+      A context-aware identity layer for AI. Open source, file-based, yours.
+    </p>
+    <p>
+      <a href="https://github.com/rutvij47/sphere" target="_blank">GitHub</a>
+      &nbsp;·&nbsp;
+      MIT License
+    </p>
+    <p style="margin-top: 1rem; font-size: 0.8rem; color: #4a5a7a;">
+      Made with ♥ by Rutvij Shah
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 80;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
