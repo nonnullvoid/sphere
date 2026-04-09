@@ -40,7 +40,7 @@ Everything is plain text files you own. No servers, no accounts, no sync. It liv
 
 ```bash
 # Clone the repo
-git clone https://github.com/rutvij47/sphere.git
+git clone https://github.com/nonnullvoid/sphere.git
 
 # Copy the template you want
 cp -r sphere/templates/seed ~/my-sphere
