@@ -1,28 +1,55 @@
 # Sphere
 
-**A context-aware identity layer for AI.**
+**Give your AI a persistent home.**
 
-Sphere gives your AI a persistent home — a place it comes back to at the start of every session, already knowing who you are, how you think, and what you're working toward. No re-explaining. No blank slates.
-
-Built for Claude Code. The file architecture works with any AI.
+A folder of markdown files your AI reads at startup — so every session begins oriented, not blank.
 
 ---
 
-## The idea
+## What it looks like
 
-Every AI session starts cold. You re-explain your context, your goals, your working style. The AI forgets everything when you close the window.
+Open your WorkSphere in Claude and this is what greets you — no prompting, no re-explaining:
 
-Sphere fixes that. It's a folder of markdown files that your AI reads at startup — a persistent identity layer that makes every session continuous rather than fresh. Your profile. Your principles. Your AI's persona in your world.
+```
+my-worksphere ready
+
+| Project       | Status      | Next action              |
+|---------------|-------------|--------------------------|
+| sphere-v2     | in-progress | Finalize README          |
+| client-portal | blocked     | Waiting on design review |
+| portfolio     | on hold     | —                        |
+```
+
+Say `resume sphere-v2` and the AI picks up from your last session — what was done, what's next, open decisions. Say `ground` when you're done and the next session starts just as clean.
 
 ---
 
 ## How it works
 
-1. **Clone a template** — blank or pre-structured for life or work
-2. **Fill in `core/user/`** — who you are, how you work, what you believe
-3. **Every session starts oriented** — your AI reads Sphere on startup via `CLAUDE.md`
+1. **Clone a template** — base, WorkSphere, or LifeSphere
+2. **Fill in `core/user/`** — your profile, principles, how you work. The AI walks you through it in conversation when you first open the sphere.
+3. **Every session starts oriented** — your AI reads the sphere at startup via `CLAUDE.md`. No plugins, no config, just files.
 
-Everything is plain text files you own. No servers, no accounts, no sync. It lives wherever you put it.
+Everything is plain markdown you own. No servers, no accounts, no sync.
+
+---
+
+## Get started
+
+```bash
+# Clone
+git clone https://github.com/nonnullvoid/sphere.git
+
+# Pick a template and copy it to where you work
+cp -r sphere/sphere-templates/base ~/my-sphere
+# or: cp -r sphere/sphere-templates/work-sphere ~/my-worksphere
+# or: cp -r sphere/sphere-templates/life-sphere ~/my-lifesphere
+
+# Open in Claude Code — sphere loads automatically
+cd ~/my-worksphere && claude
+
+# The AI will offer to walk you through setup on first open
+```
 
 ---
 
@@ -30,87 +57,61 @@ Everything is plain text files you own. No servers, no accounts, no sync. It liv
 
 | Template | What it is | Best for |
 |----------|-----------|---------|
-| [`templates/seed/`](templates/seed/) | Blank Sphere — minimal, no pre-filled content | Starting from scratch |
-| [`templates/life-sphere/`](templates/life-sphere/) | LifeSphere — philosophy + wellness layers pre-installed | Whole-life context |
-| [`templates/work-sphere/`](templates/work-sphere/) | WorkSphere — domain + projects layers pre-installed | Professional work |
+| [`sphere-templates/base/`](sphere-templates/base/) | Minimal — structure only, no layers | Starting from scratch |
+| [`sphere-templates/work-sphere/`](sphere-templates/work-sphere/) | Projects + domain + planning layers pre-installed | Professional work |
+| [`sphere-templates/life-sphere/`](sphere-templates/life-sphere/) | Philosophy + wellness layers pre-installed | Whole-life context |
 
 ---
 
-## Get started
-
-```bash
-# Clone the repo
-git clone https://github.com/nonnullvoid/sphere.git
-
-# Copy the template you want
-cp -r sphere/templates/seed ~/my-sphere
-# or: cp -r sphere/templates/life-sphere ~/my-sphere
-# or: cp -r sphere/templates/work-sphere ~/my-work-sphere
-
-# Open in Claude Code — sphere loads automatically
-cd ~/my-sphere && claude
-
-# Tell Claude: "Run the onboard skill"
-```
-
----
-
-## Structure
+## What's inside a sphere
 
 ```
 [your-sphere]/
-├── CLAUDE.md          ← tells the AI to load Sphere on startup
-├── sphere.md          ← what this Sphere is and how it works
-├── MODE.md            ← declares the Sphere type
+├── CLAUDE.md          ← tells the AI to load the sphere on startup
+├── sphere.md          ← orchestrator: startup sequence, identity, layer registry
 ├── core/
-│   ├── user/
-│   │   ├── profile.md       ← who you are
-│   │   ├── preferences.md   ← how you like to work with AI
-│   │   ├── principles.md    ← what you believe and how you operate
-│   │   └── roles.md         ← the contexts you inhabit
+│   ├── engine.md      ← runtime rules: layers, senses, instincts, evolution
+│   ├── protocol.md    ← operating vocabulary: what the sphere can do and why
+│   ├── init.md        ← initialization protocol: how the AI sets up a new sphere
+│   ├── records/       ← compacted history and long-term memory
 │   ├── ai/
-│   │   └── persona.md       ← who the AI is in your world
-│   └── skills/
-│       ├── onboard.md       ← guided setup
-│       ├── reflect.md       ← review and evolve
-│       ├── fork.md          ← copy with all data
-│       └── replicate.md     ← copy structure only
-├── layers/            ← optional domain extensions
-├── surface/           ← artifacts and outputs
-└── records/
-    └── decisions.md   ← append-only decisions log
+│   │   └── persona.md ← who the AI is in this sphere
+│   └── user/
+│       ├── profile.md    ← who you are
+│       ├── principles.md ← what you believe and how you operate
+│       └── preferences.md ← how you like to work with AI
+├── layers/            ← installed domain extensions
+└── surface/           ← projected artifacts and outputs
 ```
 
----
-
-## Layers
-
-Layers are optional domain extensions that load on-demand. The AI reads a layer only when the work calls for it.
-
-Pre-installed layers by template:
-- **LifeSphere** → `philosophy/`, `wellness/`
-- **WorkSphere** → `domain/`, `projects/`
-
-Browse the [full layers catalogue](layers/README.md) or build your own.
+The AI reads `core/` at every startup. Layers load on-demand when a command needs them. Surface is for outputs — what the sphere produces, kept separate from what it is.
 
 ---
 
-## Skills
+## Layer catalog
 
-Every Sphere comes with four built-in skills:
+The [`layer-catalog/`](layer-catalog/) contains reusable extensions you can install into any sphere:
 
-- **Onboard** — guided setup through conversation
-- **Reflect** — periodic review and evolution
-- **Fork** — full copy with personal data (for cloning or backup)
-- **Replicate** — structure copy, no personal data (for sharing or new contexts)
+| Layer | What it adds |
+|-------|-------------|
+| `projects/` | Track active work across sessions with built-in session handoff |
+| `domain/` | Professional field context — makes the AI a peer, not a generalist |
+| `philosophy/` | Examined worldview — beliefs, frameworks, open questions |
+| `wellness/` | Physical and mental health baseline — energy, routines, patterns |
 
-Run a skill by telling your AI: *"Run the onboard skill"* or *"Let's do a Sphere reflect."*
+Each layer is self-contained: install by copying into your sphere's `layers/` directory and registering in `sphere.md`.
+
+---
+
+## Going deeper
+
+The [Architecture doc](ARCHITECTURE.md) covers the full model: the three actors (user, AI, sphere), the execution chain (intent → ability → command → action → state), layer depth tiers, the evolution protocol, and the three-tier org model.
 
 ---
 
 ## Requirements
 
-- **Claude Code** — or any AI assistant that reads files at session start
+- **Claude Code** — or any AI that reads files at session start
 - **A text editor**
 - **A folder**
 

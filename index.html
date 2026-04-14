@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sphere — Give your AI a world to live in</title>
+  <title>Sphere — Give your AI a persistent home</title>
   <style>
     :root {
       --bg: #080c14;
@@ -440,12 +440,12 @@
     <div class="sphere-orb"></div>
   </div>
 
-  <span class="hero-tag">Context-aware identity layer for AI</span>
-  <h1>Give your AI a world<br>to live in.</h1>
+  <span class="hero-tag">Persistent context layer for AI</span>
+  <h1>Give your AI a<br>persistent home.</h1>
   <p class="hero-sub">
-    Sphere gives your AI a persistent home — a place it comes back to at the start of every session, already knowing who you are. File-based, local, yours.
+    Sphere is a folder of markdown files your AI reads at startup — so every session begins oriented, not blank. Your context, your projects, your principles. Always there.
     <br><br>
-    <span>Built for Claude Code. The file architecture works with any AI.</span>
+    <span>Built for Claude Code. Works with any AI that reads files.</span>
   </p>
   <div class="hero-actions">
     <a href="#start" class="btn-primary">Get started</a>
@@ -461,24 +461,24 @@
     <div class="section-label">How it works</div>
     <h2 class="section-title">Your AI reads your files.<br>Every session starts oriented.</h2>
     <p class="section-body">
-      Sphere is a folder of markdown files. A single <code>CLAUDE.md</code> at the root tells your AI to read them at startup — your profile, your principles, how you like to work. The AI arrives already knowing the context. You pick up where you left off.
+      Sphere is a folder of markdown files. A single <code>CLAUDE.md</code> tells your AI to read them at startup — your profile, your principles, your active projects. The AI arrives already knowing the context. No re-explaining. No blank slates.
     </p>
 
     <div class="steps">
       <div class="step">
         <div class="step-num">01</div>
-        <h3>Write your context once</h3>
-        <p>Fill in <code>core/user/</code> — your profile, your principles, how you like to work. The onboard skill walks you through it in conversation so you're not staring at blank files.</p>
+        <h3>Fill in your context once</h3>
+        <p>Open your sphere and the AI walks you through setup — profile, principles, working style. It writes the files. You just talk.</p>
       </div>
       <div class="step">
         <div class="step-num">02</div>
-        <h3>CLAUDE.md loads it at startup</h3>
-        <p>A single file at the root instructs your AI to read your sphere when you open the directory. No configuration. No plugins. It just reads the files.</p>
+        <h3>Every session starts ready</h3>
+        <p><code>CLAUDE.md</code> instructs your AI to read the sphere at startup. No configuration, no plugins — it reads files and arrives oriented.</p>
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <h3>The difference is immediate</h3>
-        <p>Your AI doesn't ask who you are. It doesn't need to be caught up. It starts from your context, not from zero — and it stays that way every session.</p>
+        <h3>Ground your work, pick it up</h3>
+        <p>Say <code>ground</code> before you close. Say <code>resume</code> when you return. The AI knows exactly where things stand.</p>
       </div>
     </div>
 
@@ -489,25 +489,34 @@
         <div class="compare-body">
           <div class="chat-line">
             <div class="chat-who you">You</div>
-            <div class="chat-text">Help me think through whether to take this consulting project.</div>
+            <div class="chat-text">What was I working on?</div>
           </div>
           <div class="chat-line">
             <div class="chat-who ai">AI</div>
-            <div class="chat-text dim">Sure! Could you tell me about your current situation, your goals, your workload, and what the project involves?</div>
+            <div class="chat-text dim">I don't have context from our previous sessions. Could you catch me up on your current projects and where things stand?</div>
           </div>
         </div>
       </div>
 
       <div class="compare-col after">
-        <div class="compare-head">With Sphere</div>
+        <div class="compare-head">With WorkSphere</div>
         <div class="compare-body">
           <div class="chat-line">
+            <div class="chat-who ai">AI</div>
+            <div class="chat-text" style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; line-height: 1.6;">
+              my-worksphere ready<br><br>
+              | Project &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Status &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| Next &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+              | sphere-v2 &nbsp;&nbsp;| in-progress | Finalize README &nbsp;&nbsp;&nbsp;&nbsp;|<br>
+              | portfolio &nbsp;&nbsp;| on hold &nbsp;&nbsp;&nbsp;&nbsp;| — &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+            </div>
+          </div>
+          <div class="chat-line">
             <div class="chat-who you">You</div>
-            <div class="chat-text">Help me think through whether to take this consulting project.</div>
+            <div class="chat-text">resume sphere-v2</div>
           </div>
           <div class="chat-line">
             <div class="chat-who ai">AI</div>
-            <div class="chat-text">You've written that you're in a building year and you don't optimize for comfort. A consulting project is a real trade-off on both. What's making you hesitate?</div>
+            <div class="chat-text">Picking up from yesterday — you were mid-way through the README. Drafted the hero, left off at the get-started block. Continuing from there?</div>
           </div>
         </div>
       </div>
@@ -523,7 +532,7 @@
   <div class="section-inner">
     <div class="section-label">Architecture</div>
     <h2 class="section-title">A sphere has structure.</h2>
-    <p class="section-body">Three layers. Everything in the right place.</p>
+    <p class="section-body">Three zones. The AI reads <code>core/</code> at startup, loads layers on demand, and writes outputs to <code>surface/</code>.</p>
 
     <div class="anatomy">
       <div class="anatomy-visual">
@@ -557,7 +566,7 @@
           <div class="anatomy-icon core">⬤</div>
           <div>
             <div class="anatomy-label">core/</div>
-            <div class="anatomy-desc">The fixed center. Your identity (<code>user/</code>) and the AI persona (<code>ai/persona.md</code>). Loaded at every session start — this is what makes the AI know you.</div>
+            <div class="anatomy-desc">Loaded at every startup. Your identity (<code>user/</code>), AI persona (<code>ai/</code>), and three runtime files: <code>engine.md</code> (how it works), <code>protocol.md</code> (what it can do), <code>init.md</code> (how to set up).</div>
           </div>
         </div>
 
@@ -565,7 +574,7 @@
           <div class="anatomy-icon layers">◎</div>
           <div>
             <div class="anatomy-label">layers/</div>
-            <div class="anatomy-desc">Optional domain extensions — philosophy, wellness, financial, projects. Loaded on-demand when the work requires them. Install only what fits your life.</div>
+            <div class="anatomy-desc">Domain extensions loaded on-demand — projects, domain expertise, planning, philosophy, wellness. Each layer is self-describing: the AI reads its identity block and knows what to do.</div>
           </div>
         </div>
 
@@ -573,7 +582,7 @@
           <div class="anatomy-icon surface">◯</div>
           <div>
             <div class="anatomy-label">surface/</div>
-            <div class="anatomy-desc">Artifacts and outputs — documents, research, drafts. What the sphere produces, kept separate from what it is.</div>
+            <div class="anatomy-desc">Projected artifacts — documents, drafts, research. What the sphere produces, kept separate from what it is. Changes here are intentional and visible.</div>
           </div>
         </div>
       </div>
@@ -587,29 +596,29 @@
 <section id="start">
   <div class="section-inner">
     <div class="section-label">Get started</div>
-    <h2 class="section-title">Clone a template. Fill it in.</h2>
+    <h2 class="section-title">Pick a template. The AI<br>sets it up with you.</h2>
     <p class="section-body">
-      Two starting points. Start with the blank template if you want to build from scratch. Start with a pre-structured template if you want more scaffolding for a specific context.
+      Three starting points. The AI walks you through setup on first open — your profile, your principles, how you work. You talk; it writes.
     </p>
 
     <div class="templates">
 
-      <!-- SEED -->
+      <!-- BASE -->
       <div class="template-card">
         <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
           <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.6)"/>
         </svg>
-        <h3>Blank template</h3>
-        <div class="template-desc">The minimal starting point — structure only. The onboard skill fills it in through conversation so you're not staring at empty files.</div>
+        <h3>Base</h3>
+        <div class="template-desc">Minimal — <code>core/</code> only, no layers. Add layers from the catalog as your needs develop. The AI proposes them when patterns emerge.</div>
         <ul class="template-features">
-          <li>Core structure, no pre-filled content</li>
-          <li>Onboard skill — guided conversational setup</li>
-          <li>Reflect skill — periodic sphere evolution</li>
+          <li>Core identity and AI persona</li>
+          <li>Conversational setup on first open</li>
+          <li>Reflect and evolve as you go</li>
         </ul>
       </div>
 
-      <!-- SHELL -->
+      <!-- WORKSPHERE -->
       <div class="template-card featured">
         <div class="template-badge">Recommended</div>
         <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -617,13 +626,29 @@
           <circle cx="26" cy="26" r="13" stroke="rgba(107,163,255,0.55)" stroke-width="1.5"/>
           <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.85)"/>
         </svg>
-        <h3>Pre-structured templates</h3>
-        <div class="template-desc">Two templates with domain-specific scaffolding — one for life context, one for professional work. More structure to guide what goes where.</div>
+        <h3>WorkSphere</h3>
+        <div class="template-desc">For professional work. Opens with a project status table. Track work across sessions with <code>ground</code> and <code>resume</code>. Your AI knows your domain.</div>
         <ul class="template-features">
-          <li>LifeSphere — identity, roles, values, reflection</li>
-          <li>WorkSphere — domain, projects, professional context</li>
-          <li>Both base skills included</li>
-          <li>Fork and replicate skills for sharing and cloning</li>
+          <li>Projects layer — session handoff built in</li>
+          <li>Domain layer — field expertise and vocabulary</li>
+          <li>Planning layer — daily rhythm and priorities</li>
+          <li>Startup project table, automatic passive sync</li>
+        </ul>
+      </div>
+
+      <!-- LIFESPHERE -->
+      <div class="template-card">
+        <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
+          <circle cx="26" cy="26" r="13" stroke="rgba(124,92,191,0.45)" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <circle cx="26" cy="26" r="5" fill="rgba(124,92,191,0.7)"/>
+        </svg>
+        <h3>LifeSphere</h3>
+        <div class="template-desc">For whole-life context. Your AI understands your values, your wellbeing, and the thinking beneath your decisions — not just your tasks.</div>
+        <ul class="template-features">
+          <li>Philosophy layer — worldview and frameworks</li>
+          <li>Wellness layer — energy, routines, patterns</li>
+          <li>Roles and principles across life contexts</li>
         </ul>
       </div>
 
@@ -637,12 +662,12 @@
         <span class="code-cmd">git clone</span> <span class="code-str">https://github.com/nonnullvoid/sphere.git</span><br>
         <br>
         <span class="code-comment"># Copy the template you want</span><br>
-        <span class="code-cmd">cp -r</span> sphere/templates/seed ~/my-sphere<br>
-        <span class="code-comment"># or: cp -r sphere/templates/life-sphere ~/my-sphere</span><br>
-        <span class="code-comment"># or: cp -r sphere/templates/work-sphere ~/my-work-sphere</span><br>
+        <span class="code-cmd">cp -r</span> sphere/sphere-templates/work-sphere ~/my-worksphere<br>
+        <span class="code-comment"># or: cp -r sphere/sphere-templates/base ~/my-sphere</span><br>
+        <span class="code-comment"># or: cp -r sphere/sphere-templates/life-sphere ~/my-lifesphere</span><br>
         <br>
-        <span class="code-comment"># Open in Claude Code — sphere loads automatically</span><br>
-        <span class="code-cmd">cd</span> ~/my-sphere &amp;&amp; <span class="code-cmd">claude</span>
+        <span class="code-comment"># Open in Claude Code — sphere loads and offers setup</span><br>
+        <span class="code-cmd">cd</span> ~/my-worksphere &amp;&amp; <span class="code-cmd">claude</span>
       </div>
     </div>
   </div>
@@ -658,7 +683,7 @@
       Sphere
     </div>
     <p style="margin-bottom: 0.5rem;">
-      A context-aware identity layer for AI. Open source, file-based, yours.
+      A persistent context layer for AI. Open source, file-based, yours.
     </p>
     <p>
       <a href="https://github.com/nonnullvoid/sphere" target="_blank">GitHub</a>
