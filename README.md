@@ -43,13 +43,14 @@ git clone https://github.com/nonnullvoid/sphere.git
 # Pick a template and copy it to where you work
 cp -r sphere/sphere-templates/base ~/my-sphere
 # or: cp -r sphere/sphere-templates/work-sphere ~/my-worksphere
-# or: cp -r sphere/sphere-templates/life-sphere ~/my-lifesphere
 
 # Open in Claude Code — sphere loads automatically
 cd ~/my-worksphere && claude
 
 # The AI will offer to walk you through setup on first open
 ```
+
+**Want a guided setup?** Open the cloned `sphere/` folder with your AI. It reads `CLAUDE.md` automatically, understands what sphere is, and walks you through picking a template, installing layers, and running init — conversationally. See [`assemble.md`](assemble.md) for what it covers.
 
 ---
 
@@ -106,6 +107,8 @@ Each layer is self-contained: install by copying into your sphere's `layers/` di
 ## Going deeper
 
 The [Architecture doc](ARCHITECTURE.md) covers the full model: the three actors (user, AI, sphere), the execution chain (intent → ability → command → action → state), layer depth tiers, the evolution protocol, and the three-tier org model.
+
+[`assemble.md`](assemble.md) is a guided setup protocol for AI assistants — open the repo with your AI and it will use this to walk you through template selection, layer installation, and first-run init.
 
 ---
 
