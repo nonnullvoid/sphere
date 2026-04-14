@@ -13,14 +13,14 @@ Open your WorkSphere in Claude and this is what greets you — no prompting, no 
 ```
 my-worksphere ready
 
-| Project       | Status      | Next action              |
-|---------------|-------------|--------------------------|
-| sphere-v2     | in-progress | Finalize README          |
-| client-portal | blocked     | Waiting on design review |
-| portfolio     | on hold     | —                        |
+| Project        | Status      | Next action          |
+|----------------|-------------|----------------------|
+| product-launch | in-progress | Draft release notes  |
+| team-hiring    | blocked     | Waiting on recruiter |
+| q2-retro       | on hold     | —                    |
 ```
 
-Say `resume sphere-v2` and the AI picks up from your last session — what was done, what's next, open decisions. Say `ground` when you're done and the next session starts just as clean.
+Say `resume product-launch` and the AI picks up from your last session — what was done, what's next, open decisions. Say `ground` when you're done and the next session starts just as clean.
 
 ---
 
