@@ -1,6 +1,30 @@
 # Sphere Architecture
 
-_Deep reference for how Sphere works. For getting started, see [README.md](README.md)._
+_Deep reference for how Sphere works. This document is for two audiences: **curious power users** who want to understand what's happening under the hood, and **contributors and builders** who want to extend, fork, or build on top of Sphere. For an introduction, start with [README.md](README.md)._
+
+---
+
+## Boot Sequence
+
+When you open a sphere, the AI reads three files in order. Everything else follows from this.
+
+```
+CLAUDE.md  →  sphere.md  →  core/
+```
+
+**`CLAUDE.md`** is the door. A single instruction pointing to `sphere.md`. Nothing else lives here — it exists because most AI tools look for `CLAUDE.md` as the entry point.
+
+**`sphere.md`** is the orchestrator. It runs a startup sequence: reads the user's profile, principles, and persona, then reads the core instruction files. Ends by announcing the sphere is ready. It also holds the identity block (sphere name, personality, layer registry) and optionally a project table for WorkSphere variants.
+
+**`core/`** is the engine room. Three files the AI reads every session:
+
+| File | Role | What it contains |
+|------|------|-----------------|
+| `engine.md` | HOW | Runtime rules: layer discovery, senses, state machine, instincts, evolution protocol |
+| `protocol.md` | WHAT + WHY | User intents as a compact table, abilities as command registries |
+| `init.md` | SETUP | Onboarding conversation guide — triggered when profile is still placeholder content |
+
+The AI reads `init.md` only when needed. `engine.md` and `protocol.md` are read every session.
 
 ---
 
@@ -18,8 +42,6 @@ The user talks naturally. The AI reads the sphere's full state and operates it. 
 
 ## Vocabulary
 
-Sphere uses a consistent vocabulary across all operations.
-
 | Term | Level | What it is |
 |------|-------|-----------|
 | **Intent** | Why | What the user wants — a stable purpose |
@@ -30,23 +52,23 @@ Sphere uses a consistent vocabulary across all operations.
 | **Sense** | Perception | How a layer notices events happening |
 | **Layer** | Structure | A specialized region with internal state + actions |
 | **Surface** | Projection | Where layers externalize artifacts for others to perceive |
-| **State** | Condition | The sphere's current condition (all files) |
+| **State** | Condition | The sphere's current condition — all files at a point in time |
 | **Evolve** | Evolution | The sphere develops new abilities from expressed intents |
-| **Reflection** | Evaluation | Targeted: evaluate one intent or ability |
-| **Deep-reflection** | Reorganization | Full structural reevaluation against all intents |
+| **Reflect** | Evaluation | Targeted: evaluate one intent or ability |
+| **Deep-reflect** | Reorganization | Full structural reevaluation against all intents |
 | **Absorb** | Import | Intelligently pull intents/abilities from another sphere |
-| **Init** | Bootstrap | A new sphere coming online from a seed |
-| **Ground** | Handoff | Persist session knowledge so any new session can pick up instantly |
+| **Ground** | Handoff | End of session: compact working state into records |
+| **Resume** | Handoff | Start of session: restore state from records |
 
 ---
 
 ## Lifecycle
 
 ```
-Seed → Init → Evolve/Use → Seed/Absorb
+Template → Init → Evolve/Use → Ground/Resume → Seed/Absorb
 ```
 
-A **seed** carries the full structural blueprint without any user data. **Init** brings a new sphere online — the AI reads the seed and walks the user through a conversational setup. The sphere **evolves** through use as the AI recognizes new intents and crystallizes abilities. Mature spheres can **seed** (produce new seeds) or **absorb** improvements from other spheres.
+A **template** (from `sphere-templates/`) carries the full structural blueprint without any user data. **Init** brings a new sphere online — the AI reads `core/init.md` and walks the user through a conversational setup. The sphere **evolves** through use as the AI recognizes new intents and crystallizes abilities. At session boundaries, **ground** compacts state; **resume** restores it. Mature spheres can **seed** (produce new templates) or **absorb** improvements from other spheres.
 
 ---
 
@@ -64,20 +86,29 @@ A command invokes an ability. The ability determines which layers participate. E
 
 ### Core (substrate)
 
-The living engine. Three instruction files + user identity + long-term memory:
+The living engine. Three instruction files + user identity + long-term memory.
 
-- `engine.md` — runtime: layer discovery, senses dispatch, instincts, evolution protocol, state machine rules
-- `intents.md` — why: user purposes, stable compass, reflection axis
-- `abilities.md` — what: shared vocabulary + command registry. The most-read file — defines what the sphere can do and what each word means
-- `ai/persona.md` — who the AI is in this sphere: identity, working style, learned behaviors
-- `user/` — identity: profile, principles, preferences, voice/style (sphere-variant specific)
-- `records/` — compacted history: cross-cutting decisions, long-term memory
+```
+core/
+├── engine.md       ← runtime rules (HOW)
+├── protocol.md     ← intents + abilities (WHAT + WHY)
+├── init.md         ← onboarding conversation guide (SETUP)
+├── records/        ← compacted history, long-term memory
+├── ai/
+│   └── persona.md  ← who the AI is in this sphere
+└── user/
+    ├── profile.md      ← who the user is
+    ├── principles.md   ← guiding principles
+    └── preferences.md  ← communication style
+```
+
+`protocol.md` is the most-read file in the sphere. It holds the intent table at the top (what the user wants from this sphere) and the ability registry below (what commands exist, what they do, which layers they touch). When the sphere evolves, `protocol.md` is where new abilities are registered.
 
 ### Layers (implementation)
 
 The how. Each layer has an **identity block** declaring: name, depth tier, dependencies, senses, data paths, init steps. Below that: action definitions — the file operations it performs when participating in an ability.
 
-Layers write their own state. The AI reads abilities.md to know what to invoke, reads layers to know how to execute.
+Layers write their own state. The AI reads `engine.md` to know the rules, reads `protocol.md` to know what to invoke, reads layers to know how to execute.
 
 ### Surface (projection field)
 
@@ -85,60 +116,48 @@ Where layers externalize rendered artifacts for others to perceive. Not build ou
 
 ---
 
-## Repository Layout
+## Directory Layout
+
+### A sphere instance (what you run day-to-day)
 
 ```
-sphere/
-├── README.md
-├── ARCHITECTURE.md        ← this file
-├── core/                  ← plug-and-play sphere mechanism (reference implementation)
-│   ├── README.md
-│   ├── engine.md          ← runtime rules
-│   ├── intents.md         ← user purposes
-│   ├── abilities.md       ← command vocabulary + registry
+[sphere]/
+├── CLAUDE.md              ← door: entry point → sphere.md
+├── sphere.md              ← orchestrator: startup sequence, identity, layer registry
+├── core/
+│   ├── engine.md          ← HOW: runtime rules
+│   ├── protocol.md        ← WHAT+WHY: intents table + command registry
+│   ├── init.md            ← SETUP: onboarding conversation guide
+│   ├── records/           ← long-term memory
 │   ├── ai/
 │   │   └── persona.md
 │   └── user/
 │       ├── profile.md
 │       ├── principles.md
-│       ├── preferences.md
-│       └── roles.md
-├── layer-catalog/         ← reusable, self-contained layer extensions
-│   ├── README.md
-│   ├── projects/          ← track active work (foundation layer)
-│   ├── domain/            ← professional domain context (independent)
-│   ├── philosophy/        ← examined worldview (foundation)
-│   └── wellness/          ← health and capacity context (independent)
-└── sphere-templates/      ← pre-assembled spheres ready to use
-    ├── base/              ← minimal sphere, no layers (start here)
-    ├── work-sphere/       ← professional work (projects + domain + planning)
-    └── life-sphere/       ← whole-life lens (projects + philosophy + wellness)
-```
-
----
-
-## Deployed Sphere Layout
-
-When a sphere is actually deployed (user runs it), the directory looks like this:
-
-```
-[sphere]/
-├── CLAUDE.md              ← startup loader (minimal — just @sphere.md)
-├── sphere.md              ← slim orchestrator: startup sequence, identity, layer registry
-├── init.md                ← init guide for new users
-├── core/
-│   ├── engine.md          ← runtime rules
-│   ├── intents.md         ← user purposes
-│   ├── abilities.md       ← command vocabulary + registry
-│   ├── ai/
-│   │   └── persona.md     ← who the AI is in this sphere
-│   └── user/
-│       ├── profile.md     ← who the user is
-│       ├── principles.md  ← guiding principles
-│       └── preferences.md ← working style
+│       └── preferences.md
 ├── layers/                ← installed layers
-│   └── [layer]/
+│   ├── [layer]/           ← directory layers (with data)
+│   └── [layer].md         ← file layers (instructions only)
 └── surface/               ← projected artifacts
+```
+
+### This repo (sphere-templates + layer-catalog)
+
+```
+sphere/
+├── README.md
+├── ARCHITECTURE.md
+├── sphere-templates/      ← ready-to-use sphere templates
+│   ├── base/              ← minimal starting point
+│   └── work-sphere/       ← professional context
+├── layer-catalog/         ← available layers to install (copy into layers/)
+│   ├── projects/
+│   ├── planning/
+│   └── ...
+└── core/                  ← shared reference files (assembled into templates)
+    ├── engine.md
+    ├── protocol.md
+    └── init.md
 ```
 
 ---
@@ -172,7 +191,7 @@ Every layer declares its identity at the top:
 - **Init:** [what to do when this layer first activates]
 ```
 
-The layer registry lives in `sphere.md` (name, path, depth). The engine loads layers lazily — only when a command invokes them. `abilities.md` declares which layers each command touches.
+The layer registry lives in `sphere.md` (name, path, depth). The engine does not read all layer files at startup — it loads them lazily when a command invokes them. `protocol.md` declares which layers each command touches. On first use in a session, the engine reads the layer file and checks its identity block for dependencies.
 
 ### Cross-Layer Communication
 
@@ -182,11 +201,28 @@ The layer registry lives in `sphere.md` (name, path, depth). The engine loads la
 
 ---
 
+## Session Handoff: Ground and Resume
+
+Spheres accumulate working state across a session. At natural breakpoints, `ground` compacts the session into records — decisions, project updates, context — so the next session can start clean without re-reading everything.
+
+```
+ground → records/ updated → session ends
+resume → AI reads records/ → picks up from last known state
+```
+
+`resume [context]` can be scoped: `resume product-launch` restores just that project's context rather than the full sphere. This is the primary mechanism for continuity in long-running work.
+
+The `ground` command is also the trigger for the AI to notice if anything should be committed (if git is present) and whether any surface projections need updating.
+
+---
+
 ## Evolution (Intent-Driven)
 
 The sphere evolves through natural conversation. The user never needs to understand layers, intents, or identity blocks — they just talk and the sphere adapts.
 
-### Scope assessment
+### Scope Assessment
+
+Not everything needs structural evolution:
 
 | Scope | Example | What happens |
 |-------|---------|-------------|
@@ -195,15 +231,64 @@ The sphere evolves through natural conversation. The user never needs to underst
 | **New ability** | "Help me prep for 1:1s" | Register a new ability on existing layers. |
 | **New layer** | "Track my reading list with notes and progress" | Create a new layer — only when it needs its own persistent data. |
 
-### Announce naturally
+**Threshold for a new layer:** the capability needs its own files AND doesn't fit within an existing layer. Most requests are new commands or abilities on existing layers.
 
-After implementing, the AI tells the user what's available — not what files were written. A summary block teaches vocabulary through real examples:
+### Propose Before Implementing
 
-```
-Intent: [purpose this serves]
-Ability: [capability name]
-Commands: [what the user can say]
-```
+The AI always proposes in plain language and waits for confirmation:
+
+- "I can add a `weekly-summary` command that formats your week differently. Want me to set that up?"
+- "Tracking a reading list is substantial enough to be its own layer. I'll create it with commands for adding books and logging progress. Okay?"
+
+### Announce Naturally
+
+After implementing, the AI tells the user what's available — not what files were written:
+
+- "Done — say `prep 1:1 [name]` before your next meeting and I'll draft talking points."
+- "Set up your reading list. Say `add book [title]` to add one, `reading list` to see everything."
+
+No mention of intents, abilities, or identity blocks unless the user asks about internals.
+
+---
+
+## Reflection
+
+Reflection is how the sphere stays healthy. Evolution adds capabilities; reflection evaluates and prunes them. The user doesn't need to say "reflect" — the AI recognizes natural expressions of friction, underuse, or curiosity.
+
+### Natural Triggers
+
+| What the user says | What it means | Type |
+|-------------------|--------------|------|
+| "Something feels off about project tracking" | Friction with a specific capability | Targeted |
+| "I'm not using the meeting stuff much" | A capability may not be serving its intent | Targeted |
+| "What can you do?" | User wants to discover capabilities | Targeted (exploratory) |
+| "Can we simplify? There's too much going on" | Capabilities may have outgrown their usefulness | Deep |
+| "What would you change about how we work?" | Open invitation for structural evaluation | Deep |
+| `reflect` / `deep-reflect` | Explicit invocation (power users) | As named |
+
+### Targeted Reflection
+
+Evaluate one area of the sphere. The AI reads the relevant intent, its serving abilities, and the layers involved. Output is plain language — not a technical audit.
+
+### Deep Reflection
+
+Full structural evaluation across four axes:
+- **Gaps** — something the user wants that has no capability
+- **Bloat** — a capability that serves no real purpose
+- **Misalignment** — a purpose being poorly served
+- **Discovery** — something the user does repeatedly that isn't registered
+
+Output is a brief health check: what's working, what's not being used, and what to change. Always propose, never auto-change.
+
+### Reflection → Evolution Loop
+
+Reflection findings feed directly into evolution:
+- Gap → propose a new ability (scope assessment → propose → confirm)
+- Bloat → propose removing or simplifying
+- Misalignment → propose redesigning
+- Discovery → propose crystallizing the pattern
+
+This loop is the sphere's self-improvement cycle.
 
 ---
 
@@ -213,37 +298,53 @@ The sphere is always in a consistent state. Every command is a well-defined tran
 
 - **State** = contents of core/ + layers/ at any point
 - **Transition** = command causing actions across layers
-- **Compaction** = `ground` = summary commit that compacts working state into records
+- **Compaction** = ground commits that compress working state into records
 
-### Git as state backend (recommended, not required)
+### Git as State Backend (Recommended, Not Required)
 
 Git is the recommended implementation: commits = transitions, log = history, revert = undo. During `init`, the sphere checks for git and initializes if available. If git is not present, the sphere works normally — all commands function — but state management commands (`checkpoint`, `revert`, `undo`, `history`) become dormant.
+
+| Command | What it does | Requires git |
+|---------|-------------|-------------|
+| `checkpoint [message]` | Save current state as a named checkpoint | Yes |
+| `history` | Show recent state transitions | Yes |
+| `revert` | Restore a previous checkpoint | Yes |
+| `undo` | Revert the last state change | Yes |
+
+Surface changes are not easily reverted even with git — they require intentional rollback.
 
 ---
 
 ## Replication
 
-Spheres reproduce through seeds and exchange improvements through absorption.
+Spheres reproduce through templates and exchange improvements through absorption.
 
 | Command | What it does |
 |---------|-------------|
 | `seed` | Extract skeleton — all structure, no data |
-| `init [name] [seed]` | Bootstrap new sphere from a seed (conversational) |
-| `absorb [source]` | Pull improvements from another sphere |
-| `compare [other]` | Diff two spheres at intent/ability/layer level |
+| `init` | Bootstrap new sphere from a template (conversational) |
+| `absorb` | Pull improvements from another sphere |
+| `compare` | Diff two spheres at intent/ability/layer level |
 
 ### The Seed
 
-A seed is a sphere stripped of state, keeping structure:
-- Core files (engine, intents, abilities) — full, they're instructions
+A seed (template) is a sphere stripped of state, keeping structure:
+- Core files (`engine.md`, `protocol.md`, `init.md`) — full, they're instructions
 - User files — templates with placeholders
 - Layer identity blocks + action definitions — no data
 - Surface — empty structure
-- Init guide — conversational bootstrap
 
 **Non-lossy guarantee:** All instructions survive extraction. Only user data, project state, and surface projections are stripped.
 
-**Partial layer selection:** When seeding with fewer layers, abilities that need missing layers become **dormant** — still listed, marked as needing specific layers.
+**Partial layer selection:** When seeding with fewer layers, abilities that need missing layers become **dormant** — still listed in `protocol.md`, marked as needing specific layers. The blueprint is preserved; dormant entries show what's possible with additional layers.
+
+### Export Modes
+
+| Mode | What ships | Use case |
+|------|-----------|----------|
+| `[full]` | Intent + ability + layer implementation | Generic layers |
+| `[pattern]` | Intent + ability description only | Coupled layers — target builds own version |
+| `[skip]` | Nothing | Purely local |
 
 ---
 
@@ -270,12 +371,14 @@ user-sphere                  ← personal active workspace
 
 The sphere is designed to be usable at conversation level. Users don't need to understand the architecture.
 
-### Concept tiers
+### Concept Tiers
 
 | Tier | What it unlocks | Concepts | How learned |
 |------|----------------|----------|-------------|
-| **Use** | Operate day-to-day | commands, ground, abilities.md, "just describe what you want" | Init + reinforced always |
+| **Use** | Operate day-to-day | commands, ground/resume, "just describe what you want" | Init + reinforced always |
 | **Understand** | Know how it's organized; shape it via reflect | intent (why), ability (named capability), layer (area), reflect (evaluate) | Summary block during evolution; `concepts` / `explain` on demand |
 | **Extend** | Build layers, replicate spheres | senses, instincts, identity blocks, depth tiers, seed/absorb | Only when the user asks or tries something these handle |
 
-**Design principle:** The engine is the AI's manual, not the user's. Init is a conversation. The sphere should feel like talking to a capable assistant from session one.
+The AI teaches concepts passively through use — not documentation. When a structural change occurs, the AI shows a summary block (`Intent: / Ability: / Commands:`) that teaches vocabulary through real examples. Users can actively pull via `concepts` (list all) or `explain [concept]` (deep dive on one).
+
+**Design principle:** `engine.md` is the AI's manual, not the user's. Init is a conversation. The sphere should feel like talking to a capable assistant from session one.
