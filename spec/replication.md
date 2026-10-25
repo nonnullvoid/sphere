@@ -83,7 +83,7 @@ With it, anything that later comes from this seed can say exactly which sphere, 
 
 ---
 
-## Init: starting a sphere from a seed — **proven** (for builds)
+## Init: starting a sphere from a seed — _used once by hand; not yet exercised from a published build_
 
 A new sphere begins as a copy of a seed, usually a published build. **Init** is the first conversation, where the sphere learns who its human is and fills its empty slots: profile, principles, a first piece of work. Init is co-authored like everything else: the human talks, the AI drafts, the human confirms. See [profiles](profiles.md) for how init differs at core profile.
 
