@@ -40,7 +40,9 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
 
 ### Level 1 — simple sessions (the default) — **proven**
 
-- One branch. Git is always present, but at core profile it's **invisible**: the tooling makes every commit and the human never sees the word.
+- **One branch for the whole sphere**, shared by every session: all sessions commit to `main`. (Branches per session are what level 2 adds.) Git is always present, but at core profile it's **invisible**: the tooling makes every commit and the human never sees the word.
+  - **Same machine:** sessions share one working folder and can see each other's uncommitted edits. Ground stages only what *this* session touched, so it never commits another session's half-finished work.
+  - **Several devices:** each device has its own copy of `main`. Ground pulls before committing and pushes after. If two devices changed the same shared file, the conflict surfaces there and is resolved by the tooling or the AI, never shown raw at core profile.
 - A **session log** with one file per session in `core/records/sessions/`, named `YYYY-MM-DD-HHMM-<slug>.md`. Each file says which work the session touched and summarizes what happened.
 - `ground` = compact + session file + commit. Ground also adds a one-line pointer from the work's journal to the session file. `resume` = read the work's journal.
 - No worktrees, no branches per session, no tree vocabulary.
