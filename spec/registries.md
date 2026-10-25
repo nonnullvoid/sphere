@@ -1,6 +1,6 @@
 # Registries
 
-_Status: draft 1, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
+_Status: draft 2, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -12,32 +12,50 @@ A sphere grows to hundreds of files. Reading them all at the start of every sess
 
 The trap is that a list kept by hand drifts. Something changes, nobody updates the list, and from then on the sphere reasons from a picture that's no longer true. So the rule is:
 
-**Truth lives in one place. A registry is a view of it, rebuilt by the tooling, never edited by hand.** — **proven**
+**Truth lives in one place.** A registry either points at that truth or is itself the only home for it. Never both. — **proven**
 
-The test for any file: if you could delete it and regenerate it, it's a view. If you couldn't, it's truth, and nothing else should duplicate it.
+The test for any file: if you could delete it and rebuild it from other files, it's a view. If you couldn't, it's truth, and nothing else should duplicate it.
+
+**How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the structural frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, whatever its mode.
 
 ---
 
+## Three ways a registry is maintained
+
+| Mode | Who maintains it | When it fits |
+|---|---|---|
+| **generated** | the tooling, by script | Every column can be computed from other files |
+| **AI-maintained** | the AI, following the registry's frame | Some columns need judgment: a description, a relationship, a summary |
+| **authored** | the human, with the AI drafting | It holds human decisions that live nowhere else |
+
+**AI-maintained doesn't mean unchecked.** An instruction in a frame to "rebuild this at every ground" is a habit, and habits lapse. A registry that says it's rebuilt every ground can go months without being rebuilt, with nothing noticing. So every registry, whatever its mode, has a [drift check](#drift-checks--proven) that runs in the tooling.
+
+**Authored registries are reconciled.** A registry that is the truth for some human decision (the session registry: what a session is for, whether it's abandoned) stores only those decisions. It computes everything else, and at ground it's checked against the facts it sits next to, with mismatches put to the human as questions. See [state](state.md#the-session-registry).
+
 ## The registries in a sphere
 
-| Registry | Lists | Built from | Chapter |
-|---|---|---|---|
-| **Layers** (`core/layers.md`) | every layer: what it holds, what it depends on, what it may share | each layer's own contract file | below |
-| **Surface** (`core/surface.md`) | every place the sphere puts rendered output, and who can see it | each surface area's declaration | [projections](projections.md) |
-| **Protocol** (`core/protocol/protocol.md`) | intents, abilities, commands, senses | lens and frame files | [protocol](protocol.md) |
-| **Work index** (`layers/work/index.md`) | every work node, by status | each node's `work.md` | [work](work.md) |
-| **World** (`layers/world/registry.md`) | every domain and subject, and how they relate | subject frontmatter | [knowledge](knowledge.md) |
-| **Projections** | every rendered view: its source, freshness, home | each projection's declaration | [projections](projections.md) |
-| **Sessions** | which sessions exist and what they're for | _the exception: see below_ | [state](state.md) |
+| Registry | Lists | Likely mode | Built or checked against | Chapter |
+|---|---|---|---|---|
+| **Layers** (`core/layers.md`) | every layer: what it holds, depends on, may share | generated | each layer's contract file | below |
+| **Surface** (`core/surface.md`) | every place rendered output goes, and who can see it | generated | each surface area's declaration | [projections](projections.md) |
+| **Protocol** (`core/protocol/protocol.md`) | intents, abilities, commands, senses | AI-maintained | lens and frame files: every command maps to a frame that exists, every layer it names exists | [protocol](protocol.md) |
+| **Work index** (`layers/work/index.md`) | every work node, by status | generated | each node's `work.md` | [work](work.md) |
+| **World** (`layers/world/registry.md`) | every domain and subject, and how they relate | generated, or AI-maintained if relationships need judgment | subject frontmatter | [knowledge](knowledge.md) |
+| **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
+| **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
 
-### The exception: authored registries
+"Likely mode" is the default a build ships with. A sphere's own frame for a registry can choose differently.
 
-The session registry isn't a pure view. It holds **meaning**: what a session is for, whether it's paused or abandoned. That has no other home, so the registry is the truth for it. A registry like this:
+Every registry declares its mode where it can be seen:
 
-- stores **only** what has no other home, and computes everything else (see [state](state.md#the-session-registry));
-- is **reconciled** at ground against the facts it sits next to, with mismatches put to the human as questions.
-
-**The rule for choosing:** if every column can be computed from other files, the registry is generated. If it holds human decisions that live nowhere else, it's authored, and it gets reconciliation instead.
+```yaml
+---
+registry: work-index
+maintained: generated        # generated | ai | authored
+frame: work_registry
+sources: layers/work/*/work.md
+---
+```
 
 ---
 
@@ -61,20 +79,20 @@ requires: []                # what this layer needs another sphere to have befor
 
 ## Committed views and caches — _decided, not yet exercised_
 
-Generated files come in two kinds, and they're handled differently:
+Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and they're handled differently:
 
 | Kind | Examples | Committed? | Why |
 |---|---|---|---|
 | **Human-facing views** | work index, world registry, layer registry | **Yes** | A person browsing the folder or the repository should be able to read them without running anything |
 | **Machine-only caches** | the startup bundle, loading manifests | **No**: gitignored, rebuilt when needed | Nobody reads them directly, and committing them only creates merge conflicts |
 
-**Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when level-2 sessions [sync](state.md#level-2--the-session-tree-opt-in--advanced), the tooling simply regenerates it from the merged sources. Both versions were views of their sources, so the merged sources produce the right one.
+**Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when level-2 sessions [sync](state.md#level-2--the-session-tree-opt-in--advanced), it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
 
 ---
 
 ## Every view says it's a view
 
-Each generated file starts with a header:
+Each generated or AI-maintained file starts with a header:
 
 ```markdown
 <!-- Generated at ground, 2026-10-25 14:32. Built from: layers/work/*/work.md.
@@ -90,8 +108,8 @@ Each generated file starts with a header:
 Registries come with checks that run at ground:
 
 - **Structure check:** every layer folder has a contract, and every contract has a folder.
-- **Freshness check:** every generated view matches what its sources would produce now.
-- **Reference check:** every link in a view points at something that exists, for example a `parent:` naming a node that was renamed.
+- **Freshness check:** a view was rebuilt after its sources last changed. For a generated view, it also matches what its sources would produce now.
+- **Reference check:** every link in a registry points at something that exists. Examples: a `parent:` naming a node that was renamed, or a command whose frame or layer no longer exists.
 
 A failed check doesn't block the ground. It reports what's wrong and offers to fix it. A check that stops work gets disabled; a check that offers a fix gets used.
 
@@ -107,6 +125,5 @@ At **core profile**, registries exist but are never mentioned. They're how the s
 
 ## Open questions
 
-1. **Generating the protocol registry.** Today it's written by hand. Generating it would mean abilities and commands are declared in each frame (procedure frames already describe themselves in their skill `description`), and intents in each lens. Worth doing, or is the hand-written table more readable as the sphere's top-level vocabulary?
-2. **When views rebuild.** At every ground, or only when their sources changed? Rebuilding everything is simpler; rebuilding only what changed is faster in a large sphere.
-3. **Views outside git.** In a gitless fallback sphere (one session at a time), "never edited by hand" still holds, but there's no merge to regenerate after. Anything else needed?
+1. **When views rebuild.** At every ground, or only when their sources changed? Rebuilding everything is simpler; rebuilding only what changed is faster in a large sphere.
+2. **Views outside git.** In a gitless fallback sphere (one session at a time), "never edited by hand" still holds, but there's no merge to regenerate after. Anything else needed?
