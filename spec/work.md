@@ -22,13 +22,13 @@ Each piece of work is a **node**: one folder, holding two files.
 layers/work/
 ├── <node>/
 │   ├── work.md         what and why: goal, done-when, status, next action
-│   └── journal.md      what happened, session by session, and where to pick up
+│   └── progress.md     what happened, session by session, and where to pick up
 ├── archive/
 │   └── <node>/         finished work, moved out of the way
 └── index.md            generated: every node, grouped by status
 ```
 
-**`work.md`** is the definition. It changes rarely.
+**`work.md`** is what the work *is*: the definition. It changes rarely.
 
 ```yaml
 ---
@@ -43,7 +43,7 @@ Then, in plain words: the goal, what done looks like, and the **next action**, a
 
 **`paused` always says why.** It covers both *blocked* (something is in the way) and *waiting* (someone else has to act), so a paused node carries a one-line `waiting_on:`. Without it, paused work quietly turns into forgotten work.
 
-**`journal.md`** is the running record. Each ground adds an entry: what happened, what's next, and a link to the [session file](state.md#level-1--simple-sessions-the-default--proven). A cold `resume` reads the latest entries and can continue without anyone re-explaining.
+**`progress.md`** is the running record. Each ground adds an entry: what happened, what's next, and a link to the [session file](state.md#level-1--simple-sessions-the-default--proven). A cold `resume` reads the latest entries and can continue without anyone re-explaining.
 
 Display names are up to the build. A life sphere might call nodes *projects*; a non-technical sphere might call them *my things*. The structure is the same.
 
@@ -96,7 +96,7 @@ What every session does with work:
 |---|---|
 | **Open** | If the session is clearly about a node, the sphere notes it. It never blocks on the question. |
 | **During** | Nothing is promised. |
-| **Ground** | The node's journal gets an entry; its `status` and next action are updated if they changed; the index is rebuilt. New facts are *proposed* for the [knowledge](knowledge.md) layer, never written to it automatically. |
+| **Ground** | The node's `progress.md` gets an entry; its `status` and next action are updated if they changed; the index is rebuilt. New facts are *proposed* for the [knowledge](knowledge.md) layer, never written to it automatically. |
 
 **Which work a session belongs to is inferred, on the fly,** from what the session talks about and which nodes' files it touches. A session that touches two nodes writes an entry to both. Many sessions belong to no node at all: a question, some research, a quick fix. They stay untracked, and that's fine. The sphere only asks when it has real evidence and can't resolve it, for example two plausible nodes and no way to choose.
 
@@ -108,7 +108,7 @@ A **mirror** keeps a node's status in step with an outside tool, such as a team'
 
 - A mirror is **one-way by default**: the sphere pushes a summary out. It doesn't take its own truth from the outside tool.
 - Everything a mirror sends passes the outbound guard: it's drafted and the human approves, unless they've given a standing approval for that mirror.
-- **Only what the mirror is told to send leaves the sphere.** Private notes, journals and lenses never travel with it.
+- **Only what the mirror is told to send leaves the sphere.** Private notes, progress files and lenses never travel with it.
 
 ---
 
@@ -120,5 +120,4 @@ Finished work is also evidence of growth. A build can add a **witness** layer th
 
 ## Open questions
 
-1. **The second file's name.** `work.md` is settled. `journal.md` is a placeholder; `progress.md` and `handoff.md` are the candidates.
-2. **When to suggest archiving.** How long should a node sit in `done` before the sphere suggests moving it? A fixed delay, or at a periodic review?
+1. **When to suggest archiving.** How long should a node sit in `done` before the sphere suggests moving it? A fixed delay, or at a periodic review?

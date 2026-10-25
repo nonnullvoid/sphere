@@ -20,7 +20,7 @@ The human lives in real time; the sphere lives on its last grounded state. Anyth
 
 Ending a session, or reaching a safe point inside one, the sphere:
 
-1. **Compacts** working state into its records: the work's journal gets what happened and what's next, and new facts or rules are *proposed* rather than written automatically (see [knowledge](knowledge.md), [guardrails](guardrails.md)).
+1. **Compacts** working state into its records: the work's `progress.md` gets what happened and what's next, and new facts or rules are *proposed* rather than written automatically (see [knowledge](knowledge.md), [guardrails](guardrails.md)).
 2. **Reconciles** the session record (see [The session registry](#the-session-registry)).
 3. **Commits** if git is present: stages only the files this session touched, never everything, with a message in the form `ground [scope] — summary`.
 
@@ -28,7 +28,7 @@ Grounding is the sphere's authorized commit. Two things count as approval: the h
 
 ### `resume` — **proven**
 
-Starting a session on existing work, the sphere reads that work's journal and the session record, and says where things stand and what's next. A good ground is measured by how well a cold resume works: a new session, with no memory of the last one, should be able to continue.
+Starting a session on existing work, the sphere reads that work's `progress.md` and the session record, and says where things stand and what's next. A good ground is measured by how well a cold resume works: a new session, with no memory of the last one, should be able to continue.
 
 ---
 
@@ -44,7 +44,7 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
   - **Same machine:** sessions share one working folder and can see each other's uncommitted edits. Ground stages only what *this* session touched, so it never commits another session's half-finished work.
   - **Several devices:** each device has its own copy of `main`. Ground pulls before committing and pushes after. If two devices changed the same shared file, the conflict surfaces there and is resolved by the tooling or the AI, never shown raw at core profile.
 - A **session log** with one file per session in `core/records/sessions/`, named `YYYY-MM-DD-HHMM-<slug>.md`. Each file says which work the session touched and summarizes what happened.
-- `ground` = compact + session file + commit. Ground also adds a one-line pointer from the work's journal to the session file. `resume` = read the work's journal.
+- `ground` = compact + session file + commit. Ground also adds a one-line pointer from the work's `progress.md` to the session file. `resume` = read the work's `progress.md`.
 - No worktrees, no branches per session, no tree vocabulary.
 
 **Why one file per session:** two sessions never write the same log file, so the log can't conflict, with or without git. The folder listing is the registry.
@@ -53,7 +53,7 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
 
 Concurrent sessions are normal: two windows, or a laptop and a phone. The layout keeps them out of each other's way:
 
-- **Per-session and per-work files** take most writes: session files and work journals.
+- **Per-session and per-work files** take most writes: session files and each work's `progress.md`.
 - **Shared files** (the work index, principles, profile) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
 - When a conflict still happens, **the tooling or the AI resolves it**. At core profile a raw merge conflict never reaches the human.
 
