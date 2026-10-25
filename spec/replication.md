@@ -80,7 +80,9 @@ Identity lives in its own small file, `core/identity.json`, so tooling can read 
 {
   "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88",
   "name": "ridgeline-worksphere",
-  "version": "2026.10.3"
+  "version": "2026.10.3",
+  "architecture": "2.0",
+  "profile": "standard"
 }
 ```
 
