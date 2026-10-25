@@ -64,6 +64,31 @@ Serving is its own frame (`projection_serving`, under the projections lens), so 
 
 At core profile, the human never sees any of this. They open "my things" and it works.
 
+## Stack — _decided, not yet exercised_
+
+A sphere defines a default stack for projections, so templates and shared styling can rely on one base, and nobody needs to install anything to see their own sphere. It escalates in steps when the default isn't enough:
+
+| Tier | Stack | When | Lives |
+|---|---|---|---|
+| **1. Default** | Plain HTML, CSS and JavaScript. **No build step.** Type hints, if wanted, go in comments that editors read without compiling. | Almost every projection | `surface/projections/` |
+| **2. With a library** | Tier 1, plus a library saved into `surface/projections/assets/` (for example, a charting library). Still no build step. | When the default can't render a chart or an interaction well | `surface/projections/` |
+| **3. An app that reads the sphere** | Any web or mobile stack. **TypeScript** is the default language at this tier. | When it needs a database, logins, background jobs, a build step, or a phone app | **Outside the sphere**, as its own project |
+
+**Why plain web is the default:** static files open with a double-click, and served ones need only the local server from the [serving](#serving) frame. Models generate it reliably. It's readable and diffable like the rest of the sphere. And it will still open in ten years.
+
+**Libraries are saved locally, not loaded from the internet.** A projection that fetches code from a third-party server when it opens has stopped being private and stopped working offline.
+
+**Once it needs an app, it's no longer a projection.** At tier 3 the thing is an application that *reads* the sphere. The sphere doesn't host it. Its registry entry says `kind: external`, names the app's home, and declares how the app stays in sync with the sphere's files. That last part is not optional. An outside app with no declared sync is exactly how a view ends up silently stale.
+
+```yaml
+- name: portfolio
+  kind: external
+  home: ~/projects/portfolio-app    # outside the sphere
+  sources: [layers/world/subjects/finance/]
+  sync: on-ground                    # on-ground | on-open | manual (shown as stale after 1 day)
+  sharing: private
+```
+
 ## Provenance — **proven**
 
 Each artifact carries a pointer to its sources and the time it was rendered, inside the artifact, not just in the registry. A projection that has been copied, shared or screenshotted can still say where it came from and how old it is.
@@ -131,7 +156,7 @@ Each projection has a registry entry:
 
 ```yaml
 - name: work-dashboard
-  kind: live                    # live | manually-synced | snapshot
+  kind: live                    # live | manually-synced | snapshot | external
   opens: served                 # static | served
   freshness: on-open            # on-open | sync within 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
