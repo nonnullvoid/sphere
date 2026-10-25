@@ -124,7 +124,7 @@ At level 1 the session log *is* the registry, and reconciliation is a single che
 
 - **Stage only what the session touched.** Never stage everything in the folder. Unrelated changes may belong to another session or to the human. — **proven**
 - **One sphere repo, separate from code repos.** Sphere state has its own history; grounding the sphere never commits to the project being worked on. — **proven**
-- **Generated files are caches.** Anything that can be regenerated (for example a startup bundle) is rebuilt when needed rather than committed, so it can't conflict on merge. — _decided, not yet exercised_
+- **Generated files never cause merge pain.** Machine-only caches (like the startup bundle) are rebuilt when needed and never committed. Human-facing views (like the work index) are committed so people can read them, and on a conflict the tooling regenerates them instead of asking anyone to merge. See [registries](registries.md#committed-views-and-caches--decided-not-yet-exercised). — _decided, not yet exercised_
 - **Flatspace surface** — **advanced**: rendered views (projections) can live on a separate branch that every session sees at its latest version, so a view never depends on which session branch you're on.
 
 ---
@@ -138,7 +138,7 @@ Documented so people who opt in know what they're choosing. Each will be address
 | Silent fallback to main | a session meant for a worktree ends up working on the main branch | tooling refuses to start the session instead of falling back |
 | Registry drift | sessions exist in git with no registry entry, or entries outlive their branches | three homes + reconciliation at ground |
 | Detached HEAD | grounds land on no branch and can be lost | ground refuses or repairs before committing |
-| Generated-file conflicts | a committed startup bundle conflicts on nearly every sync | treat it as a cache: regenerate, don't commit |
+| Generated-file conflicts | a committed startup bundle conflicts on nearly every sync | caches aren't committed; committed views are regenerated on conflict |
 | Worktree shell limits | some harnesses restrict multi-line shell inside worktree sessions | under investigation; root cause first, not workarounds |
 
 ---
