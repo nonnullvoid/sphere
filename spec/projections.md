@@ -1,6 +1,6 @@
 # Projections
 
-_Status: draft 1, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
+_Status: draft 2, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -43,6 +43,27 @@ Every projection declares which of three kinds it is:
 
 _The lesson behind this rule:_ a dashboard showing stale financial numbers, silently, because the sync step hadn't run. Nothing on the page said so.
 
+## How it opens — _decided, not yet exercised_
+
+Separately from freshness, each projection declares how it opens. That depends on what the projection is for, not on a rule for all of them:
+
+| Opens as | Fits | Requirement |
+|---|---|---|
+| **static** | Snapshots and one-off renders: a walkthrough of a code change, a technical explainer, a year-in-review | **Self-contained:** data, styles and scripts inside the one file, so it opens with a double-click and no server |
+| **served** | Live views and anything interactive: work tracking, a checklist, a "mark done" button | Opened through a local server that the sphere starts |
+
+Live projections are served. Snapshots are static. A manually synced projection can be either: static with its data baked in at sync time, or served if it's interactive.
+
+### Serving
+
+Serving is its own frame (`projection_serving`, under the projections lens), so every projection doesn't reinvent it. The sphere:
+
+- **starts a local server when a served projection is opened,** reuses it if one is already running, and stops it when it's no longer needed;
+- **listens on this machine only,** never on the network, so a private projection stays private;
+- **lets a served projection write only to its declared source files.** This is how input reaches the source (see [Views that accept input](#views-that-accept-input--decided-not-yet-exercised)): the server is the path back, and nothing else is writable through it.
+
+At core profile, the human never sees any of this. They open "my things" and it works.
+
 ## Provenance — **proven**
 
 Each artifact carries a pointer to its sources and the time it was rendered, inside the artifact, not just in the registry. A projection that has been copied, shared or screenshotted can still say where it came from and how old it is.
@@ -63,6 +84,10 @@ If a view genuinely needs to hold its own data, it isn't a projection any more. 
 - **Themes vary; structure doesn't.** A build or sphere can re-theme everything (colors, type, density) through design tokens, without touching a single projection's structure.
 - **Extract a template on the third repetition, never before.** The first two projections of a kind are written directly. When a third is needed, the shared shape is clear enough to extract. Extracting earlier guesses at a pattern that doesn't exist yet.
 
+## Ephemeral renders
+
+Not every render is worth keeping. A walkthrough generated to explain one change, or a one-time comparison, is **ephemeral until kept**. It's rendered static into a scratch area of the surface, opened, and not registered. If the human wants to keep it, it gets a registry entry and a home like any other projection. Otherwise the registry would fill up with one-time explainers.
+
 ## Legacy views
 
 Views built before a sphere adopted this structure, by hand and unregistered, are **registered as legacy** rather than rewritten or ignored. Each gets a registry entry with `legacy: true` and an honest freshness declaration. They don't have to be rebuilt to be known.
@@ -77,6 +102,7 @@ Views built before a sphere adopted this structure, by hand and unregistered, ar
 surface/
 ├── projections/
 │   ├── assets/          shared stylesheet, components, theme tokens
+│   ├── _scratch/        ephemeral renders, not registered, safe to clear
 │   └── <name>/          one folder per projection
 ├── state/               live machine state (heartbeats, indexes); disposable, never committed
 ├── raw/                 incoming files the human dropped in, not yet processed
@@ -106,6 +132,7 @@ Each projection has a registry entry:
 ```yaml
 - name: work-dashboard
   kind: live                    # live | manually-synced | snapshot
+  opens: served                 # static | served
   freshness: on-open            # on-open | sync within 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
   home: surface/projections/work-dashboard/
@@ -118,6 +145,7 @@ Each projection has a registry entry:
 
 ## Open questions
 
-1. **Opening live projections.** A live projection that reads files when it opens usually needs a small local server. Browsers block a page opened straight from disk from reading other files. How does a non-technical human open one with a double-click? Options: the tooling starts a local viewer, or projections fall back to a snapshot rendered at every ground.
+1. **How a non-technical human starts a served projection** without a terminal: a command to the sphere ("show my things"), a launcher file they double-click, or both?
 2. **Projections on a phone.** Should builds ship a way to see projections away from the computer, and if so, what keeps that private?
-3. **Formats.** HTML is the default for rich views. Should a plain markdown projection be a first-class kind for spheres that only ever live inside a harness?
+3. **Clearing scratch.** When are ephemeral renders cleared: after a time, at ground, or only when the human asks?
+4. **Formats.** HTML is the default for rich views. Should a plain markdown projection be a first-class kind for spheres that only ever live inside a harness?
