@@ -1,6 +1,6 @@
 # State
 
-_Status: draft 1, for review._ How a sphere stays consistent across sessions: what a session is, what `ground` and `resume` do, and how the session system grows from simple to advanced without breaking anyone along the way.
+_Status: draft 2, for review._ How a sphere stays consistent across sessions: what a session is, what `ground` and `resume` do, and how the session system grows from simple to advanced without breaking anyone along the way.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -24,7 +24,7 @@ Ending a session, or reaching a safe point inside one, the sphere:
 2. **Reconciles** the session record (see [The session registry](#the-session-registry)).
 3. **Commits** if git is present: stages only the files this session touched, never everything, with a message in the form `ground [scope] — summary`.
 
-Grounding is the sphere's authorized commit. A human asking to ground is the approval; nothing else commits sphere state.
+Grounding is the sphere's authorized commit. Two things count as approval: the human asking to ground, or a **standing approval** the human set up, such as a scheduled end-of-day ground. Nothing else commits sphere state.
 
 ### `resume` — **proven**
 
@@ -40,13 +40,34 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
 
 ### Level 1 — simple sessions (the default) — **proven**
 
-- One branch, or no git at all.
-- A flat **session log**: one entry per session, saying which work it touched and a one-line summary.
-- `ground` = compact + log entry + commit. `resume` = read the work's journal.
+- One branch. Git is always present, but at core profile it's **invisible**: the tooling makes every commit and the human never sees the word.
+- A **session log** with one file per session in `core/records/sessions/`, named `YYYY-MM-DD-HHMM-<slug>.md`. Each file says which work the session touched and summarizes what happened.
+- `ground` = compact + session file + commit. Ground also adds a one-line pointer from the work's journal to the session file. `resume` = read the work's journal.
 - No worktrees, no branches per session, no tree vocabulary.
-- At core profile, git is never mentioned. Grounding happens silently in the background, and the human only sees their work.
 
-**Without git**, level 1 still works: ground writes the log entry and the journal, so continuity holds. What's lost is history and diffs. _(Inferred behavior; not yet exercised without git.)_
+**Why one file per session:** two sessions never write the same log file, so the log can't conflict, with or without git. The folder listing is the registry.
+
+#### Conflict-avoiding layout — _decided, not yet exercised_
+
+Concurrent sessions are normal: two windows, or a laptop and a phone. The layout keeps them out of each other's way:
+
+- **Per-session and per-work files** take most writes: session files and work journals.
+- **Shared files** (the work index, principles, profile) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
+- When a conflict still happens, **the tooling or the AI resolves it**. At core profile a raw merge conflict never reaches the human.
+
+#### Without git — fallback only
+
+Git is the default because it gives history, undo and merges. Without git, these edge cases have no safety net:
+
+| Edge case | What goes wrong |
+|---|---|
+| Two sessions open at once | Last writer wins on shared files; the other session's changes are lost silently |
+| One sphere synced to two devices through a cloud folder | The sync service creates conflict copies or picks one version |
+| A crash halfway through a ground | Some files written, some not, with no record of which |
+| A bad ground | No history, so it can't be undone |
+| The human edits a file while a session is open | The session's next write overwrites the edit |
+
+A gitless sphere is supported only as **one session at a time**. A lock file is written at session start, and a second session opens read-only with a warning. Locks can go stale after a crash, and they reach other devices slowly through cloud sync. That's why this is a documented fallback, not the default. — _unexercised_
 
 ### Level 2 — the session tree (opt-in) — **advanced**
 
@@ -55,7 +76,7 @@ For technical users running several streams of work in parallel.
 - Each session is a branch in a tree, usually with its own worktree.
 - Three verbs instead of one:
   - **ground**: commit this session's state (as at level 1).
-  - **sync**: merge this session's grounded state up into its parent session. Sync is **not** an ending; the child keeps going.
+  - **sync**: ground, then merge this session's state up into its parent session. Sync is a superset of ground, and it's **not** an ending: the child keeps going.
   - **close**: finish the session. Its final state merges up and it leaves the active tree.
 - A parent session can hold many children and act as the integration point for their work.
 - **Sessions talk through their parent, never sideways.** A child that needs something from a sibling asks the parent, which relays. Direct sibling messaging was tried and caused sessions to take over each other's work.
@@ -81,6 +102,8 @@ The record of which sessions exist and what they're for. Three kinds of truth, e
 | **Facts** | the session exists, its branch, its parent, when it last grounded | git | computed when needed, never stored in the registry |
 | **Meaning** | what the session is for, its status (paused, abandoned, done), why it's linked to another | the registry | the AI drafts it, the human confirms |
 | **Runtime state** | is it running right now, what's mounted where | a disposable state file, never committed | the tooling |
+
+**Where liveness lives (level 2):** each running session has a heartbeat file at `surface/state/sessions/<id>.json` holding `last_seen`. Any sphere command updates it, and a session counts as alive while `last_seen` is within a threshold (30 minutes as a starting point). It's one file per session, so heartbeats never contend. At ground, reconciliation cross-checks heartbeats against git activity: "S41's heartbeat says alive, but it hasn't touched anything in 3 days. Still running?" — _decided, not yet exercised_
 
 **Why three homes:** when a fact is stored in two places, they drift apart. Storing facts only in git, and only meaning in the registry, shrinks what can drift to two cases, and both surface as questions at ground:
 
@@ -120,7 +143,6 @@ Documented so people who opt in know what they're choosing. Each will be address
 
 ## Open questions
 
-1. **Where the level-1 session log lives** in a build (`core/records/sessions.md` is the obvious candidate). Decide in the base build.
-2. **Liveness rule for level 2:** "any command counts as alive" is the current practice. Confirm before it's written down as spec.
-3. **Should `sync` require a ground first,** or ground implicitly? Current practice should decide this.
-4. **Git-optional level 1** has not been exercised. Keep it in the spec as a design goal, or mark it unexercised until a build tries it?
+1. **The liveness threshold.** 30 minutes is a starting point; tune it from real use.
+2. **Conflict resolution at core profile.** What the tooling resolves by itself, and what it hands to the AI. To be designed with the session tooling.
+3. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.
