@@ -1,12 +1,123 @@
 # Projections
 
-_Status: stub._ How a sphere shows its state to humans.
+_Status: draft 1, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
-## Will cover
+---
 
-- Four-way separation: frame / render rules / registry / artifact. **proven**
-- Freshness: live · manually synced · snapshot. **proven**
-- Provenance in every artifact; a projection is never the source of truth. **proven**
-- Projections as the interface for core-profile spheres: matter, never machinery.
+## The idea
+
+A sphere's files are its truth, but files aren't how most people want to see their life or their work. A **projection** is a view rendered from those files: a dashboard of work in motion, a map of growth over time, a home page that links everything.
+
+One rule underneath all of it: **a projection is never the source of truth.** It's a picture of the files. If the picture and the files disagree, the files win, and the picture is fixed by re-rendering it, never by editing it. — **proven**
+
+For a non-technical human, projections are the whole interface. They see their things, never the sphere's machinery. See [Matter, not machinery](#matter-not-machinery).
+
+---
+
+## Four parts, kept separate — **proven**
+
+| Part | What it holds | Where |
+|---|---|---|
+| **Frame** | The mechanics: when a projection is rendered, refreshed, published | `core/protocol/frames/projections/` |
+| **Render rules** | What this projection shows and how: sources, layout, what to leave out | `layers/projections/<name>.md` |
+| **Registry entry** | Its kind, freshness, source, home, who can see it, template | `layers/projections/registry.md` |
+| **Artifact** | The rendered thing itself | `surface/projections/<name>/` |
+
+Kept apart, each can change without breaking the others. A new look is a template change. A new data source is a render-rule change. A new audience is a registry change.
+
+---
+
+## Freshness — **proven**
+
+Every projection declares which of three kinds it is:
+
+| Kind | How it stays current | Example |
+|---|---|---|
+| **live** | Reads its source files when someone opens it. Nothing to sync. | A work dashboard that reads the work index each time it loads |
+| **manually synced** | Someone or something runs a sync to update it | A portfolio view built from exported account data |
+| **snapshot** | Rendered once, at a moment, and never updated | A year-in-review page |
+
+**Staleness must be visible on the projection itself.** Every artifact shows when it was last rendered and from what. A manually synced view that's past its freshness window says so plainly, on the page, where the reader is looking. A stale view that looks current is the worst failure a projection can have, because people make decisions from it. — _decided, not yet exercised_
+
+_The lesson behind this rule:_ a dashboard showing stale financial numbers, silently, because the sync step hadn't run. Nothing on the page said so.
+
+## Provenance — **proven**
+
+Each artifact carries a pointer to its sources and the time it was rendered, inside the artifact, not just in the registry. A projection that has been copied, shared or screenshotted can still say where it came from and how old it is.
+
+---
+
+## Views that accept input — _decided, not yet exercised_
+
+Some projections invite interaction: a checklist, a form, a "mark done" button. Input on a projection **goes back to the source files**, through the sphere, and the projection re-renders from them. A view that stores its own state has quietly become a second source of truth, and the two will drift.
+
+If a view genuinely needs to hold its own data, it isn't a projection any more. Declare it as a source, with a layer contract like any other, so the sphere knows it's truth. See [registries](registries.md).
+
+---
+
+## Templates — **proven**
+
+- **Shared chrome:** projections share a stylesheet and a small set of components (top bar, cards, tables, freshness badge), so every view looks like part of the same sphere.
+- **Themes vary; structure doesn't.** A build or sphere can re-theme everything (colors, type, density) through design tokens, without touching a single projection's structure.
+- **Extract a template on the third repetition, never before.** The first two projections of a kind are written directly. When a third is needed, the shared shape is clear enough to extract. Extracting earlier guesses at a pattern that doesn't exist yet.
+
+## Legacy views
+
+Views built before a sphere adopted this structure, by hand and unregistered, are **registered as legacy** rather than rewritten or ignored. Each gets a registry entry with `legacy: true` and an honest freshness declaration. They don't have to be rebuilt to be known.
+
+---
+
+## Surface: where artifacts live — **proven**
+
+`surface/` holds everything a sphere renders or exchanges, organized by kind:
+
+```
+surface/
+├── projections/
+│   ├── assets/          shared stylesheet, components, theme tokens
+│   └── <name>/          one folder per projection
+├── state/               live machine state (heartbeats, indexes); disposable, never committed
+├── raw/                 incoming files the human dropped in, not yet processed
+├── inbox/               things arriving from outside: other spheres, exports
+└── outbox/              things staged to leave the sphere
+```
+
+**Everything is private by default.** Each projection declares its sharing: `private` (only the human), `shared` (named people), or `public`. Making something shared or public is an outbound act: it passes the outbound guard, and the human approves it. Facts about other people never appear in a shared or public projection unless the human explicitly includes them. See [knowledge](knowledge.md#facts-about-other-people).
+
+---
+
+## Matter, not machinery
+
+Projections show the human's **matter**: their work, their world, their growth. They don't show the sphere's **machinery**: lenses, frames, registries, sessions, git.
+
+- At **core profile** this is absolute. A non-technical human's projections are a home page, "my things," and a witness view of how they're growing. Nothing else.
+- At **standard and full profile**, machinery views are allowed as an option for people building their sphere: a map of layers, a view of the protocol. They're never the default front door.
+
+**Witness views deserve care.** Seeing your own progress, wins and growth over time is one of the warmest things a sphere offers, and especially for people who'd never read a file. It's worth building well, in every build.
+
+---
+
+## A record like any other
+
+Each projection has a registry entry:
+
+```yaml
+- name: work-dashboard
+  kind: live                    # live | manually-synced | snapshot
+  freshness: on-open            # on-open | sync within 1 day | frozen
+  sources: [layers/work/index.md, layers/work/*/work.md]
+  home: surface/projections/work-dashboard/
+  sharing: private              # private | shared | public
+  template: dashboard
+  legacy: false
+```
+
+---
+
+## Open questions
+
+1. **Opening live projections.** A live projection that reads files when it opens usually needs a small local server. Browsers block a page opened straight from disk from reading other files. How does a non-technical human open one with a double-click? Options: the tooling starts a local viewer, or projections fall back to a snapshot rendered at every ground.
+2. **Projections on a phone.** Should builds ship a way to see projections away from the computer, and if so, what keeps that private?
+3. **Formats.** HTML is the default for rich views. Should a plain markdown projection be a first-class kind for spheres that only ever live inside a harness?
