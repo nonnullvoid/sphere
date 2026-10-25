@@ -33,7 +33,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 
 ## What can travel
 
-- **Public lenses and frames**, to anyone. **Protected** ones only to the people or spheres the human named.
+- **Public lenses and frames**, to anyone. **Protected** ones only to recipients the human chooses at the time of the export.
 - Each export includes only what its audience is allowed: a public build carries public items; a seed sent to a named collaborator can also carry protected ones.
 - **Registry structures** without their entries, **templates**, **shared assets**, **tooling**.
 - **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
@@ -73,6 +73,18 @@ Every sphere has a stable identity, so provenance always names spheres the same 
 | **id** | A UUID v7, created once at init and never changed. Practically unique, and sortable by when the sphere was born. | `01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88` |
 | **name** | A display name, chosen by the human. Unique where possible, but not guaranteed. | `ridgeline-worksphere` |
 | **version** | A tag for the sphere's shape, which changes when its protocol changes | `2026.10.3` |
+
+Identity lives in its own small file, `core/identity.json`, so tooling can read it without parsing anything else, and so provenance copies it exactly:
+
+```json
+{
+  "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88",
+  "name": "ridgeline-worksphere",
+  "version": "2026.10.3"
+}
+```
+
+`core/identity.json` itself travels in every export, since provenance needs it. It names the sphere and nothing about its human.
 
 **A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a structural frame, `sphere_identity`. Spheres can choose differently by swapping that frame.
 
@@ -139,5 +151,4 @@ Later, spheres may exchange shape directly over a network. The intended route is
 
 ## Open questions
 
-1. **Where identity lives.** In `sphere.md`'s identity block, or in its own small file such as `core/identity.json`?
-2. **Protected recipients.** How does a sphere record who a protected item may go to: by person, by sphere id, or both?
+_None open. Recording who protected items may go to, beyond the human's choice at each export, waits until spheres actually exchange with each other._

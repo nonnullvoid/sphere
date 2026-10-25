@@ -188,7 +188,7 @@ Every lens carries a **sharing level**, set when it's created:
 | Level | Who can receive it | Typical lenses |
 |---|---|---|
 | **public** | anyone: published builds, open repositories | how projections should behave; why grounding matters |
-| **protected** | people or spheres the human names | a team's working agreements; a family's routines |
+| **protected** | recipients the human chooses when sharing | a team's working agreements; a family's routines |
 | **private** | no one; it never leaves this sphere | the human's principles, rhythms, how they see themselves |
 
 When a lens is created, the sphere **proposes a level as a best guess and confirms it with the human.** If it can't tell, it asks. If nobody answers, the lens is **private**. Moving a lens to a more open level later is an outbound decision, and the human approves it.
