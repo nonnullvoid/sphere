@@ -22,7 +22,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 
 | Never travels | Where it lives |
 |---|---|
-| The human's identity, profile, principles | `core/user/` |
+| The human's persona and principles | `core/user/` |
 | The AI's persona and relationship with this human | `core/ai/` |
 | Session records, decisions, history | `core/records/`, `layers/world/history/` |
 | Layer data: work, knowledge, everything in `layers/` | `layers/` |
@@ -81,10 +81,13 @@ Identity lives in its own small file, `core/identity.json`, so tooling can read 
   "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88",
   "name": "ridgeline-worksphere",
   "version": "2026.10.3",
-  "architecture": "2.0",
-  "profile": "standard"
+  "born_from": { "architecture": "2.0", "build": "base-sphere 1.0.0" }
 }
 ```
+
+**`born_from` is lineage: fixed, recorded once at init.** It names the published architecture and build a sphere started from, or the parent sphere it was seeded from (by that sphere's id, name and version). A sphere that has evolved its own way since is still accurately described by where it began.
+
+**Which published architecture a sphere resembles today is worked out, not declared.** [Compare](#compare--unexercised) can report the closest published architecture and how the sphere differs from it, whenever someone asks. It's a description. **A sphere is never required to conform to an architecture.** Its human decides how it grows.
 
 `core/identity.json` itself travels in every export, since provenance needs it. It names the sphere and nothing about its human.
 
@@ -103,21 +106,20 @@ Every seed carries `core/provenance.json`:
     "name": "ridgeline-worksphere",
     "version": "2026.10.3"
   },
+  "born_from": { "architecture": "2.0", "build": "base-sphere 1.0.0" },
   "grain": "dehydrated",
-  "architecture": "2.0",
-  "profile": "standard",
   "commit": "a1b2c3d",
   "exported_at": "2026-10-25T14:32:00Z"
 }
 ```
 
-With it, anything that later comes from this seed can say exactly which sphere, which version of it, and which architecture it came from.
+With it, anything that later comes from this seed can say exactly which sphere, which version of it, and which lineage it came from.
 
 ---
 
 ## Init: starting a sphere from a seed — _used once by hand; not yet exercised from a published build_
 
-A new sphere begins as a copy of a seed, usually a published build. **Init** is the first conversation, where the sphere learns who its human is and fills its empty slots: profile, principles, a first piece of work. Init is co-authored like everything else: the human talks, the AI drafts, the human confirms. See [profiles](profiles.md) for how init differs at core profile.
+A new sphere begins as a copy of a seed, usually a published build. **Init** is the first conversation, where the sphere learns who its human is and fills its empty slots: the human's persona, principles, a first piece of work. Init is co-authored like everything else: the human talks, the AI drafts, the human confirms. For a non-technical human, init asks about their life and never about structure.
 
 ---
 
@@ -135,13 +137,42 @@ A new sphere begins as a copy of a seed, usually a published build. **Init** is 
 
 ## Compare — _unexercised_
 
-**Compare** shows how two spheres differ in shape: which lenses, frames and layers each has, and where shared ones have diverged. Because every sphere declares its architecture version, the comparison is measured against a common anchor rather than guessed at. Compare reads shape only. It never needs either sphere's data.
+**Compare** shows how two spheres differ in shape: which lenses, frames and layers each has, and where shared ones have diverged. It can also compare a sphere against a published architecture, to report the closest match. Because every sphere records its lineage, a comparison can start from what they had in common. Compare reads shape only. It never needs either sphere's data.
 
 ## Upgrading from a newer build — _unexercised_
 
 A sphere started from a build can take in later versions of that build. This is absorb, applied to its own lineage: the new version's upgrade note (see [versions](VERSIONS.md)) says what changed, and the sphere proposes each change against the human's sphere as it actually is now. Nothing is overwritten. A sphere that has grown its own way keeps it.
 
 ---
+
+## Trusted spheres — _decided, not yet exercised_
+
+Spheres can let other spheres in, in specific and limited ways. For example, one person's sphere helps look after a partner's sphere: it keeps that sphere's machinery healthy and offers improvements, with authority the partner's sphere has granted.
+
+**Every sphere decides who it trusts.** It keeps its own list of trusted spheres in `core/trust.json`, and what each one may do:
+
+```json
+{
+  "trusted": [
+    {
+      "sphere": { "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88", "name": "ridgeline-lifesphere" },
+      "granted": ["read-projections", "propose-changes", "fix-drift"],
+      "granted_at": "2026-10-25",
+      "note": "Helps keep my sphere running"
+    }
+  ]
+}
+```
+
+- **Trust starts at nothing.** A trusted sphere can do only what it was explicitly granted, and grants are specific: reading projections, proposing changes, fixing drift, receiving protected lenses.
+- **Changes from a trusted sphere arrive as proposals,** unless direct changes were specifically granted. The trusting sphere's human still decides.
+- **Everything a trusted sphere does is recorded** in the trusting sphere, in plain words its human can read: what was looked at, what was proposed, what was changed.
+- **The trusting sphere can narrow or revoke any grant, at any time,** and the change is immediate. Trust given is never trust owed.
+- **Trust is one-way.** Being trusted by a sphere grants nothing in return.
+
+For a non-technical human, all of this happens in plain words: *"Rutvij's sphere can suggest changes and keep things tidy. Want to change that?"*
+
+**Honest limit:** until spheres can prove their identity (see [signing](#sphere-identity--decided-not-yet-exercised)), trust rests on how the humans set up access between their spheres. That's sound between people who share a home or a machine. Once trust has to cross a network, signing is what makes it safe.
 
 ## Transport
 

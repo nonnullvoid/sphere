@@ -14,5 +14,5 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [Projections](projections.md): How a sphere shows its state to humans.
 - [Guardrails](guardrails.md): Guardrails and the memory feedback loop.
 - [Replication](replication.md): How spheres reproduce and exchange.
-- [Profiles](profiles.md): Conformance profiles inside one architecture.
+- [Modes](modes.md): Switchable behaviors: how a sphere changes the way it talks and acts.
 - [VERSIONS](VERSIONS.md): Versioning policy and changelog.

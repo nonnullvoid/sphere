@@ -7,5 +7,5 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 ## Will cover
 
 - Architecture: `SPHERE-ARCH major.minor`. Major = breaking structural change; minor = additive.
-- Builds: independent semver, each declaring architecture version and profile.
+- Builds: independent semver, each declaring the architecture version it was built from.
 - Every release ships an upgrade note.

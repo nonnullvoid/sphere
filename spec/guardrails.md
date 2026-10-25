@@ -78,7 +78,7 @@ Most people come to a sphere already carrying rules: instruction files, a harnes
 
 ---
 
-## At core profile
+## For a non-technical human
 
 The human never hears the word guardrail. When they say *"don't ever do that again,"* the sphere answers in plain words (*"Got it. I'll always check with you before sending anything to your family group."*) and the rule is recorded behind the scenes.
 

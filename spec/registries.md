@@ -117,9 +117,9 @@ A failed check doesn't block the ground. It reports what's wrong and offers to f
 
 ## Keep them lean — **proven**
 
-A registry holds a **name, a one-line description and a pointer**. It never copies content from the files it lists. Its job is to tell the sphere where to look, so the sphere can read only what a task needs. See loading in [profiles](profiles.md).
+A registry holds a **name, a one-line description and a pointer**. It never copies content from the files it lists. Its job is to tell the sphere where to look, so the sphere can read only what a task needs.
 
-At **core profile**, registries exist but are never mentioned. They're how the sphere finds its way around, not something the human manages.
+For a **non-technical human**, registries exist but are never mentioned. They're how the sphere finds its way around, not something the human manages.
 
 ---
 

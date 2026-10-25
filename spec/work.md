@@ -57,7 +57,7 @@ A flat list of work is a tree that is one level deep. Nothing else changes as wo
 - **A node is broken down** by creating child nodes that point to it.
 - **Folders never nest.** Every node lives at `layers/work/<node>/` whatever its depth. The tree exists only in the `parent:` fields, which refer to node names rather than paths.
 
-A simple sphere never nests, and never sees the word tree. A heavy sphere nests as deep as it needs to. Moving between the two needs no migration. Profiles differ in how they present work, not in how they store it.
+A simple sphere never nests, and never sees the word tree. A heavy sphere nests as deep as it needs to. Moving between the two needs no migration. Spheres differ in how they present work, not in how they store it.
 
 Common shapes, as labels rather than types: a **stream** (an ongoing area), a **project** (has a finish line), a **task** (one sitting or a few). All use the same two files.
 

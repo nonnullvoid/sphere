@@ -62,7 +62,7 @@ Serving is its own frame (`projection_serving`, under the projections lens), so 
 - **listens on this machine only,** never on the network, so a private projection stays private;
 - **lets a served projection write only to its declared source files.** This is how input reaches the source (see [Views that accept input](#views-that-accept-input--decided-not-yet-exercised)): the server is the path back, and nothing else is writable through it.
 
-At core profile, the human never sees any of this. They open "my things" and it works.
+A non-technical human never sees any of this. They open "my things" and it works.
 
 ## Stack — _decided, not yet exercised_
 
@@ -143,8 +143,8 @@ surface/
 
 Projections show the human's **matter**: their work, their world, their growth. They don't show the sphere's **machinery**: lenses, frames, registries, sessions, git.
 
-- At **core profile** this is absolute. A non-technical human's projections are a home page, "my things," and a witness view of how they're growing. Nothing else.
-- At **standard and full profile**, machinery views are allowed as an option for people building their sphere: a map of layers, a view of the protocol. They're never the default front door.
+- **For a non-technical human** this is absolute. Their projections are a home page, "my things," and a witness view of how they're growing. Nothing else.
+- **For people building their own sphere,** machinery views are allowed as an option: a map of layers, a view of the protocol. They're never the default front door.
 
 **Witness views deserve care.** Seeing your own progress, wins and growth over time is one of the warmest things a sphere offers, and especially for people who'd never read a file. It's worth building well, in every build.
 

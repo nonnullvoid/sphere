@@ -40,9 +40,9 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
 
 ### Level 1 — simple sessions (the default) — **proven**
 
-- **One branch for the whole sphere**, shared by every session: all sessions commit to `main`. (Branches per session are what level 2 adds.) Git is always present, but at core profile it's **invisible**: the tooling makes every commit and the human never sees the word.
+- **One branch for the whole sphere**, shared by every session: all sessions commit to `main`. (Branches per session are what level 2 adds.) Git is always present, but for a non-technical human it's **invisible**: the tooling makes every commit and the human never sees the word.
   - **Same machine:** sessions share one working folder and can see each other's uncommitted edits. Ground stages only what *this* session touched, so it never commits another session's half-finished work.
-  - **Several devices:** each device has its own copy of `main`. Ground pulls before committing and pushes after. If two devices changed the same shared file, the conflict surfaces there and is resolved by the tooling or the AI, never shown raw at core profile.
+  - **Several devices:** each device has its own copy of `main`. Ground pulls before committing and pushes after. If two devices changed the same shared file, the conflict surfaces there and is resolved by the tooling or the AI, never shown raw to a non-technical human.
 - A **session log** with one file per session in `core/records/sessions/`, named `YYYY-MM-DD-HHMM-<slug>.md`. Each file says which work the session touched and summarizes what happened.
 - `ground` = compact + session file + commit. Ground also adds a one-line pointer from the work's `progress.md` to the session file. `resume` = read the work's `progress.md`.
 - No worktrees, no branches per session, no tree vocabulary.
@@ -54,8 +54,8 @@ The rule behind this: **nobody meets an unfinished mechanism by accident.** Feat
 Concurrent sessions are normal: two windows, or a laptop and a phone. The layout keeps them out of each other's way:
 
 - **Per-session and per-work files** take most writes: session files and each work's `progress.md`.
-- **Shared files** (the work index, principles, profile) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
-- When a conflict still happens, **the tooling or the AI resolves it**. At core profile a raw merge conflict never reaches the human.
+- **Shared files** (the work index, principles, the human's persona) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
+- When a conflict still happens, **the tooling or the AI resolves it**. A raw merge conflict never reaches a non-technical human.
 
 #### Without git — fallback only
 
@@ -146,5 +146,5 @@ Documented so people who opt in know what they're choosing. Each will be address
 ## Open questions
 
 1. **The liveness threshold.** 30 minutes is a starting point; tune it from real use.
-2. **Conflict resolution at core profile.** What the tooling resolves by itself, and what it hands to the AI. To be designed with the session tooling.
+2. **Conflict resolution for non-technical humans.** What the tooling resolves by itself, and what it hands to the AI. To be designed with the session tooling.
 3. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.

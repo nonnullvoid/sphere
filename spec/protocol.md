@@ -104,7 +104,7 @@ core/protocol/
 
 Frames are grouped by the lens family they come from. — **proven** Procedure frames use the [Agent Skills format](https://agentskills.io/specification) as-is: a folder named after the skill (lowercase letters, numbers and hyphens), holding a `SKILL.md`. Skills a human imports before any lens exists go in `frames/_unattached/`. — _decided, not yet exercised_
 
-At **core profile** this structure is present but never shown. A non-technical human never sees the words lens or frame. They see the sphere behave the way they asked. See [profiles](profiles.md).
+For a **non-technical human**, this structure is present but never shown. They never see the words lens or frame. They see the sphere behave the way they asked. How plainly a sphere talks about itself is set by its [persona and modes](modes.md).
 
 ## Frontmatter — _draft; confirm fields against current practice_
 
