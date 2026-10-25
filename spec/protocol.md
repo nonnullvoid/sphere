@@ -1,6 +1,6 @@
 # Protocol
 
-_Status: draft 2, for review._ How a sphere holds what it understands about its human, the mechanics it derives from that understanding, and the vocabulary that invokes them.
+_Status: draft 3, for review._ How a sphere holds what it understands about its human, the mechanics it derives from that understanding, and the vocabulary that invokes them.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -115,6 +115,7 @@ lens: outbound-comms
 version: 3
 updated: 2026-10-24
 verified: true          # the human has confirmed this version
+sharing: public         # public | protected | private
 frames: [comms-guard, draft-message, unsent-drafts]
 ```
 
@@ -180,12 +181,21 @@ The human stays the authority throughout. The AI proposes; the human decides.
 
 ---
 
-## What travels — **unexercised** beyond one export
+## Sharing — _decided, not yet exercised_
 
-The protocol is the part of a sphere that can be shared; the human's data never is. Data stays home, protocol travels.
+Every lens carries a **sharing level**, set when it's created:
 
-- **Mechanism lenses** (how projections work, how sessions ground) can be shared and published.
-- **Self-lenses** (a person's principles, rhythms, how they position themselves) never travel. Builds ship them as empty **slots**, to be co-authored in each sphere.
+| Level | Who can receive it | Typical lenses |
+|---|---|---|
+| **public** | anyone: published builds, open repositories | how projections should behave; why grounding matters |
+| **protected** | people or spheres the human names | a team's working agreements; a family's routines |
+| **private** | no one; it never leaves this sphere | the human's principles, rhythms, how they see themselves |
+
+When a lens is created, the sphere **proposes a level as a best guess and confirms it with the human.** If it can't tell, it asks. If nobody answers, the lens is **private**. Moving a lens to a more open level later is an outbound decision, and the human approves it.
+
+**A frame can't be more open than its lens** unless the human explicitly says so. A frame derived from a private lens often restates that lens's content in its mechanics, so it inherits the lens's level by default.
+
+A private lens still shows up in an export as an **empty slot**. Another sphere can see *that* this sphere has a principles lens, never *what's in it*. Data stays home; protocol travels. See [replication](replication.md).
 
 See [replication](replication.md).
 

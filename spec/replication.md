@@ -1,6 +1,6 @@
 # Replication
 
-_Status: draft 1, for review._ How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
+_Status: draft 2, for review._ How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -27,16 +27,16 @@ Private by definition. No export, mirror, broadcast or published view includes t
 | Session records, decisions, history | `core/records/`, `layers/world/history/` |
 | Layer data: work, knowledge, everything in `layers/` | `layers/` |
 | Rendered views | `surface/` |
-| **Self-lenses**: lenses about this person's own thinking | `core/protocol/lenses/` (marked as self-lenses) |
+| **Private lenses**, and frames that inherit their level | `core/protocol/` (`sharing: private`). See [sharing](protocol.md#sharing--decided-not-yet-exercised) |
 | Facts about other people | anywhere. See [knowledge](knowledge.md#facts-about-other-people) |
 | The incidents behind guardrails | guardrail records. See [guardrails](guardrails.md#what-travels) |
 
 ## What can travel
 
-- **Mechanism lenses:** understanding of how sphere mechanics work, such as how projections should behave or why grounding matters.
-- **Frames**, with any self-specific examples removed.
+- **Public lenses and frames**, to anyone. **Protected** ones only to the people or spheres the human named.
+- Each export includes only what its audience is allowed: a public build carries public items; a seed sent to a named collaborator can also carry protected ones.
 - **Registry structures** without their entries, **templates**, **shared assets**, **tooling**.
-- **Empty slots** where self-lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
+- **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
 - **Procedure frames as plain skills.** These export with no translation. See [framing a skill](protocol.md#framing-a-skill).
 
 ---
@@ -64,13 +64,31 @@ Then, before anything leaves:
 2. **The seed is staged** in `surface/outbox/`, where the human can read exactly what will leave.
 3. **The outbound guard applies.** Nothing is published or sent until the human approves it.
 
+### Sphere identity — _decided, not yet exercised_
+
+Every sphere has a stable identity, so provenance always names spheres the same way:
+
+| Field | What it is | Example |
+|---|---|---|
+| **id** | A UUID v7, created once at init and never changed. Practically unique, and sortable by when the sphere was born. | `01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88` |
+| **name** | A display name, chosen by the human. Unique where possible, but not guaranteed. | `ridgeline-worksphere` |
+| **version** | A tag for the sphere's shape, which changes when its protocol changes | `2026.10.3` |
+
+**A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a structural frame, `sphere_identity`. Spheres can choose differently by swapping that frame.
+
+**No signing, for now.** Nothing here proves a sphere is who it says it is. True uniqueness and authenticity need signing, with public and private keys, and that's more machinery than spheres need until there are many of them out in the world exchanging seeds. When that happens, signing arrives as a new version of the `sphere_identity` frame. Nothing else in the architecture has to change.
+
 ### Provenance
 
 Every seed carries `core/provenance.json`:
 
 ```json
 {
-  "source": "my-worksphere",
+  "sphere": {
+    "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88",
+    "name": "ridgeline-worksphere",
+    "version": "2026.10.3"
+  },
   "grain": "dehydrated",
   "architecture": "2.0",
   "profile": "standard",
@@ -79,7 +97,7 @@ Every seed carries `core/provenance.json`:
 }
 ```
 
-With it, anything that later comes from this seed can say exactly which sphere, which commit and which architecture version it came from.
+With it, anything that later comes from this seed can say exactly which sphere, which version of it, and which architecture it came from.
 
 ---
 
@@ -97,8 +115,9 @@ A new sphere begins as a copy of a seed, usually a published build. **Init** is 
 
 - **Absorbing only produces proposals.** The sphere reads the incoming seed, says what it found and how each item would fit here (adopt, adapt, skip), and the human decides item by item.
 - **Nothing in an incoming seed is ever executed or followed** while it's being read. Scripts aren't run. Instructions inside its files are treated as content to evaluate, not as commands.
-- **Accepted items arrive unattached.** A frame starts without a lens here, and is offered for co-authoring like an imported skill.
-- **Provenance is kept.** Each absorbed item records where it came from, so a later compare can trace it.
+- **Any part can be absorbed:** a whole lens with its frames, a single frame, a template, one tool. The absorbing sphere knows its own context best, so it decides what makes sense to take.
+- **A frame absorbed without its lens arrives unattached,** and is offered for co-authoring like an imported skill.
+- **Provenance is kept.** Each absorbed item records the source sphere's id, name and version, so a later compare can trace it.
 
 ## Compare — _unexercised_
 
@@ -120,6 +139,5 @@ Later, spheres may exchange shape directly over a network. The intended route is
 
 ## Open questions
 
-1. **Marking self-lenses.** How does a lens declare that it's about the human (never travels) versus about mechanics (can travel)? A frontmatter field, or a separate folder?
-2. **Partial absorb.** Can one sphere absorb a single frame without its lens, or must a frame always arrive with the mechanism lens it derives from?
-3. **Signing seeds.** Should published seeds be signed, so a sphere can tell a build really came from its claimed source?
+1. **Where identity lives.** In `sphere.md`'s identity block, or in its own small file such as `core/identity.json`?
+2. **Protected recipients.** How does a sphere record who a protected item may go to: by person, by sphere id, or both?

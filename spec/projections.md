@@ -135,7 +135,7 @@ surface/
 └── outbox/              things staged to leave the sphere
 ```
 
-**Everything is private by default.** Each projection declares its sharing: `private` (only the human), `shared` (named people), or `public`. Making something shared or public is an outbound act: it passes the outbound guard, and the human approves it. Facts about other people never appear in a shared or public projection unless the human explicitly includes them. See [knowledge](knowledge.md#facts-about-other-people).
+**Everything is private by default.** Each projection declares its sharing level, using the same three levels as [lenses](protocol.md#sharing--decided-not-yet-exercised): `private` (only the human), `protected` (named people), or `public`. Opening a projection up is an outbound act: it passes the outbound guard, and the human approves it. Facts about other people never appear in a protected or public projection unless the human explicitly includes them. See [knowledge](knowledge.md#facts-about-other-people).
 
 ---
 
@@ -161,7 +161,7 @@ Each projection has a registry entry:
   freshness: on-open            # on-open | sync within 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
   home: surface/projections/work-dashboard/
-  sharing: private              # private | shared | public
+  sharing: private              # private | protected | public
   template: dashboard
   legacy: false
 ```
