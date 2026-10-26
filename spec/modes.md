@@ -29,7 +29,7 @@ core/ai/personas/
 ```
 
 - **Personas share the sphere's memory.** They read the same work, knowledge and lenses. A persona is a character, not a separate mind. If something needs its own separate memory, it's a separate sphere.
-- **One persona is active at a time.** One is marked as the default, and a session starts with it.
+- **One persona is active per session.** Each session has exactly one persona and one mode at a time. Different sessions can run different personas and modes at once, for example a terse engineering persona in one window and a reflective mode in another. One persona is marked as the default, and a new session starts with it.
 - **Switching persona is always explicit,** because it's a bigger change than switching mode: *"switch to Forge."* The sphere can suggest a switch, but never makes one silently.
 - **Modes work with any persona,** unless a mode says it belongs to one.
 - **Guardrails hold for every persona.** No persona is exempt.
@@ -54,7 +54,7 @@ A sphere with one persona simply has one file in `core/ai/personas/`.
 
 - **Explicit:** *"switch to social mode."*
 - **Suggested and confirmed:** *"This sounds personal. Want me to switch to the reflective mode?"* The sphere never switches silently.
-- A mode lasts for the session unless the human says otherwise.
+- A mode belongs to the session it was chosen in, and lasts for that session unless the human says otherwise. Switching mode in one session doesn't change any other session.
 
 ---
 
