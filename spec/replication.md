@@ -23,7 +23,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 | Never travels | Where it lives |
 |---|---|
 | The human's persona and principles | `core/user/` |
-| The AI's persona and relationship with this human | `core/ai/` |
+| The AI's personas and their relationship with this human | `core/ai/` |
 | Session records, decisions, history | `core/records/`, `layers/world/history/` |
 | Layer data: work, knowledge, everything in `layers/` | `layers/` |
 | Rendered views | `surface/` |

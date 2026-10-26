@@ -83,7 +83,7 @@ What's new:
 - **Projections:** never the source of truth, visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
 - **Guardrails:** incident-born rules with reasons, kept few, overridable except when marked hard. ([guardrails](guardrails.md))
 - **Replication:** sharing levels, allowlist-built seeds, untrusted absorb, sphere identity and lineage, trusted spheres. ([replication](replication.md))
-- **Modes:** switchable behavior on top of a persona. _Stub._ ([modes](modes.md))
+- **Modes:** a sphere can have several personas, with switchable modes on top of them. ([modes](modes.md))
 
 ---
 

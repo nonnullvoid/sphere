@@ -40,10 +40,10 @@ my-sphere/
 │   ├── identity.json        id, name, version, and where this sphere was born from
 │   ├── trust.json           spheres this one trusts, and what each may do
 │   ├── engine.md            runtime rules: senses, instincts, the state machine
-│   ├── ai/persona.md        who the AI is in this sphere
+│   ├── ai/personas/         who the AI is in this sphere (one or more)
 │   ├── user/persona.md      who the human is
 │   ├── protocol/            lenses, frames, and the protocol registry
-│   ├── modes/               switchable behaviors on top of the persona
+│   ├── modes/               switchable behaviors on top of a persona
 │   ├── records/sessions/    one file per session
 │   ├── layers.md            layer registry
 │   └── surface.md           surface registry
@@ -116,7 +116,7 @@ These run through every chapter:
 | [projections](spec/projections.md) | Views, freshness, static and served, the stack, surface |
 | [guardrails](spec/guardrails.md) | Incident-born rules, keeping them few, overrides |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
-| [modes](spec/modes.md) | Switchable behaviors on top of a persona _(stub)_ |
+| [modes](spec/modes.md) | Personas, and switchable behaviors on top of them |
 | [versions](spec/VERSIONS.md) | Architecture, build and sphere versions; upgrades; what's new in 1.0 |
 
 For how to grow a sphere well, see [BUILDING.md](BUILDING.md).

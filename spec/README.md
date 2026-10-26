@@ -14,5 +14,5 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [Projections](projections.md): views, freshness, static and served, the stack, surface
 - [Guardrails](guardrails.md): incident-born rules, keeping them few, overrides
 - [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres
-- [Modes](modes.md): switchable behaviors on top of a persona _(stub)_
+- [Modes](modes.md): personas, and switchable behaviors on top of them
 - [Versions](VERSIONS.md): architecture, build and sphere versions; upgrades; what's new in 1.0
