@@ -1,18 +1,18 @@
 # SPHERE-ARCH 1.0 (draft)
 
-_Work in progress on the `next` branch, toward the first stable architecture. `ARCHITECTURE.md` at the repo root will be rewritten as the overview and table of contents. Until then, `main` shows v0.1._
+_Work in progress on the `next` branch, toward the first stable architecture. Start with the overview, [ARCHITECTURE.md](../ARCHITECTURE.md). Until release, `main` shows v0.1._
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
 ## Chapters
 
-- [Protocol](protocol.md): Lens and frame: how a sphere holds understanding and the mechanics derived from it.
-- [State](state.md): The sphere as a state machine: sessions, ground, resume.
-- [Work](work.md): Work tracking as a boundary contract.
-- [Knowledge](knowledge.md): The world/knowledge layer: the sphere's model of what it operates in.
-- [Registries](registries.md): Registries as generated views over contracts that live next to the data.
-- [Projections](projections.md): How a sphere shows its state to humans.
-- [Guardrails](guardrails.md): Guardrails and the memory feedback loop.
-- [Replication](replication.md): How spheres reproduce and exchange.
-- [Modes](modes.md): Switchable behaviors: how a sphere changes the way it talks and acts.
-- [VERSIONS](VERSIONS.md): Versioning policy and changelog.
+- [Protocol](protocol.md): lenses, frames, skills, the registry, co-authoring, sharing levels
+- [State](state.md): sessions at two levels, ground and resume, the session registry, commits
+- [Work](work.md): work nodes, depth as a dial, the index, archiving
+- [Knowledge](knowledge.md): the world layer, graded and dated facts, facts about other people
+- [Registries](registries.md): how each registry is maintained, and how drift is caught
+- [Projections](projections.md): views, freshness, static and served, the stack, surface
+- [Guardrails](guardrails.md): incident-born rules, keeping them few, overrides
+- [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres
+- [Modes](modes.md): switchable behaviors on top of a persona _(stub)_
+- [Versions](VERSIONS.md): architecture, build and sphere versions; upgrades; what's new in 1.0
