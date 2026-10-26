@@ -8,7 +8,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 ## Persona and modes
 
-Two layers, kept distinct:
+Three things, kept distinct:
 
 | | What it is | Changes | Lives in |
 |---|---|---|---|
