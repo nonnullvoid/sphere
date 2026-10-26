@@ -75,11 +75,12 @@ The first public release (v0.1, April 2026) was an early sketch. It described a 
 
 What's new:
 
-- **Protocol:** lenses and frames. Every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
+- **Protocol:** lenses and frames. Frames derive from one or more lenses and declare the data they touch; every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
 - **State:** two session levels, simple by default and the session tree opt-in. A session registry with three homes for three kinds of truth. ([state](state.md))
 - **Work:** nodes as `work.md` + `progress.md`, depth as a dial, a generated index, archiving. ([work](work.md))
 - **Knowledge:** domain → subject → item, graded and dated facts, facts proposed at ground, care for facts about other people. ([knowledge](knowledge.md))
-- **Registries:** maintained per registry, checked by tooling, whatever the mode. ([registries](registries.md))
+- **Registries:** conventions over configuration; stable interfaces with swappable parts; maintained per registry, checked by tooling, whatever the mode. ([registries](registries.md))
+- **Evolution:** crystallization sized from one-off to refactor; reflection with four findings; migrations sized by blast radius (targeted, phased, fork). ([evolution](evolution.md))
 - **Projections:** never the source of truth, visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
 - **Guardrails:** incident-born rules with reasons, kept few, overridable except when marked hard. ([guardrails](guardrails.md))
 - **Replication:** sharing levels, allowlist-built seeds, untrusted absorb, sphere identity and lineage, trusted spheres. ([replication](replication.md))

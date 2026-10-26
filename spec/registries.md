@@ -1,6 +1,6 @@
 # Registries
 
-_Status: draft 2, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
+_Status: draft 3, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -17,6 +17,61 @@ The trap is that a list kept by hand drifts. Something changes, nobody updates t
 The test for any file: if you could delete it and rebuild it from other files, it's a view. If you couldn't, it's truth, and nothing else should duplicate it.
 
 **How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the structural frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, whatever its mode.
+
+---
+
+## Conventions and swappable parts
+
+Registries are one instance of a broader stance: **a sphere is a framework, not a one-off arrangement of files.** Two disciplines make that real.
+
+**Convention over configuration.** — **proven** Every part of a sphere has a standard shape it's assumed to have:
+- a layer has a contract
+- a work node has a type and a status
+- a session has a record
+- a projection has a registered home
+
+Conforming costs nothing; only *deviating* costs configuration. A sphere may deviate, but **deviation is explicit**, a configured exception the sphere knows about, never a silent one. If something needs special wiring to work, first ask whether it should become a convention instead. The payoff is that a sphere seeded from another comes up working, because it follows the same conventions.
+
+**Stable interface, swappable implementation.** — _designed; swapping unexercised_ The *interface* a part must honor is fixed and written down in its registry. The *implementation* behind it is free to vary. A sphere can replace how it tracks work, or how it stores knowledge, with its own design and keep running, **as long as the new part honors the registered interface.** The test of a real interface: could another sphere's version slot in behind it? A registry that lists only *what exists*, and never the contract it all satisfies, can't support that. **Name the interface, or it isn't swappable.**
+
+This is the mechanism behind spheres growing their own way while still working with each other. See [replication](replication.md).
+
+## The registry pattern — **proven**
+
+Every registry has the same four properties:
+
+| Property | Means |
+|---|---|
+| **An index** | It holds *what exists* and *where*. The content itself lives elsewhere. |
+| **An explicit contract** | If it isn't in the registry, the sphere treats it as not existing. Nothing is found by scanning folders. |
+| **It declares the interface** | Not just which items exist, but the contract they satisfy |
+| **It's checked** | A [drift check](#drift-checks--proven) verifies it at ground, whatever its maintenance mode |
+
+### Where a registry lives — _decided, not yet exercised_
+
+Placement follows from two questions. It's never assigned case by case.
+
+1. **Source or view?** Each item holds its own truth (its identity, its links, its definition) in its own file. A registry over items that have their own files is a **view**. It's a **source** only when its items have no other home. Fast-changing runtime state (heartbeats, last-rendered times) is neither: it's a disposable side file, never committed. See [state](state.md#the-session-registry).
+2. **For a view, where does it live?** With its items, by default. It moves only as far as it must to be seen when it's needed:
+   - **in `core/`** if it's needed before anything else loads (the layer registry, loading indexes);
+   - **in `surface/state/`** if it must show live state *across* sessions (which sessions are running right now);
+   - **otherwise, next to its items** (the work index sits in `layers/work/`).
+
+With [session trees](state.md#level-2--the-session-tree-opt-in--advanced), two views point in opposite directions. Each session should see only *committed* work, so the work index stays with the work, on each session's branch. But knowing which sessions are live is the whole point of the session state, so it lives in shared, always-latest space. Same pattern, opposite answers, because their visibility needs are opposite.
+
+### Who owns a registry
+
+A separate question from where it lives:
+- **Structural registries** describe the sphere's anatomy: the layers, surface and protocol registries. They belong to the sphere's own framework frames.
+- **Content registries** catalogue a domain's items: work, world, projections, sessions. They belong to that domain's frames.
+
+Don't centralize content registries, and don't scatter structural ones.
+
+### Senses — _decided, not yet exercised_
+
+- `structure-changed`: a layer, surface area or other structural part was added, removed or restructured. Its registry is now stale and is rebuilt at ground.
+- `convention-violated`: something deviates from a convention without a configured exception.
+- `component-swapped`: a part was replaced behind its interface.
 
 ---
 
@@ -69,7 +124,8 @@ layer: work
 depth: foundation           # foundation | utility | optional
 depends_on: [world]
 holds: work nodes, their status and progress
-requires: []                # what this layer needs another sphere to have before it can be shared
+interface: work nodes with type, status, parent and next action; a generated index   # what any replacement must honor
+requires: []                # files that must travel with this layer when the sphere is seeded
 ---
 ```
 

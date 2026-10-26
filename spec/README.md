@@ -10,7 +10,8 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [State](state.md): sessions at two levels, ground and resume, the session registry, commits
 - [Work](work.md): work nodes, depth as a dial, the index, archiving
 - [Knowledge](knowledge.md): the world layer, graded and dated facts, facts about other people
-- [Registries](registries.md): how each registry is maintained, and how drift is caught
+- [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught
+- [Evolution](evolution.md): how a sphere grows, reflects on itself, and migrates safely
 - [Projections](projections.md): views, freshness, static and served, the stack, surface
 - [Guardrails](guardrails.md): incident-born rules, keeping them few, overrides
 - [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres

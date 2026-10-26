@@ -87,6 +87,8 @@ A sphere separates **why** from **how**:
 
 Lenses and frames are **co-authored**. The human brings the understanding; the AI drafts; the human reviews and iterates; nothing is captured without the human's instruction. When understanding changes, everything derived from it is revisited. See [protocol](spec/protocol.md).
 
+**Evolution** keeps it healthy. The sphere notices repeated patterns and friction, proposes changes sized to how big they are, and announces each one so you learn its vocabulary by example. See [evolution](spec/evolution.md).
+
 **Guardrails** grow from near-misses: each one is a rule with its reason, kept few, and always overridable except where the human has marked it hard. See [guardrails](spec/guardrails.md).
 
 ---
@@ -100,7 +102,8 @@ These run through every chapter:
 3. **Everything is readable.** Plain files, plain words. If a human can't audit it, it doesn't belong in a sphere.
 4. **Promise boundaries, not ambience.** A sphere guarantees what's true at the start and end of a session, not continuous perfection in between.
 5. **Honest status.** Every chapter marks what's **proven** in daily use, what's **advanced** with known sharp edges, and what's still **unexercised**.
-6. **Never against the human's will.** A sphere records where it came from and can compare itself to a published architecture, but nothing forces it to conform. See [versions](spec/VERSIONS.md).
+6. **Conventions, with swappable parts.** Every part has a standard shape, and any part can be replaced by another that honors the same interface. See [registries](spec/registries.md#conventions-and-swappable-parts).
+7. **Never against the human's will.** A sphere records where it came from and can compare itself to a published architecture, but nothing forces it to conform. See [versions](spec/VERSIONS.md).
 
 ---
 
@@ -112,7 +115,8 @@ These run through every chapter:
 | [state](spec/state.md) | Sessions at two levels, ground and resume, the session registry, commits |
 | [work](spec/work.md) | Work nodes, depth as a dial, the index, archiving |
 | [knowledge](spec/knowledge.md) | The world layer, graded and dated facts, facts about other people |
-| [registries](spec/registries.md) | How each registry is maintained, and how drift is caught |
+| [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |
+| [evolution](spec/evolution.md) | How a sphere grows, reflects on itself, and migrates safely |
 | [projections](spec/projections.md) | Views, freshness, static and served, the stack, surface |
 | [guardrails](spec/guardrails.md) | Incident-born rules, keeping them few, overrides |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
