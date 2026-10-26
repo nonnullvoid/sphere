@@ -1,6 +1,6 @@
 # Work
 
-_Status: draft 2. A starting point for v2.0; a more flexible work model is expected in a later version._ How a sphere tracks the work its human is doing: what a piece of work looks like on disk, how it grows from a flat list into a tree, and what sessions promise to keep true.
+_Status: draft 2. A starting point for architecture 1.0; a more flexible work model is expected in a later version._ How a sphere tracks the work its human is doing: what a piece of work looks like on disk, how it grows from a flat list into a tree, and what sessions promise to keep true.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

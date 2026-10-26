@@ -1,6 +1,6 @@
-# SPHERE-ARCH v2.0 (draft)
+# SPHERE-ARCH 1.0 (draft)
 
-_Work in progress on the `v2` branch. `ARCHITECTURE.md` at the repo root will be rewritten as the overview and table of contents. Until then, `main` shows v0.1._
+_Work in progress on the `v2` branch, toward the first stable architecture. `ARCHITECTURE.md` at the repo root will be rewritten as the overview and table of contents. Until then, `main` shows v0.1._
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

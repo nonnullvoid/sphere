@@ -81,7 +81,7 @@ Identity lives in its own small file, `core/identity.json`, so tooling can read 
   "id": "01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88",
   "name": "ridgeline-worksphere",
   "version": "2026.10.3",
-  "born_from": { "architecture": "2.0", "build": "base-sphere 1.0.0" }
+  "born_from": { "architecture": "1.0", "build": "base-sphere 1.0.0" }
 }
 ```
 
@@ -106,7 +106,7 @@ Every seed carries `core/provenance.json`:
     "name": "ridgeline-worksphere",
     "version": "2026.10.3"
   },
-  "born_from": { "architecture": "2.0", "build": "base-sphere 1.0.0" },
+  "born_from": { "architecture": "1.0", "build": "base-sphere 1.0.0" },
   "grain": "dehydrated",
   "commit": "a1b2c3d",
   "exported_at": "2026-10-25T14:32:00Z"

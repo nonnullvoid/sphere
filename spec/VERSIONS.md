@@ -10,7 +10,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 | What's versioned | Scheme | Who sets it | Example |
 |---|---|---|---|
-| **The architecture**: this spec | `SPHERE-ARCH major.minor` | the published repository | `SPHERE-ARCH 2.0` |
+| **The architecture**: this spec | `SPHERE-ARCH major.minor` | the published repository | `SPHERE-ARCH 1.0` |
 | **A build**: a ready-to-use sphere in the repository | semantic versioning, per build | the published repository | `base-sphere 1.0.0` |
 | **A sphere**: one person's living sphere | its own tag, by its own scheme | the sphere, through its `sphere_identity` frame | `2026.10.3` |
 
@@ -22,10 +22,10 @@ They move independently. A build can get a bug-fix release without the architect
 
 A published architecture version is a **reference point**: something a sphere can say it was born from, and something [compare](replication.md#compare--unexercised) can measure a sphere against. **It is never a contract.** A sphere that has grown away from its architecture isn't out of compliance; it's simply further from that reference point, and compare can say how.
 
-- **Major** (`2.0` → `3.0`): a structural change, where something an older sphere relies on works differently. Examples: files move, a core concept is redefined, a layout changes.
-- **Minor** (`2.0` → `2.1`): additive. New chapters, new optional mechanics, new frames. Nothing an existing sphere relies on changes meaning.
+- **Major** (`1.0` → `2.0`): a structural change, where something an older sphere relies on works differently. Examples: files move, a core concept is redefined, a layout changes.
+- **Minor** (`1.0` → `1.1`): additive. New chapters, new optional mechanics, new frames. Nothing an existing sphere relies on changes meaning.
 - **Status tags move without a version change.** When something marked *unexercised* gets proven in real use, its tag is updated. That's a correction to the description, not a change to the architecture.
-- **Deprecation is announced a version ahead.** Anything that will change in the next major version is marked deprecated in the current one, with what replaces it.
+- **Deprecation is announced a version ahead.** — _decided_ Anything that will change in the next major version is marked deprecated in the current one, with what replaces it.
 
 ## Build versions — _decided, not yet exercised_
 
@@ -48,7 +48,7 @@ A sphere versions its own shape. How is up to its [`sphere_identity`](replicatio
 Every release of the architecture or a build ships an **upgrade note**. A living sphere reads it to decide what to take in:
 
 ```markdown
-## base-sphere 1.1.0 — built from SPHERE-ARCH 2.0
+## base-sphere 1.1.0 — built from SPHERE-ARCH 1.0
 
 ### What changed
 - Work dashboard shows `waiting_on` for paused nodes.
@@ -67,9 +67,13 @@ Every release of the architecture or a build ships an **upgrade note**. A living
 
 ---
 
-## SPHERE-ARCH 2.0 — what's new since v0.1
+## SPHERE-ARCH 1.0 — what's new since v0.1
 
-The first public release (v0.1, April 2026) described a sphere with a single protocol file, layer registries kept by hand inside the orchestrator, and an untyped output folder. Version 2.0 is mostly a backport of what two spheres in daily use worked out since:
+The first public release (v0.1, April 2026) was an early sketch. It described a sphere with a single protocol file, layer registries kept by hand inside the orchestrator, and an untyped output folder.
+
+**1.0 is the first stable architecture.** Almost none of it is invented for this release. It's a backport of what two spheres in daily use worked out over six months, including what broke along the way. Where something hasn't been proven yet, the chapters say so with their status tags.
+
+What's new:
 
 - **Protocol:** lenses and frames. Every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
 - **State:** two session levels, simple by default and the session tree opt-in. A session registry with three homes for three kinds of truth. ([state](state.md))
@@ -85,5 +89,4 @@ The first public release (v0.1, April 2026) described a sphere with a single pro
 
 ## Open questions
 
-1. **Why "2.0" and not "1.0".** The public repository's first release was v0.1, and the earlier private generation of spheres was informally called v1. Calling this 2.0 matches how the project has talked about it. Calling it 1.0 would match what the public has seen. Which reads better to someone arriving fresh?
-2. **How long deprecated things live.** One major version ahead, or a fixed time?
+1. **How long deprecated things live.** One major version ahead, or a fixed time?
