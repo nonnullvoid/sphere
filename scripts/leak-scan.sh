@@ -15,9 +15,11 @@ regex="$(grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' "$patterns" | paste -sd
 
 case "${1:-}" in
   --history) hits="$(git rev-list --all | while read -r rev; do git grep -I -n -i -E "$regex" "$rev" -- . ":!$patterns" || true; done | sort -u)" ;;
+  --range)   read -r -a revs <<< "${2:?usage: --range <rev-range>}"
+             hits="$(git rev-list "${revs[@]}" | while read -r rev; do git grep -I -n -i -E "$regex" "$rev" -- . ":!$patterns" || true; done | sort -u)" ;;
   --staged)  hits="$(git grep --cached -I -n -i -E "$regex" -- . ":!$patterns" || true)" ;;
   "")        hits="$(git grep -I -n -i -E "$regex" -- . ":!$patterns" || true)" ;;
-  *) echo "usage: $0 [--staged|--history]" >&2; exit 2 ;;
+  *) echo "usage: $0 [--staged|--history|--range <rev-range>]" >&2; exit 2 ;;
 esac
 
 if [[ -n "$hits" ]]; then
