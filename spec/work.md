@@ -14,7 +14,7 @@ Work is anything the human is trying to change in the world: a job hunt, a kitch
 
 Three ideas shape everything below:
 
-1. **One kind of thing, recursive.** Every piece of work is a **work node**, and any node can hold other nodes. A node can be a task to its parent and a project in its own right. The sphere doesn't make anyone decide which. — **proven**
+1. **One kind of thing, recursive.** Every piece of work is a **work node**, and any node can hold other nodes. A node can be a task to its parent and a project in its own right; labels are a light judgment, never a structural rule. — **proven**
 2. **Plans give direction.** A plan says where the work is going and why this path, so what to do next comes from the plan, not from a fresh judgment call at every session. Plans live alongside the work, not inside it. — _decided, not yet exercised_
 3. **Plan is asserted; progress is measured.** A plan is what we believe the path is. Progress is what actually happened, read from evidence, never from checkboxes. **The gap between the two is the most useful signal the work layer produces.** — **proven**
 
@@ -24,19 +24,19 @@ And one promise: **at the start and end of every session, the work it touched is
 
 ## Work nodes — **proven**
 
-### Labels come from shape
+### Labels are a light judgment
 
-Nodes have no fixed type. What a node is called is **computed from its shape**, never set:
+A node's label says what *kind* of work it is. It's a judgment about the work's nature, not a fact about its structure, and it depends on where you stand: a task to its parent can be a project in its own right.
 
-| Shape | Called | Example |
+| Kind | What it is | Usually holds |
 |---|---|---|
-| Marked `ongoing`: it never finishes | **area** | health, home, finances, a standing responsibility |
-| Has children and an end | **project** | the kitchen renovation, a job hunt |
-| No children | **task** | call the plumber, book the onsite |
+| **area** | A part of life or work that never finishes: health, home, finances, a standing responsibility | projects, tasks |
+| **project** | An effort with an end: the kitchen renovation, a job hunt | projects, tasks |
+| **task** | A unit of doing: call the plumber, book the onsite | tasks (subtasks) |
 
-Nothing is typed by hand, so nothing ever needs re-typing. A task that gains children becomes a project automatically. A node that gains a parent is still the same node.
-
-The words are **display only.** A human can say "to-do," "chore" or "item," and the sphere understands. Builds can rename the labels for their audience: a code build might say workstream / project / task. The structure underneath never changes.
+- **The containment is convention, not a rule.** The sphere expects these shapes but doesn't enforce them. Any node can hold any other.
+- **`kind:` is optional.** When it's absent, the sphere infers a label from context. When a task grows into an effort of its own, the sphere can suggest calling it a project. The human decides, and relabeling is a one-word edit that moves nothing.
+- **The words are display only.** A human can say "to-do," "chore" or "item," and the sphere understands. Builds can rename the labels for their audience: a code build might say workstream / project / task. The structure underneath never changes.
 
 ### On disk
 
@@ -61,12 +61,13 @@ layers/work/
 ```yaml
 ---
 title: Google interview
+kind: task                      # optional: area | project | task; inferred when absent
 parent: jobhunt-may-2026        # a node name; absent for top-level work
 state: active                   # idea | planned | active | paused | done | archived
 paused:                         # when paused: blocked | waiting | on hold
 waiting_on:                     # required when paused
 focus: pinned                   # optional; see State and focus
-ongoing: false                  # true makes this an area
+ongoing: false                  # true for work that never finishes (every area, some tasks)
 progress: 3/7                   # optional; see Plan vs progress
 summary: onsite scheduled, phone done    # one line, refreshed at ground
 plan: [jobhunt-strategy@2]      # optional; the plan(s) and version this node follows
@@ -103,11 +104,11 @@ The node's history, in order and never rewritten. Each ground adds an entry: wha
 | **paused** | Stopped for a reason: **blocked**, **waiting**, or **on hold**. Always says on what, in `waiting_on:` | ⛔ ⏳ ⏸️ |
 | **done** | Finished | ✅ |
 | **archived** | Done and moved out of the way | 📦 |
-| _(ongoing)_ | An area: never done | ♾️ |
+| _(ongoing)_ | Never finishes: every area, and some tasks, like a practice routine | ♾️ |
 
 Paused always says why, because paused work without a reason quietly becomes forgotten work.
 
-**An area doesn't finish.** If someone marks an ongoing node done, the sphere asks whether the area itself has ended (a responsibility handed over, a chapter closed) or whether a project inside it finished.
+**Ongoing work doesn't finish.** If someone marks an ongoing node done, the sphere asks whether it has really ended (a responsibility handed over, a routine retired) or whether something inside it finished.
 
 **Focus: is it in view right now.** — _decided, not yet exercised_ Focus is independent of state. A paused node can stay pinned, and a fresh idea can be the focus of the week.
 
@@ -123,7 +124,7 @@ The marks are the base build's defaults. A [witness theme](projections.md#matter
 A flat list of work is a tree that is one level deep. Nothing else changes as work grows:
 
 - **A checklist item becomes a task** when it needs its own context or history. It's promoted into a node of its own, and its line in the checklist becomes a link.
-- **A task becomes a project** the moment it gets children.
+- **Any node can gain children:** a task gets subtasks, a project gets sub-projects. Nothing is restructured; the sphere may suggest a new label when the work's nature has changed.
 - **Work moves around the tree** by editing `parent:`, never by moving folders.
 
 A simple sphere never nests and never sees the word tree. A heavy one nests as deep as it needs. Moving between the two needs no migration.
@@ -265,7 +266,7 @@ Finished work is also evidence of growth. A build can add a **witness** layer th
 
 What any replacement for this work model has to honor, so that projections, sessions, plans and other spheres keep working (see [registries](registries.md#conventions-and-swappable-parts)):
 
-- Each node has a stable name, a `title`, a `parent`, a `state`, an optional `focus`, and a one-line `summary`.
+- Each node has a stable name, a `title`, an optional `kind`, a `parent`, a `state`, an optional `focus`, and a one-line `summary`.
 - A generated index lists every node with those fields.
 - Each node keeps a history that sessions can append to.
 - Nodes can name the plan and version they follow.

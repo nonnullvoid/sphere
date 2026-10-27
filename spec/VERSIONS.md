@@ -77,7 +77,7 @@ What's new:
 
 - **Protocol:** lenses and frames. Frames derive from one or more lenses and declare the data they touch; every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
 - **State:** two session levels, simple by default and the session tree opt-in. A session registry with three homes for three kinds of truth. ([state](state.md))
-- **Work:** recursive work nodes labeled by shape (area / project / task); separate state and focus; plans as a parallel, versioned hierarchy of phases and steps; plan asserted, progress measured; a tree view built from frontmatter; archiving. ([work](work.md))
+- **Work:** recursive work nodes with optional labels (area / project / task); separate state and focus; plans as a parallel, versioned hierarchy of phases and steps; plan asserted, progress measured; a tree view built from frontmatter; archiving. ([work](work.md))
 - **Knowledge:** domain → subject → item, graded and dated facts, facts proposed at ground, care for facts about other people. ([knowledge](knowledge.md))
 - **Registries:** conventions over configuration; stable interfaces with swappable parts; maintained per registry, checked by tooling, whatever the mode. ([registries](registries.md))
 - **Evolution:** crystallization sized from one-off to refactor; reflection with four findings; migrations sized by blast radius (targeted, phased, fork). ([evolution](evolution.md))
