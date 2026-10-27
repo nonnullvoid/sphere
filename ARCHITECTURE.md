@@ -49,7 +49,7 @@ my-sphere/
 │   └── surface.md           surface registry
 ├── layers/
 │   ├── work/                what the human is changing
-│   ├── world/               what's true: subjects, facts, history
+│   ├── knowledge/           what's true: domains, topics, facts and reads
 │   ├── projections/         how views are rendered
 │   └── …                    whatever else this sphere needs
 └── surface/                 rendered views, live state, inbox and outbox
@@ -114,7 +114,7 @@ These run through every chapter:
 | [protocol](spec/protocol.md) | Lenses, frames, skills, the registry, co-authoring, sharing levels |
 | [state](spec/state.md) | Sessions at two levels, ground and resume, the session registry, commits |
 | [work](spec/work.md) | Work nodes, depth as a dial, the index, archiving |
-| [knowledge](spec/knowledge.md) | The world layer, graded and dated facts, facts about other people |
+| [knowledge](spec/knowledge.md) | Domains, topics, facts and reads; how sure each is; how knowledge gets in |
 | [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |
 | [evolution](spec/evolution.md) | How a sphere grows, reflects on itself, and migrates safely |
 | [projections](spec/projections.md) | Views, freshness, static and served, the stack, surface |

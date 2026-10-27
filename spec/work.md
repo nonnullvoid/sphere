@@ -90,7 +90,7 @@ ongoing: false                  # true for work that never finishes (every area,
 progress: 3/7                   # optional; see Plan vs progress
 summary: onsite scheduled, phone done    # one line, refreshed at ground
 plan: [jobhunt-strategy@2]      # optional; the plan(s) and version this node follows
-connects-to: [interview-practice, world:career/offers]
+connects-to: [interview-practice, knowledge:career.offers]
 updated: 2026-10-26
 ---
 ```

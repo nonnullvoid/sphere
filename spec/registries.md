@@ -95,7 +95,7 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Surface** (`core/surface.md`) | every place rendered output goes, and who can see it | generated | each surface area's declaration | [projections](projections.md) |
 | **Protocol** (`core/protocol/protocol.md`) | intents, abilities, commands, senses | AI-maintained | lens and frame files: every command maps to a frame that exists, every layer it names exists | [protocol](protocol.md) |
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
-| **World** (`layers/world/registry.md`) | every domain and subject, and how they relate | generated, or AI-maintained if relationships need judgment | subject frontmatter | [knowledge](knowledge.md) |
+| **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
 | **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
 

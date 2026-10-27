@@ -84,7 +84,7 @@ A sphere defines a default stack for projections, so templates and shared stylin
 - name: portfolio
   kind: external
   home: ~/projects/portfolio-app    # outside the sphere
-  sources: [layers/world/subjects/finance/]
+  sources: [layers/knowledge/money/]
   sync: on-ground                    # on-ground | on-open | manual (shown as stale after 1 day)
   sharing: private
 ```
