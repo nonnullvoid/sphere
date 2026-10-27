@@ -38,21 +38,40 @@ A node's label says what *kind* of work it is. It's a judgment about the work's 
 - **`kind:` is optional.** When it's absent, the sphere infers a label from context. When a task grows into an effort of its own, the sphere can suggest calling it a project. The human decides, and relabeling is a one-word edit that moves nothing.
 - **The words are display only.** A human can say "to-do," "chore" or "item," and the sphere understands. Builds can rename the labels for their audience: a code build might say workstream / project / task. The structure underneath never changes.
 
+### Naming — _decided, not yet exercised_
+
+Every node has a **name**: unique, lowercase, and stable once given, so it can be referred to from anywhere: other nodes, plans, knowledge, a conversation. The AI picks a name that fits the context. Two default schemes work in most cases:
+
+| Scheme | Example | Best for | Trade-off |
+|---|---|---|---|
+| **Namespace** | `home.kitchen.plumbing` | Stable structure, like areas and the projects inside them | The name records where the node sits. Moving it means renaming it; the tooling fixes links inside the sphere, but references written elsewhere won't follow. |
+| **Prefix + number** | `TAX-20`, `dubai-trip-21` | Work that recurs or may move around the tree | Says less about where the node sits, but never changes when it moves |
+
+The folder is named after the node (`layers/work/home.kitchen.plumbing/`), and folders stay flat whatever the scheme. In the tree view, a child is shown relative to its parent (`.plumbing`).
+
 ### On disk
 
 ```
 layers/work/
 ├── <node>/
-│   ├── work.md          what the work is, now: its context, state and quick info
-│   └── progress.md      what happened, in order
+│   ├── work.md          what the work is, now: its context, state and quick info   (always)
+│   ├── progress.md      what happened, in order                                    (always)
+│   └── …                anything else this work needs                               (optional)
 ├── archived/
 │   └── <node>/          finished work, moved out of the way
-├── plans/               the parallel hierarchy of plans (see Plans)
+├── plans/
+│   └── <plan>/
+│       ├── plan.md      the plan's current version
+│       └── history.md   every version, and the discussion behind it
 ├── templates/           starting shapes for kinds of work
 └── index.md             generated: the work tree and its quick info
 ```
 
 **Folders never nest.** Every node lives at `layers/work/<node>/` whatever its depth. The tree exists only in each node's `parent:` field, which names its parent, so moving work around the tree never moves a folder.
+
+**Every node has exactly two required files.** Anything else the work needs (screenshots, a draft document, a spreadsheet, an `assets/` folder) can live in the node's folder too, but **every extra file is linked from the node's References**, so nothing in the folder goes unexplained. Templates can add extras for kinds of work.
+
+**One rule across the sphere:** every living thing is **a current-state file plus a history file**. Work nodes have `work.md` + `progress.md`, plans have `plan.md` + `history.md`, and sessions work the same way (see [state](state.md)).
 
 ### `work.md`
 
@@ -82,7 +101,7 @@ The **body** is the node's context: the distilled, current truth about this work
 - **Context:** what the work is, why it matters, and what done looks like.
 - **References:** knowledge subjects it depends on, lenses that govern it, related nodes, outside links.
 - **Checklist:** small things to do that don't yet need their own node (see [Depth is a dial](#depth-is-a-dial--proven)).
-- **Notes:** the discussion around the work, distilled: decisions in force, open questions, what was learned.
+- **Notes:** the discussion around the work, distilled: decisions in force, open questions, what was learned. When Notes outgrows `work.md`, it can move to its own `notes.md`, linked from References.
 
 ### `progress.md`
 
@@ -151,11 +170,18 @@ A **plan** is direction a human understands: *how I'm approaching the job hunt*,
 - **Plans have their own tree.** A plan can hold sub-plans: *interview prep* within *the job hunt*.
 - **The link lives on the node.** A node's `plan:` field names the plan and the version it follows (`jobhunt-strategy@2`). Reassigning a node to another plan, or a newer version, is a one-line edit. *Which nodes follow this plan* is computed from those links, so the truth lives in one place.
 
-### Plans are versioned
+### Plans are versioned: major and minor
 
-- **Each replan is a new version,** with a note on why it changed. Earlier versions are kept. Replanning is the system working, not failing.
-- **A new version is a proposal until the human approves it,** the same as a lens isn't in force until it's confirmed. Fixing a typo isn't a new version.
-- **Versions cascade.** When a plan moves to version 3, nodes still following version 2 are flagged: *"Three nodes follow v2 of the job-hunt strategy. v3 changed the sequence. Re-check them?"*
+A plan has two files: **`plan.md`**, its current version, and **`history.md`**, every version and the discussion behind each. Replanning is the system working, not failing.
+
+| Change | Version | What it takes |
+|---|---|---|
+| **A refinement:** re-ordering two steps, sharpening a phase, adding a detail | **minor** (`2.1` → `2.2`) | Recorded in `history.md` and mentioned at ground (*"Refined the job-hunt plan to 2.3: swapped two steps."*). No approval needed, and it can be reverted. |
+| **A change of direction:** a new approach, a different sequence of phases, a dropped goal | **major** (`2.x` → `3.0`) | **A proposal until the human approves it,** the same as a lens isn't in force until it's confirmed. Then **every node following the plan is reviewed**: each is confirmed as fine, or flagged for updating. |
+
+- **Nodes link to the major version only** (`plan: jobhunt-strategy@2`). Minor refinements reach them automatically; only a major change asks them to re-check.
+- **Earlier major versions are kept in full** in `history.md`, so a node still on version 2 can read exactly what version 2 said while it's being reviewed. Minor changes are recorded as short notes.
+- Fixing a typo isn't a version at all.
 
 ### Following a plan
 
@@ -269,13 +295,12 @@ What any replacement for this work model has to honor, so that projections, sess
 - Each node has a stable name, a `title`, an optional `kind`, a `parent`, a `state`, an optional `focus`, and a one-line `summary`.
 - A generated index lists every node with those fields.
 - Each node keeps a history that sessions can append to.
-- Nodes can name the plan and version they follow.
+- Nodes can name the plan and major version they follow.
+- Names are unique and stable, so any node can be referred to from anywhere.
 
 ---
 
 ## Open questions
 
-1. **Plan files.** Proposed: `layers/work/plans/<plan>/plan.md`, holding the current version, its sub-plans and its discussion, with earlier versions as dated sections and in git history. Settle when building the base.
-2. **Plan approval granularity.** Every new version needs approval. Should small adjustments (re-ordering two steps) count as a new version, or just be recorded?
-3. **Suggested focus.** Which signals, weighted how? Learned from what the human pins over time?
-4. **Grouping top-level work** (life, work, home) as an optional namespace: needed, or does the tree already do this?
+1. **Suggested focus.** Which signals, weighted how? Learned from what the human pins over time?
+2. **Grouping top-level work** (life, work, home) as an optional namespace: needed, or does the tree already do this?
