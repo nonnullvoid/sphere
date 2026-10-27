@@ -1,6 +1,8 @@
 # Work
 
-_Status: draft 2. A starting point for architecture 1.0; a more flexible work model is expected in a later version._ How a sphere tracks the work its human is doing: what a piece of work looks like on disk, how it grows from a flat list into a tree, and what sessions promise to keep true.
+_Status: draft 3, for review. A starting point for architecture 1.0. A more flexible work model can replace it later, behind the [same interface](#the-interface)._
+
+How a sphere tracks what its human is doing: what a piece of work is, how work grows from a single thing into a tree, how plans give it direction, and how its real progress stays honest.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -8,44 +10,111 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 ## The idea
 
-Work is anything the human is trying to change in the world: a project, a goal, a task, an errand that spans days. It's usually the part of a sphere that changes most, and the part a human would miss first.
+Work is anything the human is trying to change in the world: a job hunt, a kitchen renovation, a health goal, a codebase. It's usually the part of a sphere that changes most, and the part a human would miss first.
 
-A sphere's promise about work is modest and honest: **at the start and end of every session, the work it touched is true.** In between, no promise. Continuous tracking depends on remembering mid-flow, and that fails. Boundaries can be checked. — **proven**
+Three ideas shape everything below:
+
+1. **One kind of thing, recursive.** Every piece of work is a **work node**, and any node can hold other nodes. A node can be a task to its parent and a project in its own right. The sphere doesn't make anyone decide which. — **proven**
+2. **Plans give direction.** A plan says where the work is going and why this path, so what to do next comes from the plan, not from a fresh judgment call at every session. Plans live alongside the work, not inside it. — _decided, not yet exercised_
+3. **Plan is asserted; progress is measured.** A plan is what we believe the path is. Progress is what actually happened, read from evidence, never from checkboxes. **The gap between the two is the most useful signal the work layer produces.** — **proven**
+
+And one promise: **at the start and end of every session, the work it touched is true.** In between, the sphere may update work as you mention changes, but it doesn't promise to. Boundaries can be checked; ambience can't. — **proven**
 
 ---
 
-## A piece of work — **proven**
+## Work nodes — **proven**
 
-Each piece of work is a **node**: one folder, holding two files.
+### Labels come from shape
+
+Nodes have no fixed type. What a node is called is **computed from its shape**, never set:
+
+| Shape | Called | Example |
+|---|---|---|
+| Marked `ongoing`: it never finishes | **area** | health, home, finances, a standing responsibility |
+| Has children and an end | **project** | the kitchen renovation, a job hunt |
+| No children | **task** | call the plumber, book the onsite |
+
+Nothing is typed by hand, so nothing ever needs re-typing. A task that gains children becomes a project automatically. A node that gains a parent is still the same node.
+
+The words are **display only.** A human can say "to-do," "chore" or "item," and the sphere understands. Builds can rename the labels for their audience: a code build might say workstream / project / task. The structure underneath never changes.
+
+### On disk
 
 ```
 layers/work/
 ├── <node>/
-│   ├── work.md         what and why: goal, done-when, status, next action
-│   └── progress.md     what happened, session by session, and where to pick up
-├── archive/
-│   └── <node>/         finished work, moved out of the way
-└── index.md            generated: every node, grouped by status
+│   ├── work.md          what the work is, now: its context, state and quick info
+│   └── progress.md      what happened, in order
+├── archived/
+│   └── <node>/          finished work, moved out of the way
+├── plans/               the parallel hierarchy of plans (see Plans)
+├── templates/           starting shapes for kinds of work
+└── index.md             generated: the work tree and its quick info
 ```
 
-**`work.md`** is what the work *is*: the definition. It changes rarely.
+**Folders never nest.** Every node lives at `layers/work/<node>/` whatever its depth. The tree exists only in each node's `parent:` field, which names its parent, so moving work around the tree never moves a folder.
+
+### `work.md`
+
+**Frontmatter** carries everything needed to show a node in one line, so views never have to read the body:
 
 ```yaml
 ---
-status: paused          # focused | active | paused | done | archived
-waiting_on: design sign-off from the client   # required when paused
-parent: website-relaunch   # optional; a node name, not a path; see Depth
-updated: 2026-10-25
+title: Google interview
+parent: jobhunt-may-2026        # a node name; absent for top-level work
+state: active                   # idea | planned | active | paused | done | archived
+paused:                         # when paused: blocked | waiting | on hold
+waiting_on:                     # required when paused
+focus: pinned                   # optional; see State and focus
+ongoing: false                  # true makes this an area
+progress: 3/7                   # optional; see Plan vs progress
+summary: onsite scheduled, phone done    # one line, refreshed at ground
+plan: [jobhunt-strategy@2]      # optional; the plan(s) and version this node follows
+connects-to: [interview-practice, world:career/offers]
+updated: 2026-10-26
 ---
 ```
 
-Then, in plain words: the goal, what done looks like, and the **next action**, a single concrete step.
+The **body** is the node's context: the distilled, current truth about this work.
 
-**`paused` always says why.** It covers both *blocked* (something is in the way) and *waiting* (someone else has to act), so a paused node carries a one-line `waiting_on:`. Without it, paused work quietly turns into forgotten work.
+- **Now:** a few scannable lines covering where things stand, what's next, what's blocking, and when it was last grounded. This is the only section with a fixed shape.
+- **Context:** what the work is, why it matters, and what done looks like.
+- **References:** knowledge subjects it depends on, lenses that govern it, related nodes, outside links.
+- **Checklist:** small things to do that don't yet need their own node (see [Depth is a dial](#depth-is-a-dial--proven)).
+- **Notes:** the discussion around the work, distilled: decisions in force, open questions, what was learned.
 
-**`progress.md`** is the running record. Each ground adds an entry: what happened, what's next, and a link to the [session file](state.md#level-1--simple-sessions-the-default--proven). A cold `resume` reads the latest entries and can continue without anyone re-explaining.
+### `progress.md`
 
-Display names are up to the build. A life sphere might call nodes *projects*; a non-technical sphere might call them *my things*. The structure is the same.
+The node's history, in order and never rewritten. Each ground adds an entry: what happened, what was decided, highlights of the discussion, and a link to the [session file](state.md#the-session-file--proven-shape).
+
+`work.md` holds the current understanding; `progress.md` holds the trail of how it got there. A cold resume reads both: the first for where things are, the latest entries of the second for how they got there.
+
+---
+
+## State and focus — two separate axes
+
+**State: how far along.** — **proven**
+
+| State | Means | Default mark |
+|---|---|---|
+| **idea** | Captured, not thought through | 💡 |
+| **planned** | Thought through, not started | 📋 |
+| **active** | Being worked on | 🔄 |
+| **paused** | Stopped for a reason: **blocked**, **waiting**, or **on hold**. Always says on what, in `waiting_on:` | ⛔ ⏳ ⏸️ |
+| **done** | Finished | ✅ |
+| **archived** | Done and moved out of the way | 📦 |
+| _(ongoing)_ | An area: never done | ♾️ |
+
+Paused always says why, because paused work without a reason quietly becomes forgotten work.
+
+**An area doesn't finish.** If someone marks an ongoing node done, the sphere asks whether the area itself has ended (a responsibility handed over, a chapter closed) or whether a project inside it finished.
+
+**Focus: is it in view right now.** — _decided, not yet exercised_ Focus is independent of state. A paused node can stay pinned, and a fresh idea can be the focus of the week.
+
+- **`pinned`** is the human's choice, and always wins.
+- **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. Suggestions appear as suggestions in the Focused view. They're never written into a node as a decision.
+
+The marks are the base build's defaults. A [witness theme](projections.md#matter-not-machinery) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it looks.
 
 ---
 
@@ -53,52 +122,128 @@ Display names are up to the build. A life sphere might call nodes *projects*; a 
 
 A flat list of work is a tree that is one level deep. Nothing else changes as work grows:
 
-- **A node becomes part of a bigger one** by setting `parent:` in its `work.md`.
-- **A node is broken down** by creating child nodes that point to it.
-- **Folders never nest.** Every node lives at `layers/work/<node>/` whatever its depth. The tree exists only in the `parent:` fields, which refer to node names rather than paths.
+- **A checklist item becomes a task** when it needs its own context or history. It's promoted into a node of its own, and its line in the checklist becomes a link.
+- **A task becomes a project** the moment it gets children.
+- **Work moves around the tree** by editing `parent:`, never by moving folders.
 
-A simple sphere never nests, and never sees the word tree. A heavy sphere nests as deep as it needs to. Moving between the two needs no migration. Spheres differ in how they present work, not in how they store it.
-
-Common shapes, as labels rather than types: a **stream** (an ongoing area), a **project** (has a finish line), a **task** (one sitting or a few). All use the same two files.
+A simple sphere never nests and never sees the word tree. A heavy one nests as deep as it needs. Moving between the two needs no migration.
 
 ---
 
-## The index — _decided, not yet exercised_
+## Plans — _decided, not yet exercised_
 
-`index.md` is **generated, never edited by hand.** It's rebuilt at ground from every node's `work.md`:
+A **plan** is direction a human understands: *how I'm approaching the job hunt*, *the order we're doing the kitchen in*. It isn't a list of child nodes. It's the reasoning that the work follows.
+
+### What a plan holds
+
+- **The direction:** the approach, and why this one over the alternatives.
+- **Phases:** stretches of the plan (*research, applications, interviews, decision*).
+- **Steps:** the ordered moves within each phase. Steps are where *"what's next?"* gets its answer.
+- **Assumptions** it rests on. An assumption can point at a specific fact in the [knowledge](knowledge.md) layer. If that fact changes or goes stale, the plan is flagged for review, which catches plans that have quietly outlived their premises.
+- **What would change it:** the signals that should trigger a replan.
+- **The discussion:** options considered, trade-offs, questions still open. Months later, anyone can see why this path was chosen.
+
+### Plans are a parallel hierarchy
+
+- **Plans live beside the work, not inside it,** in `layers/work/plans/`. A plan can guide **any number of nodes**, in any part of the work tree.
+- **Plans are always optional.** A node with no plan works fine; its next action lives in its own Now section.
+- **Plans have their own tree.** A plan can hold sub-plans: *interview prep* within *the job hunt*.
+- **The link lives on the node.** A node's `plan:` field names the plan and the version it follows (`jobhunt-strategy@2`). Reassigning a node to another plan, or a newer version, is a one-line edit. *Which nodes follow this plan* is computed from those links, so the truth lives in one place.
+
+### Plans are versioned
+
+- **Each replan is a new version,** with a note on why it changed. Earlier versions are kept. Replanning is the system working, not failing.
+- **A new version is a proposal until the human approves it,** the same as a lens isn't in force until it's confirmed. Fixing a typo isn't a new version.
+- **Versions cascade.** When a plan moves to version 3, nodes still following version 2 are flagged: *"Three nodes follow v2 of the job-hunt strategy. v3 changed the sequence. Re-check them?"*
+
+### Following a plan
+
+What to do next comes from the plan's steps and the work's real progress. A session that does something different **records the deviation and its reason,** and the sphere raises it at ground: *"This session worked on the offer comparison before the onsite. The plan has it after. Update the plan, or note it as an exception?"*
+
+---
+
+## Plan vs progress — **proven**
+
+- **Progress is measured from evidence:**
+  - children finished
+  - plan steps completed
+  - things that actually shipped (commits, a sent application, a fact that changed in the knowledge layer)
+
+  It's never inferred from how many boxes are ticked.
+- **The `progress:` fraction is computed where it can be:** steps or children finished out of those planned, where finished means there's evidence. Where it can't be computed (a count of practice exercises), it's a counter set by the human or the sphere.
+- **Stalls are visible.** An active node with no real movement for a while is flagged, not hidden.
+
+---
+
+## The index and the tree view — _decided, not yet exercised_
+
+`index.md` is **generated from frontmatter alone** (never edited by hand) and rebuilt at ground. Because it reads only frontmatter, it stays fast even with hundreds of nodes. See [registries](registries.md).
+
+It shows the work as a tree, one line per node:
+
+```
+[jobhunt-may-2026] Find a new job  🔄 · pinned  [2/3]  onsite next week
+├── [.interview-practice] Practice coding exercises  ♾️  [3/10]  focusing on leetcode
+└── [.interview] Google interview  🔄  [3/7]  onsite scheduled, phone done
+```
+
+Children show their name relative to their parent (`.interview`). The folders on disk stay flat.
 
 | Section | What's in it |
 |---|---|
-| **Focused** | Nodes with `status: focused`: what the human has chosen to put first. Kept short on purpose. |
-| **Active** | Everything else that's in motion: `active` and `paused`. |
-| **Done** | `done` nodes not yet archived, collapsed. |
-
-Why generated: an index edited by hand drifts. It goes stale the moment a node changes and nobody remembers to update the list. Each node holds its own status, once, and the index is a view of them. See [registries](registries.md).
-
-**Focused is a human choice.** The sphere can suggest moving a node into focus or out of it, but it never decides alone.
+| **Focused** | Pinned nodes, then suggested ones (marked as suggestions) |
+| **Active** | Everything else in motion: active, paused, planned |
+| **Ideas** | Captured, not yet planned |
+| **Done** | Finished, not yet archived |
+| **Archived** | Collapsed; listed on request |
 
 ## Archiving — _decided, not yet exercised_
 
-Archiving **moves** a node's folder to `layers/work/archive/<node>/` and sets `status: archived`. Without it, the work folder keeps growing until a human can no longer read it, and a sphere has to stay readable by a human.
+Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the active work folder stays readable. **Its row stays in the index,** collapsed under Archived, so old work can still be found, referenced or revived without digging through history.
 
-- The tooling does the move and fixes links that pointed at the old path. `parent:` fields need no fixing, because they use names.
-- Archived nodes don't appear in the index. They're still searchable, and still part of history.
-- If a node with active children is archived, the sphere asks first: archive the children too, or give them a new parent?
-- The sphere can suggest archiving work that has been `done` for a while. The human decides.
+- **Subtrees archive together.** Archiving a node takes its finished children with it. Children still in progress **block** the archive until each is finished, moved under a new parent, or explicitly dropped.
+- **Links are fixed by the tooling.** `parent:` fields use names, so they never break.
+- **The sphere can suggest archiving** work that has been done for a while. The human decides.
 
 ---
 
 ## The boundary contract — **proven**
 
-What every session does with work:
-
 | Moment | What happens |
 |---|---|
 | **Open** | If the session is clearly about a node, the sphere notes it. It never blocks on the question. |
-| **During** | Nothing is promised. |
-| **Ground** | The node's `progress.md` gets an entry; its `status` and next action are updated if they changed; the index is rebuilt. New facts are *proposed* for the [knowledge](knowledge.md) layer, never written to it automatically. |
+| **During** | When the human mentions a change ("the phone screen went well"), the sphere may update the node right away. That's done opportunistically, never promised. |
+| **Ground** | Each touched node's `progress.md` gets an entry; its `summary`, `state` and Now section are refreshed; progress is re-measured; the index is rebuilt. New facts are proposed for the [knowledge](knowledge.md) layer, never written automatically. |
 
-**Which work a session belongs to is inferred, on the fly,** from what the session talks about and which nodes' files it touches. A session that touches two nodes writes an entry to both. Many sessions belong to no node at all: a question, some research, a quick fix. They stay untracked, and that's fine. The sphere only asks when it has real evidence and can't resolve it, for example two plausible nodes and no way to choose.
+**Which work a session belongs to is inferred,** from what the session talks about and which nodes it touches. A session that touches two nodes writes to both. Many sessions belong to no node at all, and that's fine. The sphere only asks when it has real evidence and can't resolve it.
+
+## Work keeps its shape — _decided, not yet exercised_
+
+- **Templates.** Kinds of work can have a starting shape: a coding project might start with architecture notes and a folder for screenshots, and a trip might start with a packing checklist. Templates live in `layers/work/templates/`. *"Save this as a template"* lifts a well-shaped node into one.
+- **Plans fit the model.** When the AI drafts a plan, its phases and steps become a plan in `plans/`, and the work becomes nodes and checklists. **It never becomes a free-floating plan document of its own invention.** A plan that doesn't fit the model is flagged and reshaped before it sets, because ad-hoc structure is painful to clean up later.
+
+---
+
+## Senses and commands — _decided, not yet exercised_
+
+**Senses:**
+- `work-node-added`, `work-node-moved`, `work-node-archived`
+- `work-state-changed`, `work-focus-changed`
+- `work-progress-measured`, `work-stalled`
+- `plan-versioned`, `plan-deviation`, `plan-assumption-stale`
+- `work-index-stale`
+
+**Commands** (natural phrasing works too):
+- `add [task or project] [name] under [parent]`
+- `move [node] under [parent]`
+- `pin` / `unpin [node]`
+- `pause [node] [reason]`
+- `done`
+- `archive [node]`
+- `what's on my plate?`
+- `show the tree`
+- `plan [node]`
+- `replan [plan]`
 
 ---
 
@@ -108,16 +253,28 @@ A **mirror** keeps a node's status in step with an outside tool, such as a team'
 
 - A mirror is **one-way by default**: the sphere pushes a summary out. It doesn't take its own truth from the outside tool.
 - Everything a mirror sends passes the outbound guard: it's drafted and the human approves, unless they've given a standing approval for that mirror.
-- **Only what the mirror is told to send leaves the sphere.** Private notes, progress files and lenses never travel with it.
-
----
+- **Only what the mirror is told to send leaves the sphere.** Private notes, progress and lenses never travel with it.
 
 ## Witness (optional)
 
-Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back to the human over time. Whether it's used heavily depends on the person and the shape of their work, so it ships as a slot, never as a requirement.
+Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back to the human over time, in a theme that resonates. Its source is the plain record of what got done, which stays true whatever theme is on top.
+
+---
+
+## The interface
+
+What any replacement for this work model has to honor, so that projections, sessions, plans and other spheres keep working (see [registries](registries.md#conventions-and-swappable-parts)):
+
+- Each node has a stable name, a `title`, a `parent`, a `state`, an optional `focus`, and a one-line `summary`.
+- A generated index lists every node with those fields.
+- Each node keeps a history that sessions can append to.
+- Nodes can name the plan and version they follow.
 
 ---
 
 ## Open questions
 
-1. **When to suggest archiving.** How long should a node sit in `done` before the sphere suggests moving it? A fixed delay, or at a periodic review?
+1. **Plan files.** Proposed: `layers/work/plans/<plan>/plan.md`, holding the current version, its sub-plans and its discussion, with earlier versions as dated sections and in git history. Settle when building the base.
+2. **Plan approval granularity.** Every new version needs approval. Should small adjustments (re-ordering two steps) count as a new version, or just be recorded?
+3. **Suggested focus.** Which signals, weighted how? Learned from what the human pins over time?
+4. **Grouping top-level work** (life, work, home) as an optional namespace: needed, or does the tree already do this?
