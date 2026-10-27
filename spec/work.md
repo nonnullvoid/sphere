@@ -176,7 +176,7 @@ A plan has two files: **`plan.md`**, its current version, and **`history.md`**, 
 
 | Change | Version | What it takes |
 |---|---|---|
-| **A refinement:** re-ordering two steps, sharpening a phase, adding a detail | **minor** (`2.1` → `2.2`) | Recorded in `history.md` and mentioned at ground (*"Refined the job-hunt plan to 2.3: swapped two steps."*). No approval needed, and it can be reverted. |
+| **A refinement:** re-ordering two steps, sharpening a phase, adding a detail | **minor** (`2.1` → `2.2`) | No approval needed. The sphere just says so in one line when it happens (*"Updated the job-hunt plan to v2.44."*), records it in `history.md`, and it can be reverted. |
 | **A change of direction:** a new approach, a different sequence of phases, a dropped goal | **major** (`2.x` → `3.0`) | **A proposal until the human approves it,** the same as a lens isn't in force until it's confirmed. Then **every node following the plan is reviewed**: each is confirmed as fine, or flagged for updating. |
 
 - **Nodes link to the major version only** (`plan: jobhunt-strategy@2`). Minor refinements reach them automatically; only a major change asks them to re-check.
