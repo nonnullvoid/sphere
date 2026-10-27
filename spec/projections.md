@@ -1,6 +1,6 @@
 # Projections
 
-_Status: draft 2, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
+_Status: draft 3, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -16,16 +16,54 @@ For a non-technical human, projections are the whole interface. They see their t
 
 ---
 
-## Four parts, kept separate — **proven**
+## Three kinds of data — _decided, not yet exercised_
+
+Every projection touches three kinds of data, and each has exactly one home:
+
+| Kind | What it is | Lives | Committed? |
+|---|---|---|---|
+| **Source truth** | The facts the view shows: work nodes, knowledge, sessions, witness entries, lenses | In the layer that owns it | Yes, like any truth |
+| **The definition** | What this projection *is*: which sources it reads, what it shows, how it's laid out, what it leaves out | In the **projection node**, `layers/projections/<name>/` | Yes. It's authored, and it changes like any other authored file |
+| **Derived view data** | Anything computed from truth for the view's convenience: a rollup, a sorted list, a chart series | Beside the artifact, `surface/projections/<name>/` | No. It's a cache, rebuildable from the other two at any time |
+
+**Source truth isn't only knowledge.** Work, sessions, witness and lenses all own truth too. A projection reads each from its owner, never from a copy.
+
+**The missing-fact rule.** If a view needs a value that no layer owns and that can't be derived from one, that's not view data. It's a **missing fact**. Give it an owner (an existing layer, or a new one with a contract) before the view shows it. A view that quietly invents its own facts has become a second source of truth. See [views that accept input](#views-that-accept-input--decided-not-yet-exercised).
+
+**Data colocation.** Following from the table: a projection's data lives with whichever layer owns the truth. Only derived data sits beside the rendered artifact. Never a third, disconnected place. _The lesson behind this rule:_ before one sphere reorganized, its view data had ended up scattered across three places, and nobody could say which copy was current.
+
+### The projection node
+
+A projection is a node, like a work node or a knowledge topic:
+
+```
+layers/projections/
+├── <name>/
+│   ├── projection.md      the definition: sources, what it shows, layout, what to leave out
+│   └── template/          a custom template, if it doesn't use a shared one (optional)
+└── registry.md            one entry per projection
+```
+
+It sits apart from the pieces it relies on, so each can change without breaking the others:
 
 | Part | What it holds | Where |
 |---|---|---|
 | **Frame** | The mechanics: when a projection is rendered, refreshed, published | `core/protocol/frames/projections/` |
-| **Render rules** | What this projection shows and how: sources, layout, what to leave out | `layers/projections/<name>.md` |
-| **Registry entry** | Its kind, freshness, source, home, who can see it, template | `layers/projections/registry.md` |
-| **Artifact** | The rendered thing itself | `surface/projections/<name>/` |
+| **Definition** | What this projection shows and how | `layers/projections/<name>/projection.md` |
+| **Registry entry** | Its kind, freshness, sources, home, who can see it, template | `layers/projections/registry.md` |
+| **Artifact** | The rendered thing itself, and its derived data | `surface/projections/<name>/` |
 
-Kept apart, each can change without breaking the others. A new look is a template change. A new data source is a render-rule change. A new audience is a registry change.
+A new look is a template change. A new data source is a definition change. A new audience is a registry change.
+
+### Which truth a view shows
+
+Projections live outside the session boundary: a human opens their dashboard without caring which session is running. So:
+
+- **The artifact renders from grounded truth on the main line,** never from an in-flight session. What it shows is what's been saved.
+- **A session can preview its unsaved changes** by rendering into scratch (`surface/projections/_scratch/`), clearly marked as a preview. The real artifact doesn't change until the session grounds.
+- **A change to the definition rides the session** like any other authored file. It's previewed in scratch, and it reaches the real artifact when it's grounded.
+
+At [level 1](state.md), with one shared line, these are the same thing in practice. They only come apart when sessions branch.
 
 ---
 
@@ -117,6 +155,8 @@ Not every render is worth keeping. A walkthrough generated to explain one change
 
 Views built before a sphere adopted this structure, by hand and unregistered, are **registered as legacy** rather than rewritten or ignored. Each gets a registry entry with `legacy: true` and an honest freshness declaration. They don't have to be rebuilt to be known.
 
+**Retired views** go to a `_legacy/` folder inside their surface namespace (`surface/projections/_legacy/<name>/`). They're kept as reference, not rendered, and not linked from anywhere a human would land.
+
 ---
 
 ## Surface: where artifacts live — **proven**
@@ -127,8 +167,9 @@ Views built before a sphere adopted this structure, by hand and unregistered, ar
 surface/
 ├── projections/
 │   ├── assets/          shared stylesheet, components, theme tokens
-│   ├── _scratch/        ephemeral renders, not registered, safe to clear
-│   └── <name>/          one folder per projection
+│   ├── _scratch/        ephemeral renders and session previews, not registered, safe to clear
+│   ├── _legacy/         retired views, kept as reference
+│   └── <name>/          one folder per projection: the artifact and its derived data
 ├── state/               live machine state (heartbeats, indexes); disposable, never committed
 ├── raw/                 incoming files the human dropped in, not yet processed
 ├── inbox/               things arriving from outside: other spheres, exports
@@ -160,6 +201,7 @@ Each projection has a registry entry:
   opens: served                 # static | served
   freshness: on-open            # on-open | sync within 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
+  definition: layers/projections/work-dashboard/
   home: surface/projections/work-dashboard/
   sharing: private              # private | protected | public
   template: dashboard

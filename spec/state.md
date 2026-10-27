@@ -256,9 +256,9 @@ At level 1 the session files *are* the registry, and reconciliation is a single 
 
 **Runtime state is never committed.** Committing fast-changing state causes merge conflicts and makes the committed record disagree with reality. If the state file is deleted, the tooling rebuilds it.
 
-## Session type — _decided, not yet exercised_
+## Session type
 
-A session can carry a **type**: coding, brainstorming, planning, meeting review, research, sphere authoring. The type is a **hint for what to load up front, never a gate.** Everything stays reachable. If a coding session suddenly needs the meeting frames, they load on demand at the cost of one extra read. The type is declared by the human (preferred), inferred from how the session opens, and changeable at any time. Which frames each type warms up is learned from use. _(Belongs with loading efficiency; it moves there when that chapter exists.)_
+A session can carry a type that hints what to load up front. See [loading](loading.md#session-type--decided-not-yet-exercised).
 
 ---
 
@@ -298,4 +298,4 @@ Documented so people who opt in know what they're choosing. Each will be address
 
 1. **The liveness threshold.** 30 minutes is a starting point; tune it from real use.
 2. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.
-3. **The session type list.** Is the starter set right, and should a sphere learn its own types?
+3. **The session type list.** Moved to [loading](loading.md).

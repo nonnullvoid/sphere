@@ -1,6 +1,6 @@
 # Registries
 
-_Status: draft 3, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
+_Status: draft 4, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -62,10 +62,12 @@ With [session trees](state.md#level-2--the-session-tree-opt-in--advanced), two v
 ### Who owns a registry
 
 A separate question from where it lives:
-- **Structural registries** describe the sphere's anatomy: the layers, surface and protocol registries. They belong to the sphere's own framework frames.
-- **Content registries** catalogue a domain's items: work, world, projections, sessions. They belong to that domain's frames.
+- **Structural registries** describe the sphere's anatomy: the layers, surface and protocol registries, and the capability manifest. They belong to the sphere's own framework frames.
+- **Content registries** catalogue a domain's items: work, knowledge, projections, sessions. They belong to that domain's frames.
 
 Don't centralize content registries, and don't scatter structural ones.
+
+**The word "registry" is kept for these indexes.** Live data a content registry happens to track (which sessions are running right now, when a view last rendered) isn't a registry. It's state, and it lives in `surface/state/`. Calling it a registry invites people to treat disposable runtime data as something to keep and maintain.
 
 ### Senses — _decided, not yet exercised_
 
@@ -92,8 +94,9 @@ Don't centralize content registries, and don't scatter structural ones.
 | Registry | Lists | Likely mode | Built or checked against | Chapter |
 |---|---|---|---|---|
 | **Layers** (`core/layers.md`) | every layer: what it holds, depends on, may share | generated | each layer's contract file | below |
-| **Surface** (`core/surface.md`) | every place rendered output goes, and who can see it | generated | each surface area's declaration | [projections](projections.md) |
+| **Surface** (`core/surface.md`) | every space in the surface: its kind, who can see it, how it's laid out | generated | each surface space's declaration | [below](#the-surface-registry--decided-not-yet-exercised) |
 | **Protocol** (`core/protocol/protocol.md`) | intents, abilities, commands, senses | AI-maintained | lens and frame files: every command maps to a frame that exists, every layer it names exists | [protocol](protocol.md) |
+| **Capability manifest** (`core/manifest.md`) | every lens and frame: its job, and when to load it | AI-maintained | lens and frame files, by content hash | [loading](loading.md#the-capability-manifest--decided-not-yet-exercised) |
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
 | **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
@@ -125,11 +128,40 @@ depth: foundation           # foundation | utility | optional
 depends_on: [world]
 holds: work nodes, their status and progress
 interface: work nodes with type, status, parent and next action; a generated index   # what any replacement must honor
-requires: []                # files that must travel with this layer when the sphere is seeded
+requires: [scripts/work-index.py]   # everything that must travel with this layer when the sphere is seeded
 ---
 ```
 
 …followed by a few lines on what the layer is for. The layer registry is built by collecting these. A new layer becomes visible to the sphere by having a contract, not by someone remembering to add a line elsewhere.
+
+**The registry references the contract; it never absorbs it.** The contract stays with its layer, so a layer is always a registered store *with* its contract, wherever it travels.
+
+**`requires` includes helper scripts.** If a layer needs a script to work (an index generator, a sync step), the script is listed, so a seeded sphere's layer comes up working instead of arriving as data with nothing to maintain it.
+
+## The surface registry — _decided, not yet exercised_
+
+**Surface is defined by a property, not an audience:** it's the always-latest layer of materialized views and exchanged things. Rendered pages for people are one part of it; machine state, incoming files and outgoing exports are others.
+
+Every surface space is described on three independent axes:
+
+| Axis | Values | Default |
+|---|---|---|
+| **Kind** | projections · state · raw · inbox · outbox | — |
+| **Visibility** | private · protected · public | private |
+| **Flatness** | flat (one folder per item, no nesting) or nested | flat |
+
+Each entry in `core/surface.md`:
+
+```yaml
+- space: projections
+  kind: projections
+  sharing: private
+  rendered-by: projections        # the frame that writes here
+  flatspace: true
+  liveness: on-ground             # live | on-ground | manual | frozen
+```
+
+Each space also keeps a `_legacy/` folder for retired items kept as reference. See [projections](projections.md#legacy-views).
 
 ---
 
@@ -140,7 +172,9 @@ Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and th
 | Kind | Examples | Committed? | Why |
 |---|---|---|---|
 | **Human-facing views** | work index, world registry, layer registry | **Yes** | A person browsing the folder or the repository should be able to read them without running anything |
-| **Machine-only caches** | the startup bundle, loading manifests | **No**: gitignored, rebuilt when needed | Nobody reads them directly, and committing them only creates merge conflicts |
+| **Machine-only caches** | the startup bundle, a projection's derived data | **No**: gitignored, rebuilt when needed | Nobody reads them directly, and committing them only creates merge conflicts |
+
+The capability manifest is a human-facing view, so it's committed: a person can read it to see what their sphere knows how to do. See [loading](loading.md).
 
 **Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when level-2 sessions [sync](state.md#level-2--the-session-tree-opt-in--advanced), it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
 

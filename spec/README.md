@@ -11,8 +11,9 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving
 - [Knowledge](knowledge.md): domains and topics with namespaced names; facts and reads; two grades; capture, compiling and freshness; facts about other people
 - [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught
+- [Loading](loading.md): what loads when; the capability manifest; why a sphere stays fast as it grows
 - [Evolution](evolution.md): how a sphere grows, reflects on itself, and migrates safely
-- [Projections](projections.md): views, freshness, static and served, the stack, surface
+- [Projections](projections.md): views, the three kinds of data, freshness, static and served, the stack, surface
 - [Guardrails](guardrails.md): incident-born rules, keeping them few, overrides
 - [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres
 - [Modes](modes.md): personas, and switchable behaviors on top of them

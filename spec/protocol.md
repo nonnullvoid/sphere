@@ -50,7 +50,7 @@ A frame is the **operating mechanics derived from one or more lenses**: when it 
 - **A frame can derive from several lenses.** This is how two understandings get reconciled into one set of mechanics. For example, how far an agent may act on its own draws on what the human holds authority over *and* on how the work is structured.
 - **One lens usually yields several frames,** often of different kinds.
 - **Frames compose; they don't inherit.** Several frames are active at once during any piece of work. There's no frame hierarchy. Intents, abilities and frames relate many-to-many, by reference.
-- **A frame is self-sufficient to run.** Executing a frame never requires reading its lens. If it does, the frame is underspecified. The lens is consulted when the *why* is in question: judgment calls, changes, evolution. That's also what lets a sphere load frames often and lenses rarely. See [registries](registries.md).
+- **A frame is self-sufficient to run.** Executing a frame never requires reading its lens. If it does, the frame is underspecified. The lens is consulted when the *why* is in question: judgment calls, changes, evolution. That's also what lets a sphere load frames often and lenses rarely. See [loading](loading.md).
 - **Modes live inside one frame.** Different ways of running the same activity (outbound messages sent normally, sent with a "drafted by AI" disclosure, or pre-approved for one narrow case) are sections of one frame, not sibling frames.
 
 ### Components — **proven**

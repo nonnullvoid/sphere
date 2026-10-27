@@ -45,12 +45,13 @@ my-sphere/
 │   ├── protocol/            lenses, frames, and the protocol registry
 │   ├── modes/               switchable behaviors on top of a persona
 │   ├── records/sessions/    one file per session
+│   ├── manifest.md          what the sphere can do, and when to load each part
 │   ├── layers.md            layer registry
 │   └── surface.md           surface registry
 ├── layers/
 │   ├── work/                what the human is changing
 │   ├── knowledge/           what's true: domains, topics, facts and reads
-│   ├── projections/         how views are rendered
+│   ├── projections/         projection definitions: what each view shows
 │   └── …                    whatever else this sphere needs
 └── surface/                 rendered views, live state, inbox and outbox
 ```
@@ -66,7 +67,7 @@ Two kinds of thing live in these folders:
 
 ## How it runs
 
-**Startup.** The harness opens a door file, which points to `sphere.md`, which loads a small startup set: who the human is, who the AI is, the rules, and the registries that say where everything else lives. Everything else is read only when a task needs it.
+**Startup.** The harness opens a door file, which points to `sphere.md`, which loads a small startup set: who the human is, who the AI is, the rules, and the capability manifest that says what everything else is for. Everything else is read only when a task needs it. See [loading](spec/loading.md).
 
 **A session** starts from the last grounded state and ends by **grounding**. Ground compacts what happened into the sphere: the work's progress, proposed facts, a session record. Then it commits, staging only what the session touched. A new session with no memory of the last one can **resume** cold. See [state](spec/state.md).
 
@@ -113,11 +114,12 @@ These run through every chapter:
 |---|---|
 | [protocol](spec/protocol.md) | Lenses, frames, skills, the registry, co-authoring, sharing levels |
 | [state](spec/state.md) | Sessions at two levels, ground and resume, the session registry, commits |
-| [work](spec/work.md) | Work nodes, depth as a dial, the index, archiving |
+| [work](spec/work.md) | Work nodes (area / project / task), state and focus, plans, progress, archiving |
 | [knowledge](spec/knowledge.md) | Domains, topics, facts and reads; how sure each is; how knowledge gets in |
 | [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |
+| [loading](spec/loading.md) | What loads when, the capability manifest, and why a sphere stays fast as it grows |
 | [evolution](spec/evolution.md) | How a sphere grows, reflects on itself, and migrates safely |
-| [projections](spec/projections.md) | Views, freshness, static and served, the stack, surface |
+| [projections](spec/projections.md) | Views, the three kinds of data, freshness, static and served, the stack, surface |
 | [guardrails](spec/guardrails.md) | Incident-born rules, keeping them few, overrides |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
 | [modes](spec/modes.md) | Personas, and switchable behaviors on top of them |
