@@ -144,21 +144,27 @@ requires: [scripts/work-index.py]   # everything that must travel with this laye
 
 Every surface space is described on three independent axes:
 
-| Axis | Values | Default |
+| Axis | Values | Governs |
 |---|---|---|
-| **Kind** | projections · state · raw · inbox · outbox | — |
-| **Visibility** | private · protected · public | private |
-| **Flatness** | flat (one folder per item, no nesting) or nested | flat |
+| **Kind** | projections · state · raw · inbox · outbox | what the space holds, and so where a thing goes |
+| **Visibility** | private · protected · public (default private) | who may see it |
+| **Flatness** | flatspace: always-latest, the same for every session | where it sits in git. The same for all of surface, but declared explicitly |
+
+**Kind isn't visibility.** A projection is rendered for a human, but that doesn't make it public. Most of surface is private.
+
+**Flatness is what makes surface surface.** The rest of a sphere is *branchspace*: it moves with sessions and is committed when they ground. Surface is *flatspace*: one always-latest copy that every session sees, whichever branch it's on. Most of it is a materialized view over branchspace (projections re-render, the session list rebuilds from session files), so it can always be reproduced. At [level 1](state.md), with one shared line, the difference is invisible. It matters once sessions branch.
+
+**Liveness is a disposable side-layer.** The one part of surface that isn't a view is liveness: heartbeats, which windows are attached right now. It exists nowhere else, it changes every few minutes, and it's fine to lose in a crash. So it's never committed, or surface's history would churn with every heartbeat. A space declares whether it carries one.
 
 Each entry in `core/surface.md`:
 
 ```yaml
-- space: projections
-  kind: projections
+- space: state
+  kind: state
   sharing: private
-  rendered-by: projections        # the frame that writes here
+  rendered-by: sessions           # the frame that writes here
   flatspace: true
-  liveness: on-ground             # live | on-ground | manual | frozen
+  liveness: side-layer            # none | side-layer
 ```
 
 Each space also keeps a `_legacy/` folder for retired items kept as reference. See [projections](projections.md#legacy-views).
