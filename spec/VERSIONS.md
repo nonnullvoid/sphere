@@ -82,7 +82,7 @@ What's new:
 - **Registries:** conventions over configuration; stable interfaces with swappable parts; maintained per registry, checked by tooling, whatever the mode; surface defined by property. ([registries](registries.md))
 - **Loading:** four tiers (knowing-what eager, knowing-how lazy); a capability manifest; a governed floor; a session's cost scales with the task, not the sphere. ([loading](loading.md))
 - **Evolution:** crystallization sized from one-off to refactor; reflection with four findings; migrations sized by blast radius (targeted, phased, fork). ([evolution](evolution.md))
-- **Projections:** never the source of truth; three kinds of data (source truth, definition, derived cache); visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
+- **Projections:** never the source of truth; three kinds of data (source truth, definition, derived cache); live-fetch views and deterministic renders; snapshots as a one-shot template; visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
 - **Guardrails:** incident-born rules with reasons, kept few, overridable except when marked hard. ([guardrails](guardrails.md))
 - **Replication:** sharing levels, allowlist-built seeds, untrusted absorb, sphere identity and lineage, trusted spheres. ([replication](replication.md))
 - **Modes:** a sphere can have several personas, with switchable modes on top of them. ([modes](modes.md))
