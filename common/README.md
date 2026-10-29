@@ -20,6 +20,6 @@ common/core/protocol/
 
 | Lens | Frames | Status |
 |---|---|---|
-| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide | draft |
+| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted | draft 2 |
 
 _More lenses follow once this first one's shape is agreed._

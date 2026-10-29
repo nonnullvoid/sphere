@@ -279,7 +279,7 @@ Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the ac
 A **mirror** keeps a node's status in step with an outside tool, such as a team's tracker, so the human doesn't update two places.
 
 - A mirror is **one-way by default**: the sphere pushes a summary out. It doesn't take its own truth from the outside tool.
-- Everything a mirror sends passes the outbound guard: it's drafted and the human approves, unless they've given a standing approval for that mirror.
+- Everything a mirror sends passes the outbound guard: it's drafted and the human approves, unless they've registered that mirror as a vetted ability (see [outbound guard](../common/core/protocol/frames/human-is-highest/outbound-guard.md)).
 - **Only what the mirror is told to send leaves the sphere.** Private notes, progress and lenses never travel with it.
 
 ## Witness (optional)

@@ -90,7 +90,7 @@ Lenses and frames are **co-authored**. The human brings the understanding; the A
 
 **Evolution** keeps it healthy. The sphere notices repeated patterns and friction, proposes changes sized to how big they are, and announces each one so you learn its vocabulary by example. See [evolution](spec/evolution.md).
 
-**Guardrails** grow from near-misses: each one is a rule with its reason, kept few, and always overridable except where the human has marked it hard. See [guardrails](spec/guardrails.md).
+**Guardrails** grow from near-misses: each one is a rule with its reason, kept few, and always overridable except where the human has marked it firm. Each lives in the softest place that works: a memory note, a sphere file, or an enforced check. See [guardrails](spec/guardrails.md).
 
 ---
 
@@ -120,7 +120,7 @@ These run through every chapter:
 | [loading](spec/loading.md) | What loads when, the capability manifest, and why a sphere stays fast as it grows |
 | [evolution](spec/evolution.md) | How a sphere grows, reflects on itself, and migrates safely |
 | [projections](spec/projections.md) | Views, the three kinds of data, freshness, static and served, the stack, surface |
-| [guardrails](spec/guardrails.md) | Incident-born rules, keeping them few, overrides |
+| [guardrails](spec/guardrails.md) | Incident-born rules, where each lives, keeping them few, overrides, principles |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
 | [modes](spec/modes.md) | Personas, and switchable behaviors on top of them |
 | [versions](spec/VERSIONS.md) | Architecture, build and sphere versions; upgrades; what's new in 1.0 |

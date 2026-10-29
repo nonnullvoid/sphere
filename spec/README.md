@@ -14,7 +14,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [Loading](loading.md): what loads when; the capability manifest; why a sphere stays fast as it grows
 - [Evolution](evolution.md): how a sphere grows, reflects on itself, and migrates safely
 - [Projections](projections.md): views, the three kinds of data, freshness, static and served, the stack, surface
-- [Guardrails](guardrails.md): incident-born rules, keeping them few, overrides
+- [Guardrails](guardrails.md): incident-born rules, where each lives, keeping them few, overrides, principles
 - [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres
 - [Modes](modes.md): personas, and switchable behaviors on top of them
 - [Versions](VERSIONS.md): architecture, build and sphere versions; upgrades; what's new in 1.0
