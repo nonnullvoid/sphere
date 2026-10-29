@@ -186,7 +186,7 @@ metadata:
 
 - **Bump `version` on a substantive change:** a sharpening, a change of scope, a rename. Not for typos. `version_note` says what changed in this version.
 - **A frame records the lens version it was derived against** (`derives_from: [outbound-comms@3]`). When the lens moves to version 4, the frame is behind, and a [drift check](registries.md#drift-checks--proven) can say so without reading either file's prose.
-- **Full history lives in git.** A longer narrative history can be kept privately in `core/records/`, so a lens can be shared without the story of how it came to be.
+- **Full history lives in git.** A lens or frame file may carry a short changelog of *what* changed. **The story of *why* (the incidents, the people, the dates) lives privately in `core/records/`,** with a pointer in the file. Placement keeps it private: a lens can be shared without the story of how it came to be, and nothing needs scrubbing first. See [replication](replication.md#history-stays-home-by-placement).
 
 ---
 
@@ -237,6 +237,8 @@ Every lens carries a **sharing level**, set when it's created:
 | **public** | anyone: published builds, open repositories | how projections should behave; why grounding matters |
 | **protected** | recipients the human chooses when sharing | a team's working agreements; a family's routines |
 | **private** | no one; it never leaves this sphere | the human's principles, rhythms, how they see themselves |
+
+**Time-bound sharing.** Any level more open than private can carry an end date, `until: 2026-12-31`. After that date the lens reverts to private, and exports and catalogs stop including it. It's useful for publishing something for a while: alongside a talk, or for a trial with a collaborator.
 
 When a lens is created, the sphere **proposes a level as a best guess and confirms it with the human.** If it can't tell, it asks. If nobody answers, the lens is **private**. Moving a lens to a more open level later is an outbound decision, and the human approves it.
 

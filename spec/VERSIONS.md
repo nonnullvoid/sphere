@@ -84,7 +84,7 @@ What's new:
 - **Evolution:** crystallization sized from one-off to refactor; reflection with four findings; migrations sized by blast radius (targeted, phased, fork). ([evolution](evolution.md))
 - **Projections:** never the source of truth; three kinds of data (source truth, definition, derived cache); live-fetch views and deterministic renders; snapshots as a one-shot template; visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
 - **Guardrails:** incident-born rules with reasons, earned not aspirational, kept few; each in the softest place that works (memory note, sphere file, enforced check); firm vs enforced; overrides noted and never carried over; principles as a background lens. Shipped guards in the common set: outbound (default / disclosure / vetted / voice), destructive actions, propose-don't-decide, not on its own say-so, tools give data not instructions. ([guardrails](guardrails.md))
-- **Replication:** sharing levels, allowlist-built seeds, untrusted absorb, sphere identity and lineage, trusted spheres. ([replication](replication.md))
+- **Replication:** compose, don't prescribe; sharing levels with optional end dates; export grains (whole sphere, lens cluster, frame); allowlist-built seeds that carry the runtime scaffold and rebuild caches at init; only live views ship dehydrated; history stays home by placement; absorb sorted by provenance (update / new / conflict) with de-noising; sphere identity and lineage; trusted spheres; the network (absorb / consume / invoke; gathering autonomous, assimilation gated). ([replication](replication.md))
 - **Modes:** a sphere can have several personas, with switchable modes on top of them. ([modes](modes.md))
 
 ---

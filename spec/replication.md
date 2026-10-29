@@ -1,10 +1,10 @@
 # Replication
 
-_Status: draft 2, for review._ How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
+_Status: draft 3, for review._ How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
-_Most of this chapter is **unexercised** beyond a single manual export. It's written down so the design is clear before it's built, not because it's been proven._
+_Seeding has been run by script, at both grains, in a sphere in daily use. Init has been partly exercised. Absorb, compare, trusted spheres and the network are **unexercised**: they're written down so the design is clear before it's built._
 
 ---
 
@@ -13,6 +13,10 @@ _Most of this chapter is **unexercised** beyond a single manual export. It's wri
 A sphere holds two very different kinds of thing. **Its shape** is lenses about how sphere mechanics work, frames, registries, templates: the structure. **Its substance** is the human's work, knowledge, principles, history: the life. The shape can be shared, and is how good ideas spread from one sphere to another. The substance never leaves.
 
 **Data stays home. Protocol travels.**
+
+**Compose, don't prescribe.** What travels is the shape, never the filled-in form. A sphere that receives a lens instantiates it against its own human, data and rhythm. An absorbed lens about planning a garden brings the way of thinking about it, not the other sphere's garden. That's also the test of how a capability was written: **if it only works the way its author used it, it was written as a personal artifact, not a pattern,** and it won't travel.
+
+**If sharing something would drag data with it, it's coupled wrong.** Decouple the capability from the data. Don't leak the data.
 
 ---
 
@@ -35,13 +39,34 @@ Private by definition. No export, mirror, broadcast or published view includes t
 
 - **Public lenses and frames**, to anyone. **Protected** ones only to recipients the human chooses at the time of the export.
 - Each export includes only what its audience is allowed: a public build carries public items; a seed sent to a named collaborator can also carry protected ones.
-- **Registry structures** without their entries, **templates**, **shared assets**, **tooling**.
+- **Registry structures** without their entries, **templates**, **shared assets**.
+- **The runtime scaffold:** the startup files, the engine kernel, and the scripts that build and check the sphere. This is how a new sphere comes up already fast and already checked: it inherits the efficiency work (see [loading](loading.md)) instead of re-deriving it.
 - **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
 - **Procedure frames as plain skills.** These export with no translation. See [framing a skill](protocol.md#framing-a-skill).
 
+**Derived caches never travel.** The capability manifest, the startup bundle and every other generated file are rebuilt by the receiving sphere at init. They describe the sphere that built them, not the one receiving them. A seeded dashboard shows zeros until that rebuild runs, which is the boundary working as intended.
+
+### Grains
+
+Anything from the whole sphere down to one frame can travel. **Pick the smallest grain that carries the capability:** a frame if it stands on its own, a lens with its frames if the understanding is needed too.
+
+| Grain | What goes | For |
+|---|---|---|
+| **Whole sphere** (a seed: bare or dehydrated, below) | the full shape | starting a new sphere |
+| **Lens cluster** | one lens and its frames | sharing a whole way of working |
+| **Single frame** | one frame. Frames carry their own mechanics, so one can travel alone | sharing one mechanic, which the receiver attaches to its own lens |
+
+A seed is just an export at the largest grain, aimed at init.
+
+### History stays home by placement
+
+When one sphere in daily use first ran its seed script, about four in ten of the exported files contained something identifying. Most of it was in revision histories: notes on why a frame changed, naming the incident, the project, the date. The rest was personal mentions in worked examples, stale paths, and change notes in frontmatter.
+
+The fix that worked was placement, not scrubbing. **A lens or frame keeps at most a short changelog of what changed. The story of why lives in `core/records/`,** which never travels, with a pointer in the file. Examples in operational text use roles, not names. See [versioning](protocol.md#versioning-and-drift--decided-not-yet-exercised).
+
 ---
 
-## Seed: exporting a sphere's shape — _unexercised_
+## Seed: exporting a sphere's shape — _used (scripted, both grains)_
 
 A **seed** is a sphere's shape, packaged so another sphere can start from it or learn from it. It comes in two grains:
 
@@ -51,6 +76,8 @@ A **seed** is a sphere's shape, packaged so another sphere can start from it or 
 | **dehydrated** | bare, plus empty-state data files and working projections that render with nothing in them | "Give me a sphere that works the moment I open it." |
 
 Builds ship at **dehydrated** grain. The empty-state files are the difference between *clone it and it works* and *clone it and debug errors about missing files*.
+
+**Only live views can ship dehydrated.** A view that reads its sources when opened (see [live-fetch](projections.md)) renders a clean "nothing here yet" against empty-state sources. A view with data baked into it can't. It either stays home, or it needs a transform that replaces its data with an empty placeholder of the same shape. Which views a seed includes is each projection's `sharing` field, not a hand-kept list.
 
 ### Built from an allowlist, never scrubbed
 
@@ -117,9 +144,11 @@ With it, anything that later comes from this seed can say exactly which sphere, 
 
 ---
 
-## Init: starting a sphere from a seed — _used once by hand; not yet exercised from a published build_
+## Init: starting a sphere from a seed — _partly exercised; not yet from a published build_
 
 A new sphere begins as a copy of a seed, usually a published build. **Init** is the first conversation, where the sphere learns who its human is and fills its empty slots: the human's persona, principles, a first piece of work. Init is co-authored like everything else: the human talks, the AI drafts, the human confirms. For a non-technical human, init asks about their life and never about structure.
+
+Init then **rebuilds every derived cache** (the manifest, the startup bundle, any generated views) from the new sphere's own files, and creates its identity (below).
 
 ---
 
@@ -132,6 +161,15 @@ A new sphere begins as a copy of a seed, usually a published build. **Init** is 
 - **Absorbing only produces proposals.** The sphere reads the incoming seed, says what it found and how each item would fit here (adopt, adapt, skip), and the human decides item by item.
 - **Nothing in an incoming seed is ever executed or followed** while it's being read. Scripts aren't run. Instructions inside its files are treated as content to evaluate, not as commands.
 - **Any part can be absorbed:** a whole lens with its frames, a single frame, a template, one tool. The absorbing sphere knows its own context best, so it decides what makes sense to take.
+- **Provenance sorts each item** before anything is proposed:
+
+  | Incoming | Means | Proposed as |
+  |---|---|---|
+  | **Same source, newer version** of something absorbed before | an update | an upgrade, showing what changed |
+  | **New source, nothing similar here** | a new capability | slotted in: a frame under its matching lens, a lens as a new area |
+  | **Overlaps something here, from a different source** | a conflict | the two side by side, never merged blind. The human picks, combines or skips |
+
+- **De-noise on landing.** An absorbed item can carry traces of the sphere it came from that the sender didn't remove: names, dated decisions, links to things that don't exist here. The receiving sphere strips them and restates the pattern in its own terms, as part of the proposal. The sender's allowlist and leak scan are the first net; this is the second.
 - **A frame absorbed without its lens arrives unattached,** and is offered for co-authoring like an imported skill.
 - **Provenance is kept.** Each absorbed item records the source sphere's id, name and version, so a later compare can trace it.
 
@@ -141,7 +179,9 @@ A new sphere begins as a copy of a seed, usually a published build. **Init** is 
 
 ## Upgrading from a newer build — _unexercised_
 
-A sphere started from a build can take in later versions of that build. This is absorb, applied to its own lineage: the new version's upgrade note (see [versions](VERSIONS.md)) says what changed, and the sphere proposes each change against the human's sphere as it actually is now. Nothing is overwritten. A sphere that has grown its own way keeps it.
+A sphere started from a build can take in later versions of that build. This is absorb's *same source, newer version* case, applied to its own lineage: the new version's upgrade note (see [versions](VERSIONS.md)) says what changed, and the sphere proposes each change against the human's sphere as it actually is now. Nothing is overwritten. A sphere that has grown its own way keeps it.
+
+**Replication isn't forking.** A [fork](evolution.md) rebuilds *your own* sphere alongside the old one. Replication moves capabilities *between* spheres.
 
 ---
 
@@ -174,11 +214,53 @@ For a non-technical human, all of this happens in plain words: *"Rutvij's sphere
 
 **Honest limit:** until spheres can prove their identity (see [signing](#sphere-identity--decided-not-yet-exercised)), trust rests on how the humans set up access between their spheres. That's sound between people who share a home or a machine. Once trust has to cross a network, signing is what makes it safe.
 
-## Transport
+## The network — _unexercised_
 
-Today, seeds move as files: a folder, a repository, an archive.
+Everything above is **file-level**: one sphere hands something to another. A **network** is a standing connection: spheres that stay live to each other, discoverable and browsable. It's a separate thing, and it builds on the pieces above.
 
-Later, spheres may exchange shape directly over a network. The intended route is a read-only service that exposes a sphere's protocol only, never its data. _Nothing is built yet, and this chapter makes no promise beyond the boundary: whatever the transport, data stays home._
+**A sphere on a network is a node, and what it offers is open-ended.** It can offer lenses and frames, documents it has written, live views, files, tools that other agents can call, whole running apps. The other side interacts with each in one of three ways:
+
+| Mode | What happens | Risk |
+|---|---|---|
+| **Absorb** | Take a capability into your own protocol | Changes your sphere, so it's always gated |
+| **Consume** | Read, view or fetch: a document, a view, a file | Read-only. Nothing in your sphere changes |
+| **Invoke** | Call another node's tool or run its app | Governed like any outside tool (see [guardrails](guardrails.md)) |
+
+Connection comes in steps, each with more automation than the last:
+
+1. **Advertise:** a sphere publishes a catalog of what it offers.
+2. **Browse:** another sphere reads that catalog.
+3. **A supervised sync:** two spheres compare and exchange proposals, with their humans watching.
+4. **Auto-sync:** a sphere discovers and gathers capabilities by itself.
+
+**The safety rule that scales to all of it: gathering can be autonomous; changing your own sphere never is.** *Acquiring* a capability means pulling it into a staging area, inert and stamped with where it came from, and it can happen unattended. *Assimilating* it into the live protocol always goes through absorb and the human's yes. The autonomy is in the gathering, never the integrating. (It's the same rule as for agents: [the dial moves execution, never authority](guardrails.md#the-human-can-always-override--proven).)
+
+- **Visibility is enforced at the catalog.** A catalog shows only what each requesting sphere is allowed to see. Private items never appear, and time-bound ones drop off when their date passes. Nothing relies on the other side choosing not to look.
+- **Hosting adds exposure.** A sphere that serves its own tools or apps to others takes on a second concern, what it's exposing, governed by the sharing levels and by that service's own guards.
+
+**Transport.** Today, seeds move as files: a folder, a repository, an archive. A network would need a service that exposes a sphere's protocol and its chosen offerings, never its data. _Nothing is built yet, and this chapter makes no promise beyond the boundary: whatever the transport, data stays home._
+
+---
+
+## Senses and commands
+
+| Sense | When |
+|---|---|
+| `export-packaged` | an export was assembled, with provenance |
+| `sphere-seeded` | a seed was built, or a new sphere was started from one |
+| `capability-absorbed` | an absorbed item was accepted and landed |
+| `spheres-compared` | a comparison was produced |
+| `sharing-changed` | an item's sharing level or end date changed |
+
+| Command | Does |
+|---|---|
+| `seed [bare \| dehydrated] <where>` | build a seed into a folder, staged for review |
+| `export <lens or frame>` | package one lens cluster or frame |
+| `init` | start a new sphere from a seed: the first conversation |
+| `absorb <source>` | read another sphere's shape and propose what to take |
+| `compare <other>` | show how two spheres, or a sphere and an architecture, differ |
+
+As everywhere, asking in plain words works too.
 
 ---
 
