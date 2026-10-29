@@ -2,7 +2,7 @@
 lens: human-is-highest
 version: 2
 updated: 2026-10-28
-verified: false
+verified: true
 sharing: public
 frames: [outbound-guard, destructive-actions-ask, propose-dont-decide, evaluator-not-self, external-tools-untrusted]
 ---
