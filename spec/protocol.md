@@ -51,7 +51,7 @@ A frame is the **operating mechanics derived from one or more lenses**: when it 
 - **One lens usually yields several frames,** often of different kinds.
 - **Frames compose; they don't inherit.** Several frames are active at once during any piece of work. There's no frame hierarchy. Intents, abilities and frames relate many-to-many, by reference.
 - **A frame is self-sufficient to run.** Executing a frame never requires reading its lens. If it does, the frame is underspecified. The lens is consulted when the *why* is in question: judgment calls, changes, evolution. That's also what lets a sphere load frames often and lenses rarely. See [loading](loading.md).
-- **Modes live inside one frame.** Different ways of running the same activity (outbound messages sent normally, sent with a "drafted by AI" disclosure, or pre-approved for one narrow case) are sections of one frame, not sibling frames.
+- **Variants live inside one frame.** Different ways of running the same activity (outbound messages sent normally, sent with a "drafted by AI" disclosure, or pre-approved for one narrow case) are sections of one frame, not sibling frames.
 
 ### Components — **proven**
 
@@ -207,7 +207,7 @@ Re-evaluating means checking that the frame still follows from the lens. Often n
 **Prefer updating to adding, at every level.** Before creating a new lens, frame, ability or command, check whether an existing one should grow instead. A sphere that adds freely becomes hard to read and starts contradicting itself.
 
 - **A new lens** only when the understanding is genuinely distinct from every existing lens: not a sharpening, not a downstream rule, not a variation.
-- **A new frame** only when its mechanics are structurally separate from every existing frame. A new *way* of doing the same activity is a mode inside the existing frame.
+- **A new frame** only when its mechanics are structurally separate from every existing frame. A new *way* of doing the same activity is a variant inside the existing frame.
 - **When in doubt,** surface the candidate to the human and let them decide.
 
 How a change is sized, proposed, made and announced is in [evolution](evolution.md).

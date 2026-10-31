@@ -41,9 +41,9 @@ my-sphere/
 │   ├── trust.json           spheres this one trusts, and what each may do
 │   ├── engine.md            runtime rules: senses, instincts, the state machine
 │   ├── ai/personas/         who the AI is in this sphere (one or more)
-│   ├── user/persona.md      who the human is
+│   ├── user/                profile.md (who the human is, in their words), voice.md
 │   ├── protocol/            lenses, frames, and the protocol registry
-│   ├── modes/               switchable behaviors on top of a persona
+│   ├── operating-modes/     kinds of work the sphere knows how to do
 │   ├── records/sessions/    one file per session
 │   ├── manifest.md          what the sphere can do, and when to load each part
 │   ├── layers.md            layer registry
@@ -122,7 +122,7 @@ These run through every chapter:
 | [projections](spec/projections.md) | Views, the three kinds of data, freshness, static and served, the stack, surface |
 | [guardrails](spec/guardrails.md) | Incident-born rules, where each lives, keeping them few, overrides, principles |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
-| [modes](spec/modes.md) | Personas, and switchable behaviors on top of them |
+| [modes](spec/modes.md) | Operating and collaboration modes; personas; voice and tone |
 | [versions](spec/VERSIONS.md) | Architecture, build and sphere versions; upgrades; what's new in 1.0 |
 
 For how to grow a sphere well, see [BUILDING.md](BUILDING.md).

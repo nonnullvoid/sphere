@@ -22,7 +22,7 @@ The common set ships these as frames under [human-is-highest](../common/core/pro
 
 | Guardrail | What it does | |
 |---|---|---|
-| [**Outbound guard**](../common/core/protocol/frames/human-is-highest/outbound-guard.md) | Anything leaving under the human's name is drafted and shown first. Four modes: **default** (a yes for each message), **disclosure** (a one-run exception where every message is marked as sent by the AI), **vetted** (named abilities the human registered in advance; **none by default**), and **voice** (how drafts read on each channel). Agents never send. Every send gets a receipt | **proven** |
+| [**Outbound guard**](../common/core/protocol/frames/human-is-highest/outbound-guard.md) | Anything leaving under the human's name is drafted and shown first. Four send modes: **default** (a yes for each message), **disclosure** (a one-run exception where every message is marked as sent by the AI), **vetted** (named abilities the human registered in advance; **none by default**), and **voice** (how drafts read on each channel). Agents never send. Every send gets a receipt | **proven** |
 | [**Destructive actions ask**](../common/core/protocol/frames/human-is-highest/destructive-actions-ask.md) | Deleting, overwriting or anything hard to undo is proposed and confirmed, never just done | **proven** |
 | [**Propose, don't decide**](../common/core/protocol/frames/human-is-highest/propose-dont-decide.md) | Changes to what the sphere believes or how it behaves are proposals | **proven** |
 | [**Not on its own say-so**](../common/core/protocol/frames/human-is-highest/evaluator-not-self.md) | Work isn't called done, fixed or verified on the AI's word alone. Something outside it checks: a test, another agent, or the human | **proven** |

@@ -110,11 +110,11 @@ _An example already in the spec:_ the [work tree view](work.md) is built from no
 
 ---
 
-## Session type — _decided, not yet exercised_
+## Operating mode loadout — _decided, not yet exercised_
 
-A session can carry a **type**: coding, brainstorming, planning, meeting review, research, sphere authoring. The type is a **hint for what to load up front, never a gate.** Everything stays reachable. If a coding session suddenly needs the meeting frames, they load on demand at the cost of one extra read.
+Every [operating mode](modes.md#operating-modes--decided-not-yet-exercised) (coding, brainstorming, planning, research…) carries a **loadout**: the frames worth warming up front for that kind of work. The floor always loads. The loadout is the only part that varies. It's **a hint, never a gate**: everything stays reachable, and if a coding session suddenly needs the meeting frames, they load on demand at the cost of one extra read.
 
-The type is declared by the human (preferred), inferred from how the session opens, and changeable at any time. Which frames each type warms up is learned from use. _(Moved here from [state](state.md).)_
+The operating mode is declared by the human (preferred), inferred from how the work opens, and changeable at any time. Which frames each loadout warms is learned from use.
 
 ---
 
@@ -138,4 +138,4 @@ None of this is visible. They notice only that the sphere is quick, stays on top
 1. **Measuring the invariant.** What's the test that shows a session's cost tracks the task, not the sphere? Probably a fixed set of narrow tasks, run against the same sphere at different sizes.
 2. **Search at scale.** When discovery shifts to searching, is plain text search enough, or does a large sphere need an index built for it?
 3. **Floor budget.** Should a build ship a size budget for the floor, or only report its size?
-4. **Learned warm-up.** How does a sphere learn which frames a session type should warm up, without loading them all to find out?
+4. **Learned warm-up.** How does a sphere learn which frames an operating mode's loadout should warm up, without loading them all to find out?

@@ -8,13 +8,13 @@ _A practical guide to growing a sphere well. The [architecture](ARCHITECTURE.md)
 
 You don't need the whole architecture on day one. A sphere that holds a few things well beats one that holds everything badly. A good first week:
 
-- **Who you are, and how you like to work:** a short user persona and a few principles.
+- **Who you are, and how you like to work:** a short profile and a few principles.
 - **Your work,** one node per thing you're doing, each with a next action.
 - **Facts worth keeping,** with where they came from.
 - **Ground at the end of each session,** and resume at the start of the next.
 - **The outbound guard:** nothing leaves under your name without you seeing it.
 
-Everything else (session trees, mirrors, modes, sharing) can wait until you feel the need. Add things when something's missing, not because the architecture has a chapter on it.
+Everything else (session trees, mirrors, several personas or operating modes, sharing) can wait until you feel the need. Add things when something's missing, not because the architecture has a chapter on it.
 
 ---
 

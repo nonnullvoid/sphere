@@ -26,7 +26,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 
 | Never travels | Where it lives |
 |---|---|
-| The human's persona and principles | `core/user/` |
+| The human's profile, voice and principles | `core/user/` |
 | The AI's personas and their relationship with this human | `core/ai/` |
 | Session records, decisions, history | `core/records/`, `layers/knowledge/history/` |
 | Layer data: work, knowledge, everything in `layers/` | `layers/` |
@@ -220,7 +220,7 @@ Everything above is **file-level**: one sphere hands something to another. A **n
 
 **A sphere on a network is a node, and what it offers is open-ended.** It can offer lenses and frames, documents it has written, live views, files, tools that other agents can call, whole running apps. The other side interacts with each in one of three ways:
 
-| Mode | What happens | Risk |
+| Interaction | What happens | Risk |
 |---|---|---|
 | **Absorb** | Take a capability into your own protocol | Changes your sphere, so it's always gated |
 | **Consume** | Read, view or fetch: a document, a view, a file | Read-only. Nothing in your sphere changes |

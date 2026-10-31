@@ -16,7 +16,7 @@ The trap is that a list kept by hand drifts. Something changes, nobody updates t
 
 The test for any file: if you could delete it and rebuild it from other files, it's a view. If you couldn't, it's truth, and nothing else should duplicate it.
 
-**How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the structural frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, whatever its mode.
+**How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the structural frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, however it's maintained.
 
 ---
 
@@ -45,7 +45,7 @@ Every registry has the same four properties:
 | **An index** | It holds *what exists* and *where*. The content itself lives elsewhere. |
 | **An explicit contract** | If it isn't in the registry, the sphere treats it as not existing. Nothing is found by scanning folders. |
 | **It declares the interface** | Not just which items exist, but the contract they satisfy |
-| **It's checked** | A [drift check](#drift-checks--proven) verifies it at ground, whatever its maintenance mode |
+| **It's checked** | A [drift check](#drift-checks--proven) verifies it at ground, however it's maintained |
 
 ### Where a registry lives — _decided, not yet exercised_
 
@@ -79,19 +79,19 @@ Don't centralize content registries, and don't scatter structural ones.
 
 ## Three ways a registry is maintained
 
-| Mode | Who maintains it | When it fits |
+| Maintenance | Who maintains it | When it fits |
 |---|---|---|
 | **generated** | the tooling, by script | Every column can be computed from other files |
 | **AI-maintained** | the AI, following the registry's frame | Some columns need judgment: a description, a relationship, a summary |
 | **authored** | the human, with the AI drafting | It holds human decisions that live nowhere else |
 
-**AI-maintained doesn't mean unchecked.** An instruction in a frame to "rebuild this at every ground" is a habit, and habits lapse. A registry that says it's rebuilt every ground can go months without being rebuilt, with nothing noticing. So every registry, whatever its mode, has a [drift check](#drift-checks--proven) that runs in the tooling.
+**AI-maintained doesn't mean unchecked.** An instruction in a frame to "rebuild this at every ground" is a habit, and habits lapse. A registry that says it's rebuilt every ground can go months without being rebuilt, with nothing noticing. So every registry, however it's maintained, has a [drift check](#drift-checks--proven) that runs in the tooling.
 
 **Authored registries are reconciled.** A registry that is the truth for some human decision (the session registry: what a session is for, whether it's abandoned) stores only those decisions. It computes everything else, and at ground it's checked against the facts it sits next to, with mismatches put to the human as questions. See [state](state.md#the-session-registry).
 
 ## The registries in a sphere
 
-| Registry | Lists | Likely mode | Built or checked against | Chapter |
+| Registry | Lists | Likely maintenance | Built or checked against | Chapter |
 |---|---|---|---|---|
 | **Layers** (`core/layers.md`) | every layer: what it holds, depends on, may share | generated | each layer's contract file | below |
 | **Surface** (`core/surface.md`) | every space in the surface: its kind, who can see it, how it's laid out | generated | each surface space's declaration | [below](#the-surface-registry--decided-not-yet-exercised) |
@@ -102,9 +102,9 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
 | **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
 
-"Likely mode" is the default a build ships with. A sphere's own frame for a registry can choose differently.
+"Likely maintenance" is the default a build ships with. A sphere's own frame for a registry can choose differently.
 
-Every registry declares its mode where it can be seen:
+Every registry declares how it's maintained where it can be seen:
 
 ```yaml
 ---

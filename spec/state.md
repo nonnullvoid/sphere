@@ -132,7 +132,7 @@ The session file is the session's handoff to its own future self. Each ground ap
 Concurrent sessions are normal: two windows, or a laptop and a phone. The layout keeps them out of each other's way:
 
 - **Per-session and per-work files** take most writes: session files and each work's `progress.md`.
-- **Shared files** (the work index, principles, the human's persona) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
+- **Shared files** (the work index, principles, the human's profile) are only written at ground, and only after re-reading them, so a session never overwrites changes it hasn't seen.
 
 #### Without git — fallback only
 
@@ -256,9 +256,9 @@ At level 1 the session files *are* the registry, and reconciliation is a single 
 
 **Runtime state is never committed.** Committing fast-changing state causes merge conflicts and makes the committed record disagree with reality. If the state file is deleted, the tooling rebuilds it.
 
-## Session type
+## Modes
 
-A session can carry a type that hints what to load up front. See [loading](loading.md#session-type--decided-not-yet-exercised).
+A session runs in one [operating mode and one collaboration mode](modes.md), recorded in its session file with the persona. Modes belong to the sphere, not the session: a scheduled run records them the same way.
 
 ---
 
@@ -298,4 +298,4 @@ Documented so people who opt in know what they're choosing. Each will be address
 
 1. **The liveness threshold.** 30 minutes is a starting point; tune it from real use.
 2. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.
-3. **The session type list.** Moved to [loading](loading.md).
+3. **The session type list.** Now operating modes. See [modes](modes.md).
