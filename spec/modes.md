@@ -101,7 +101,7 @@ is for before shaping it. Don't start building.
 
 It's a structural frame: it **composes** lenses and frames, it doesn't hold understanding of its own.
 
-**Builds ship starter operating modes,** for example coding, brainstorming, planning, reviewing, research, reflecting, and sphere authoring for builders. **The sphere refines them through use.** It notices what a mode actually reaches for and offers to adjust its loadout. A loadout that keeps missing is a [reflection](evolution.md) finding.
+**Builds ship starter operating modes,** for example coding, brainstorming, planning, reviewing, research, reflecting, and sphere authoring (below). **The sphere refines them through use.** It notices what a mode actually reaches for and offers to adjust its loadout. A loadout that keeps missing is a [reflection](evolution.md) finding.
 
 ### What an operating mode can change
 
@@ -128,6 +128,21 @@ It's a structural frame: it **composes** lenses and frames, it doesn't hold unde
 | **Guardrails** (adds or relaxes one, for example privacy) | Suggested and confirmed: *"This sounds personal. Want me to switch to reflecting, where nothing gets sent?"* |
 
 The human can always switch explicitly: *"let's brainstorm."* An operating mode can change mid-session as the work shifts. It's a relabel, not a restart. Switching in one session doesn't change any other.
+
+### Sphere authoring: changing the sphere itself — _decided, not yet exercised_
+
+One operating mode is different from the rest. **Sphere authoring is the only operating mode in which the sphere's internals can be changed:** its lenses, frames and guardrails, its operating-mode files, the persona, and the shape of its registries.
+
+It doesn't give the AI more authority. Nothing does. It widens what can be changed and adds checks to how each change is made.
+
+- **Outside it, internals are read-only.** The sphere can still notice that a lens or a guardrail should change. It records that as a proposal for the next [reflection](evolution.md) and leaves the file alone. The sphere's notes and records aren't internals: it keeps those current without asking, as always.
+- **Only the human starts it.** The sphere never infers it, and never suggests switching into it. It ends with the session or run, and never carries over to the next one.
+- **Every change is shown and confirmed.** Each edit to a guardrail, lens or frame is shown as a change (what was there, what will be) and waits for the human's yes. The AI never approves its own change (see [evaluator-not-self](../common/core/protocol/frames/human-is-highest/evaluator-not-self.md)). Each change is recorded with its reason.
+- **Never unattended.** Sphere authoring runs only *together* or *supervised*. An unattended run can queue a proposed change for the human to review, the same way agents queue drafts and never send, but it can't apply one.
+
+**The rule that an operating mode can't remove a guardrail still holds.** Sphere authoring doesn't suspend any rule while it runs. It's where the human deliberately rewrites the rules. Switching a rule off for the moment is never possible. Changing the rule is always the human's right, and this is where they do it.
+
+**Capturing a rule in the moment** (see [where guardrails come from](guardrails.md#where-guardrails-come-from--proven)) doesn't need a switch. The human's yes to that one entry counts as a brief step into sphere authoring, for that change only.
 
 ---
 

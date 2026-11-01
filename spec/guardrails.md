@@ -97,6 +97,8 @@ Guardrails exist because people, and AIs, forget in the moment. They're not ther
 
 The exception is a guardrail the human has marked **firm**, such as never sharing another person's private details. For those, the human has decided in advance that the in-the-moment request doesn't win, and the sphere holds to that.
 
+**Changing a guardrail is different from overriding it.** An override lets one request through. A change rewrites the rule itself, and that happens only in [sphere authoring](modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised), with the human confirming each edit.
+
 **Independence doesn't loosen them.** As agents earn more independence for specific kinds of work, they're trusted to do more on their own. The guardrails hold the same at every level. **The dial moves execution, never authority.** (How independence is earned is its own chapter, still to come.)
 
 ---
