@@ -14,7 +14,7 @@ You don't need the whole architecture on day one. A sphere that holds a few thin
 - **Ground at the end of each session,** and resume at the start of the next.
 - **The outbound guard:** nothing leaves under your name without you seeing it.
 
-Everything else (session trees, mirrors, several personas or operating modes, sharing) can wait until you feel the need. Add things when something's missing, not because the architecture has a chapter on it.
+Everything else (mirrors, several personas or operating modes, sharing) can wait until you feel the need. Add things when something's missing, not because the architecture has a chapter on it.
 
 ---
 

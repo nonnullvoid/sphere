@@ -76,7 +76,7 @@ The first public release (v0.1, April 2026) was an early sketch. It described a 
 What's new:
 
 - **Protocol:** lenses and frames. Frames derive from one or more lenses and declare the data they touch; every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
-- **State:** two session levels, simple by default and the session tree opt-in. A session registry with three homes for three kinds of truth. ([state](state.md))
+- **State:** simple sessions only: one branch, several sessions at once kept apart by layout, a short lock at ground. Parallel session trees are planned, not shipped. Six operations, no separate sync (ground pulls and pushes); the words belong to the build (*ground* technical, *save* non-technical) and the human; peek shows what's unsaved. Session files are the registry; three kinds of truth, three homes. ([state](state.md))
 - **Work:** recursive work nodes with optional labels (area / project / task); separate state and focus; plans as a parallel, versioned hierarchy of phases and steps; plan asserted, progress measured; a tree view built from frontmatter; archiving. ([work](work.md))
 - **Knowledge:** domains and topics with namespaced names; facts (firm) and reads (soft), each graded by source and firmness; capture discipline, compiling from sources, visible staleness; care for facts about other people. ([knowledge](knowledge.md))
 - **Registries:** conventions over configuration; stable interfaces with swappable parts; maintained per registry, checked by tooling, however it's maintained; surface defined by property. ([registries](registries.md))

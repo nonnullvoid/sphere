@@ -69,7 +69,7 @@ Projections live outside the session boundary: a human opens their dashboard wit
 - **A session can preview its unsaved changes** by rendering into scratch (`surface/projections/_scratch/`), clearly marked as a preview. The real artifact doesn't change until the session grounds.
 - **A change to the definition rides the session** like any other authored file. It's previewed in scratch, and it reaches the real artifact when it's grounded.
 
-At [level 1](state.md), with one shared line, these are the same thing in practice. They only come apart when sessions branch.
+With [simple sessions](state.md#simple-sessions--proven), on one shared line, these are the same thing in practice. They only come apart when sessions branch.
 
 ---
 

@@ -113,7 +113,7 @@ These run through every chapter:
 | Chapter | What it covers |
 |---|---|
 | [protocol](spec/protocol.md) | Lenses, frames, skills, the registry, co-authoring, sharing levels |
-| [state](spec/state.md) | Sessions at two levels, ground and resume, the session registry, commits |
+| [state](spec/state.md) | Simple sessions (parallel trees planned), ground and resume, the session registry, commits |
 | [work](spec/work.md) | Work nodes (area / project / task), state and focus, plans, progress, archiving |
 | [knowledge](spec/knowledge.md) | Domains, topics, facts and reads; how sure each is; how knowledge gets in |
 | [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |

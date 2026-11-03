@@ -57,7 +57,7 @@ Placement follows from two questions. It's never assigned case by case.
    - **in `surface/state/`** if it must show live state *across* sessions (which sessions are running right now);
    - **otherwise, next to its items** (the work index sits in `layers/work/`).
 
-With [session trees](state.md#level-2--the-session-tree-opt-in--advanced), two views point in opposite directions. Each session should see only *committed* work, so the work index stays with the work, on each session's branch. But knowing which sessions are live is the whole point of the session state, so it lives in shared, always-latest space. Same pattern, opposite answers, because their visibility needs are opposite.
+With [parallel sessions](state.md#later-parallel-sessions--planned) (planned), two views point in opposite directions. Each session should see only *committed* work, so the work index stays with the work, on each session's branch. But knowing which sessions are live is the whole point of the session state, so it lives in shared, always-latest space. Same pattern, opposite answers, because their visibility needs are opposite.
 
 ### Who owns a registry
 
@@ -152,7 +152,7 @@ Every surface space is described on three independent axes:
 
 **Kind isn't visibility.** A projection is rendered for a human, but that doesn't make it public. Most of surface is private.
 
-**Flatness is what makes surface surface.** The rest of a sphere is *branchspace*: it moves with sessions and is committed when they ground. Surface is *flatspace*: one always-latest copy that every session sees, whichever branch it's on. Most of it is a materialized view over branchspace (projections re-render, the session list rebuilds from session files), so it can always be reproduced. At [level 1](state.md), with one shared line, the difference is invisible. It matters once sessions branch.
+**Flatness is what makes surface surface.** The rest of a sphere is *branchspace*: it moves with sessions and is committed when they ground. Surface is *flatspace*: one always-latest copy that every session sees, whichever branch it's on. Most of it is a materialized view over branchspace (projections re-render, the session list rebuilds from session files), so it can always be reproduced. With [simple sessions](state.md#simple-sessions--proven), on one shared line, the difference is invisible. It matters once sessions branch.
 
 **Liveness is a disposable side-layer.** The one part of surface that isn't a view is liveness: heartbeats, which windows are attached right now. It exists nowhere else, it changes every few minutes, and it's fine to lose in a crash. So it's never committed, or surface's history would churn with every heartbeat. A space declares whether it carries one.
 
@@ -182,7 +182,7 @@ Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and th
 
 The capability manifest is a human-facing view, so it's committed: a person can read it to see what their sphere knows how to do. See [loading](loading.md).
 
-**Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when level-2 sessions [sync](state.md#level-2--the-session-tree-opt-in--advanced), it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
+**Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when two devices sync, or when [parallel sessions](state.md#later-parallel-sessions--planned) merge, it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
 
 ---
 
