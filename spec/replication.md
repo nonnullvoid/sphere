@@ -189,7 +189,7 @@ A sphere started from a build can take in later versions of that build. This is 
 
 Spheres can let other spheres in, in specific and limited ways. For example, one person's sphere helps look after a partner's sphere: it keeps that sphere's machinery healthy and offers improvements, with authority the partner's sphere has granted.
 
-**Every sphere decides who it trusts.** It keeps its own list of trusted spheres in `core/trust.json`, and what each one may do:
+**Every sphere decides who it trusts.** It keeps its own list of trusted spheres in `core/trusted-spheres.json`, and what each one may do:
 
 ```json
 {
@@ -204,7 +204,7 @@ Spheres can let other spheres in, in specific and limited ways. For example, one
 }
 ```
 
-- **Trust starts at nothing.** A trusted sphere can do only what it was explicitly granted, and grants are specific: reading projections, proposing changes, fixing drift, receiving protected lenses.
+- **Trust starts at nothing.** A trusted sphere can do only what it was explicitly granted, and grants are specific: reading projections, proposing changes, fixing drift, receiving protected lenses, reading [library](literacy.md#the-library--proven) artifacts.
 - **Changes from a trusted sphere arrive as proposals,** unless direct changes were specifically granted. The trusting sphere's human still decides.
 - **Everything a trusted sphere does is recorded** in the trusting sphere, in plain words its human can read: what was looked at, what was proposed, what was changed.
 - **The trusting sphere can narrow or revoke any grant, at any time,** and the change is immediate. Trust given is never trust owed.

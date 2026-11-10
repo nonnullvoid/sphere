@@ -36,7 +36,7 @@ A lens captures **understanding that comes from the human's own experience**: ho
 
 A lens is:
 
-- **Authored with the human.** The AI drafts it from what the human says; the human reviews and iterates until it's true to how they work. See [Co-authoring](#co-authoring-the-method).
+- **Authored with the human.** The AI drafts it from what the human says; the human reviews and iterates until it's true to how they work. See [Co-authoring](#co-authoring-the-method--proven).
 - **Open to suggestion from any source, but confirmed by the human.** The human, an AI proposal or an observed pattern can all suggest a lens. None of them is in force until the human has confirmed it.
 - **Versioned and ongoing.** Understanding sharpens over time. A lens has a revision history, not a finished state.
 
@@ -51,6 +51,7 @@ A frame is the **operating mechanics derived from one or more lenses**: when it 
 - **One lens usually yields several frames,** often of different kinds.
 - **Frames compose; they don't inherit.** Several frames are active at once during any piece of work. There's no frame hierarchy. Intents, abilities and frames relate many-to-many, by reference.
 - **A frame is self-sufficient to run.** Executing a frame never requires reading its lens. If it does, the frame is underspecified. The lens is consulted when the *why* is in question: judgment calls, changes, evolution. That's also what lets a sphere load frames often and lenses rarely. See [loading](loading.md).
+- **A frame composes the gates it uses; it isn't their child.** A procedure that passes through approval steps (a review runbook, say) names the guard frames it uses. Filing it under one of their lenses would flatten it into a detail of that lens.
 - **Variants live inside one frame.** Different ways of running the same activity (outbound messages sent normally, sent with a "drafted by AI" disclosure, or pre-approved for one narrow case) are sections of one frame, not sibling frames.
 
 ### Components — **proven**

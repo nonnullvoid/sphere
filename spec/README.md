@@ -8,7 +8,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 - [Protocol](protocol.md): lenses, frames, skills, the registry, co-authoring, sharing levels
 - [State](state.md): sessions at two levels, ground and resume, the session registry, commits
-- [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving
+- [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving, the idea queue, witness
 - [Knowledge](knowledge.md): domains and topics with namespaced names; facts and reads; two grades; capture, compiling and freshness; facts about other people
 - [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught
 - [Loading](loading.md): what loads when; the capability manifest; why a sphere stays fast as it grows
@@ -17,4 +17,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [Guardrails](guardrails.md): incident-born rules, where each lives, keeping them few, overrides, principles
 - [Replication](replication.md): seeds, absorb, compare, sphere identity, trusted spheres
 - [Modes](modes.md): operating and collaboration modes; personas; voice and tone
+- [Rhythm](rhythm.md): the human's days; anchors as offers; the forgotten wrap; reaching a human who's present
+- [Agent trust](agent-trust.md): how agents earn, keep and lose the right to work on their own
+- [Literacy](literacy.md): what the human understands; when to teach; generic and personalized; the library
 - [Versions](VERSIONS.md): architecture, build and sphere versions; upgrades; what's new in 1.0

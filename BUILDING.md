@@ -62,6 +62,10 @@ When a frame's value is in getting operations exactly right (git, file moves, se
 
 _What goes wrong otherwise:_ a session system described entirely in prose took many iterations to make git behave, and every session re-derived the same commands. The understanding was settled early. The mechanics kept breaking, because prose isn't a program.
 
+**Don't build what the harness already does.** The AI tool your sphere runs in keeps gaining features: permissions, memory, scheduling, background agents. Before writing mechanics for something, check whether the harness handles it. When it starts to, retire your version.
+
+_What goes wrong otherwise:_ a sphere kept a frame for handling stalled permission prompts long after the harness handled them itself. It cost reading time every session and did nothing.
+
 ---
 
 ## 7. Load lazily

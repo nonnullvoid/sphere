@@ -161,7 +161,7 @@ It's set per piece of work or per run, and recorded with it. Moving work toward 
 
 **However far it moves, the guardrails don't.** Unattended work still drafts, queues and waits for anything that needs the human's yes: being away isn't permission (see [human-is-highest](../common/core/protocol/lenses/human-is-highest.md)). **The dial moves execution, never authority.**
 
-How trust is earned, measured and withdrawn is its own chapter, still to come.
+How trust is earned, measured and withdrawn is in [agent trust](agent-trust.md).
 
 ---
 

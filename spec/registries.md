@@ -99,6 +99,7 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Capability manifest** (`core/manifest.md`) | every lens and frame: its job, and when to load it | AI-maintained | lens and frame files, by content hash | [loading](loading.md#the-capability-manifest--decided-not-yet-exercised) |
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
 | **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
+| **Literacy index** (`layers/literacy/index.md`) | every tracked subject and library artifact, and what's stale | generated | subject and artifact frontmatter | [literacy](literacy.md) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
 | **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
 

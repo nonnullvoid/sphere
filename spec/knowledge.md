@@ -158,14 +158,14 @@ Sometimes knowledge is built on purpose: *"compile what we know about the new ho
 4. note where each came from
 5. put the sources in the topic's `sources/` folder
 
-The result is offered to the human like any capture.
+The result is offered to the human like any capture. **The human fills the gaps.** A source records what was said, not what mattered: meeting notes miss the tone of the room, a report misses what everyone already knew. So the offer asks what's missing, and the human's answer is part of what gets saved.
 
 *"Refresh what you know about my taxes"* reconciles a topic against its sources: confirm, update or correct each fact, clear its stale mark, and re-date it.
 
 ### 3. Routed elsewhere
 
 Not everything that sounds like knowledge is:
-- **A speculative idea** goes to idea capture, which takes it directly with no review, because ideas are maybes by nature.
+- **A speculative idea** goes to the [idea queue](work.md#ideas-come-before-work--proven), which takes it directly with no review, because ideas are maybes by nature.
 - **An idea about improving the sphere itself** goes to the [evolution](evolution.md) queue.
 - **When it's unclear where something belongs,** the sphere proposes a home along with the capture.
 

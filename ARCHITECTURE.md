@@ -38,7 +38,7 @@ my-sphere/
 ├── sphere.md                the orchestrator: startup sequence and identity at a glance
 ├── core/
 │   ├── identity.json        id, name, version, and where this sphere was born from
-│   ├── trust.json           spheres this one trusts, and what each may do
+│   ├── trusted-spheres.json spheres this one trusts, and what each may do
 │   ├── engine.md            runtime rules: senses, instincts, the state machine
 │   ├── ai/personas/         who the AI is in this sphere (one or more)
 │   ├── user/                profile.md (who the human is, in their words), voice.md
@@ -114,7 +114,7 @@ These run through every chapter:
 |---|---|
 | [protocol](spec/protocol.md) | Lenses, frames, skills, the registry, co-authoring, sharing levels |
 | [state](spec/state.md) | Simple sessions (parallel trees planned), ground and resume, the session registry, commits |
-| [work](spec/work.md) | Work nodes (area / project / task), state and focus, plans, progress, archiving |
+| [work](spec/work.md) | Work nodes (area / project / task), state and focus, plans, progress, archiving, ideas, witness |
 | [knowledge](spec/knowledge.md) | Domains, topics, facts and reads; how sure each is; how knowledge gets in |
 | [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |
 | [loading](spec/loading.md) | What loads when, the capability manifest, and why a sphere stays fast as it grows |
@@ -123,6 +123,9 @@ These run through every chapter:
 | [guardrails](spec/guardrails.md) | Incident-born rules, where each lives, keeping them few, overrides, principles |
 | [replication](spec/replication.md) | Seeds, absorb, compare, sphere identity, trusted spheres |
 | [modes](spec/modes.md) | Operating and collaboration modes; personas; voice and tone |
+| [rhythm](spec/rhythm.md) | The human's days: anchors as offers, the forgotten wrap, reaching a human who's present |
+| [agent-trust](spec/agent-trust.md) | How agents earn, keep and lose the right to work on their own |
+| [literacy](spec/literacy.md) | What the human understands, when to teach, and the library of what's been taught |
 | [versions](spec/VERSIONS.md) | Architecture, build and sphere versions; upgrades; what's new in 1.0 |
 
 For how to grow a sphere well, see [BUILDING.md](BUILDING.md).

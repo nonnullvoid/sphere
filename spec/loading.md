@@ -107,6 +107,7 @@ _An example already in the spec:_ the [work tree view](work.md) is built from no
 - **Stop at the shallowest depth** that answers the need (see [progressive disclosure](#progressive-disclosure--decided-not-yet-exercised)).
 - **Prefer pointers to payloads.** Refer to a file by name instead of quoting it back. Summarize a long result instead of carrying all of it forward.
 - **Let ground compact.** A long session doesn't have to carry everything it ever read. Ground saves what matters to files, and the next session starts clean from them.
+- **Hand off before the window degrades.** — **proven** When a session's context is well past half full, the sphere offers to ground and continue in a fresh session, while it can still write a good handoff. Waiting until attention has already slipped makes the handoff worse (see [why sessions exist](state.md#why-sessions-exist--proven)).
 
 ---
 

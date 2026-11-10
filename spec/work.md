@@ -82,7 +82,7 @@ layers/work/
 title: Google interview
 kind: task                      # optional: area | project | task; inferred when absent
 parent: jobhunt-may-2026        # a node name; absent for top-level work
-state: active                   # idea | planned | active | paused | done | archived
+state: active                   # planned | active | paused | done | archived
 paused:                         # when paused: blocked | waiting | on hold
 waiting_on:                     # required when paused
 focus: pinned                   # optional; see State and focus
@@ -117,7 +117,6 @@ The node's history, in order and never rewritten. Each ground adds an entry: wha
 
 | State | Means | Default mark |
 |---|---|---|
-| **idea** | Captured, not thought through | 💡 |
 | **planned** | Thought through, not started | 📋 |
 | **active** | Being worked on | 🔄 |
 | **paused** | Stopped for a reason: **blocked**, **waiting**, or **on hold**. Always says on what, in `waiting_on:` | ⛔ ⏳ ⏸️ |
@@ -129,12 +128,12 @@ Paused always says why, because paused work without a reason quietly becomes for
 
 **Ongoing work doesn't finish.** If someone marks an ongoing node done, the sphere asks whether it has really ended (a responsibility handed over, a routine retired) or whether something inside it finished.
 
-**Focus: is it in view right now.** — _decided, not yet exercised_ Focus is independent of state. A paused node can stay pinned, and a fresh idea can be the focus of the week.
+**Focus: is it in view right now.** — _decided, not yet exercised_ Focus is independent of state. A paused node can stay pinned, and a planned one can be the focus of the week.
 
 - **`pinned`** is the human's choice, and always wins.
 - **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. Suggestions appear as suggestions in the Focused view. They're never written into a node as a decision.
 
-The marks are the base build's defaults. A [witness theme](projections.md#matter-not-machinery) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it looks.
+The marks are the base build's defaults. A [witness theme](#witness-optional) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it's shown.
 
 ---
 
@@ -220,7 +219,6 @@ Children show their name relative to their parent (`.interview`). The folders on
 |---|---|
 | **Focused** | Pinned nodes, then suggested ones (marked as suggestions) |
 | **Active** | Everything else in motion: active, paused, planned |
-| **Ideas** | Captured, not yet planned |
 | **Done** | Finished, not yet archived |
 | **Archived** | Collapsed; listed on request |
 
@@ -248,6 +246,24 @@ Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the ac
 
 - **Templates.** Kinds of work can have a starting shape: a coding project might start with architecture notes and a folder for screenshots, and a trip might start with a packing checklist. Templates live in `layers/work/templates/`. *"Save this as a template"* lifts a well-shaped node into one.
 - **Plans fit the model.** When the AI drafts a plan, its phases and steps become a plan in `plans/`, and the work becomes nodes and checklists. **It never becomes a free-floating plan document of its own invention.** A plan that doesn't fit the model is flagged and reshaped before it sets, because ad-hoc structure is painful to clean up later.
+
+---
+
+## Ideas come before work — **proven**
+
+**An idea is not work until it graduates.** Ideas are maybes by nature, and a work tree full of maybes stops saying what the human is actually doing. So ideas have their own queue, outside the tree:
+
+```
+layers/ideas/
+├── queue.md          one line per idea: what it is, when it came, where it stands
+└── reports/
+    └── <idea>.md     what an investigation found
+```
+
+- **Capture has no friction.** The sphere writes an idea straight into the queue, with no review. That's the deliberate opposite of [knowledge capture](knowledge.md#how-knowledge-gets-in--proven), where every fact is proposed first.
+- **The queue is a research backlog, not a to-do list.** An idea can be investigated, by the sphere or an agent, often without the human, into a short written report: what it would take, what it's up against, whether it holds up.
+- **Every idea graduates or is parked.** It graduates into a work node, a fact in the knowledge layer, or a proposed change to the sphere ([evolution](evolution.md)). Or it's parked, with a line saying why. Either way it leaves the active queue.
+- **The queue is surfaced at the anchors** (see [rhythm](rhythm.md#anchors--proven)), so ideas don't rot unseen.
 
 ---
 
@@ -284,7 +300,33 @@ A **mirror** keeps a node's status in step with an outside tool, such as a team'
 
 ## Witness (optional)
 
-Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back to the human over time, in a theme that resonates. Its source is the plain record of what got done, which stays true whatever theme is on top.
+Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back to the human over time, in a theme that resonates. **It's motivation, not a scoreboard:** making growth visible is worth doing deliberately, because seeing it is what keeps people going. — **proven**
+
+- **Quiet by default, loud on milestones.** Day to day, growth accrues without comment. A real milestone gets celebrated.
+- **Honest, auditable scoring.** Every point traces back to something that happened. Inflation kills the signal; stinginess kills the momentum.
+- **Several lanes of growth** (shipping, learning, health, relationships, whatever the human cares about), so something is moving even in a week when one lane is quiet.
+
+### The theme is the growth model
+
+**A witness theme isn't a skin.** It owns the whole growth model: what counts as currency, how progression works, what reputation means, how it looks, and how it's projected. A garden theme might grow mushrooms from finished work; a craft theme might level up skills. **Swap the theme and all of that swaps with it.** Work nodes still store their own state; the theme decides what that state means for growth, and how it's shown.
+
+### The ledger is the fixed point
+
+Underneath any theme is a **plain ledger:** a non-thematic record of what got done, when, and the evidence for it. One act writes two records, an entry in the ledger and whatever the theme makes of it. The ledger survives every theme swap.
+
+**Exports are views of the ledger:** evidence for a review, a portfolio, a status report. They read the ledger, never the theme.
+
+### Growth, work and position are separate
+
+Three things that are easy to blur, each with its own owner:
+
+| | Says | Owned by |
+|---|---|---|
+| **Work** | what the human is doing | the work layer |
+| **Growth** | how they're growing | the witness layer |
+| **Position** | where they stand: a role, a level, a reputation | the human's own record, if the build keeps one |
+
+A model that tries to be all three goes stale on all three.
 
 ---
 

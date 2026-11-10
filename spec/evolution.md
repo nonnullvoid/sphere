@@ -16,7 +16,7 @@ Three mechanisms, one loop:
 use → notice → reflect → propose → (human decides) → crystallize or migrate → announce → use
 ```
 
-Everything in this loop is **co-authored**. The sphere notices and proposes; the human decides. Nothing about how the sphere understands its human, or how it behaves, changes on the sphere's own initiative. See [protocol](protocol.md#co-authoring-the-method).
+Everything in this loop is **co-authored**. The sphere notices and proposes; the human decides. Nothing about how the sphere understands its human, or how it behaves, changes on the sphere's own initiative. See [protocol](protocol.md#co-authoring-the-method--proven).
 
 ---
 
