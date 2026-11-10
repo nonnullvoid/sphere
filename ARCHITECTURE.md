@@ -41,16 +41,21 @@ my-sphere/
 │   ├── trusted-spheres.json spheres this one trusts, and what each may do
 │   ├── engine.md            runtime rules: senses, instincts, the state machine
 │   ├── ai/personas/         who the AI is in this sphere (one or more)
+│   ├── ai/agents/           one file per agent: where it's defined, the trust it has earned; index.md
 │   ├── user/                profile.md (who the human is, in their words), voice.md
 │   ├── protocol/            lenses, frames, and the protocol registry
 │   ├── operating-modes/     kinds of work the sphere knows how to do
-│   ├── records/sessions/    one file per session
+│   ├── records/             private history that never travels
+│   │   ├── sessions/        one file per session (also the session registry)
+│   │   └── agents/          each agent's outcomes, and why its trust changed
 │   ├── manifest.md          what the sphere can do, and when to load each part
 │   ├── layers.md            layer registry
 │   └── surface.md           surface registry
 ├── layers/
 │   ├── work/                what the human is changing
 │   ├── knowledge/           what's true: domains, topics, facts and reads
+│   ├── ideas/               maybes, queued until they graduate or are parked
+│   ├── literacy/            what the human understands, and the library of what's been taught
 │   ├── projections/         projection definitions: what each view shows
 │   └── …                    whatever else this sphere needs
 └── surface/                 rendered views, live state, inbox and outbox
@@ -75,6 +80,10 @@ Two kinds of thing live in these folders:
 
 **Knowledge** is facts about the human's world, each one dated and graded by where it came from, proposed at ground and never written automatically. See [knowledge](spec/knowledge.md).
 
+**Rhythm.** The sphere fits around the human's days: it offers a start and a wrap, catches the wrap the human forgot, and surfaces work that's waiting in a moment when the human is there. See [rhythm](spec/rhythm.md).
+
+**Modes and agents.** Every session or run has an *operating mode* (what kind of work) and a *collaboration mode* (who does it: the human, together, supervised, unattended). Agents earn their way toward *unattended* one kind of work at a time; the guardrails never move. See [modes](spec/modes.md) and [agent trust](spec/agent-trust.md).
+
 **Projections** are the views people actually look at: dashboards, maps, a home page. They're rendered from the files, honest about how fresh they are, and never the source of truth. See [projections](spec/projections.md).
 
 ---
@@ -89,6 +98,8 @@ A sphere separates **why** from **how**:
 Lenses and frames are **co-authored**. The human brings the understanding; the AI drafts; the human reviews and iterates; nothing is captured without the human's instruction. When understanding changes, everything derived from it is revisited. See [protocol](spec/protocol.md).
 
 **Evolution** keeps it healthy. The sphere notices repeated patterns and friction, proposes changes sized to how big they are, and announces each one so you learn its vocabulary by example. See [evolution](spec/evolution.md).
+
+**Literacy** grows the human alongside the sphere: it tracks what they've asked it to, offers the next step at the right size, and stops explaining what they already know. See [literacy](spec/literacy.md).
 
 **Guardrails** grow from near-misses: each one is a rule with its reason, kept few, and always overridable except where the human has marked it firm. Each lives in the softest place that works: a memory note, a sphere file, or an enforced check. See [guardrails](spec/guardrails.md).
 

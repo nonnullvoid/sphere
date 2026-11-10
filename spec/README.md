@@ -7,7 +7,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 ## Chapters
 
 - [Protocol](protocol.md): lenses, frames, skills, the registry, co-authoring, sharing levels
-- [State](state.md): sessions at two levels, ground and resume, the session registry, commits
+- [State](state.md): the state machine; simple sessions (parallel sessions planned); six operations; ground and resume; the session registry; commits
 - [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving, the idea queue, witness
 - [Knowledge](knowledge.md): domains and topics with namespaced names; facts and reads; two grades; capture, compiling and freshness; facts about other people
 - [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught

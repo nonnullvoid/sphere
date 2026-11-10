@@ -100,6 +100,8 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
 | **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
 | **Literacy index** (`layers/literacy/index.md`) | every tracked subject and library artifact, and what's stale | generated | subject and artifact frontmatter | [literacy](literacy.md) |
+| **Idea queue** (`layers/ideas/queue.md`) | every open idea and where it stands | AI-maintained, written directly | its `reports/` folder | [work](work.md#ideas-come-before-work--proven) |
+| **Agents** (`core/ai/agents/index.md`) | every agent: where its definition lives, its earned rung per kind of work | generated | each agent's file in `core/ai/agents/` | [agent trust](agent-trust.md#agents--decided-not-yet-exercised) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
 | **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
 

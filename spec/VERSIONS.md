@@ -35,7 +35,7 @@ Each build in the repository is versioned on its own, with semantic versioning:
 - **Minor:** additions. A new projection, a new frame, a new optional layer.
 - **Major:** a change that a sphere started from the previous version would need to absorb carefully. A layout change, or a frame that now behaves differently.
 
-Every build records the architecture version it was built from. Builds also say plainly what they include, for example which session level they start at and which layers ship, so nobody has to infer it.
+Every build records the architecture version it was built from. Builds also say plainly what they include, for example which layers ship and which words they use for saving (*ground* or *save*), so nobody has to infer it.
 
 ## A sphere's own version — _decided, not yet exercised_
 

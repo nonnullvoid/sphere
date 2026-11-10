@@ -271,4 +271,3 @@ Two kinds, handled differently:
 
 1. **The liveness threshold.** 30 minutes is a starting point; tune it from real use.
 2. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.
-3. **The session type list.** Now operating modes. See [modes](modes.md).

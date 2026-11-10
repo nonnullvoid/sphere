@@ -164,5 +164,5 @@ Two ways to fork:
 ## Open questions
 
 1. **The rhythm.** Is "every couple of weeks" right for most spheres, or should each sphere learn its own?
-2. **Where the pending queue lives** at simple session level: in the evolution work node, or in a small file of its own?
+2. **Where the pending queue lives** with simple sessions: in the evolution work node, or in a small file of its own?
 3. **Announcing for non-technical humans.** Is a plain-words announcement enough, or should some changes stay silent unless asked about?

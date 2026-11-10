@@ -86,9 +86,9 @@ The test of a good ground: **could a new session, with no memory of this one, co
 
 ## 9. Make projections honest
 
-- **Declare freshness up front:** live, manually synced, or snapshot.
+- **Declare freshness up front:** live, refreshed, or snapshot.
 - **Show staleness on the page.** A view that looks current but isn't is worse than no view.
-- **Start plain:** HTML, CSS and JavaScript with no build step. Reach for an app only when you need a database, logins or a phone. At that point, it's an app that reads your sphere, and it must declare how it stays in sync.
+- **Start plain:** HTML, CSS and JavaScript with no build step. Reach for an app only when you need a database, logins or a phone. At that point, it's an app that reads your sphere, and it must declare how it stays current.
 - **Extract a template on the third repetition,** never sooner.
 
 See [projections](spec/projections.md).

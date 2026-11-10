@@ -79,25 +79,25 @@ Every projection declares which of three kinds it is:
 
 | Kind | How it stays current | Example |
 |---|---|---|
-| **live** | Reads its source files when someone opens it. Nothing to sync. | A work dashboard that reads the work index each time it loads |
-| **synced** | A render step updates it, at ground or on `sync <name>` | A portfolio view built from exported account data |
+| **live** | Reads its source files when someone opens it. Nothing to refresh. | A work dashboard that reads the work index each time it loads |
+| **refreshed** | A render step updates it, at ground or on `refresh <name>` | A portfolio view built from exported account data |
 | **snapshot** | Generated once, at a moment, and never updated | A year-in-review page, a walkthrough |
 
-**Staleness must be visible on the projection itself.** Every artifact shows when it was last rendered and from what. A synced view that's past its freshness window says so plainly, on the page, where the reader is looking. A stale view that looks current is the worst failure a projection can have, because people make decisions from it. — _decided, not yet exercised_
+**Staleness must be visible on the projection itself.** Every artifact shows when it was last rendered and from what. A refreshed view that's past its freshness window says so plainly, on the page, where the reader is looking. A stale view that looks current is the worst failure a projection can have, because people make decisions from it. — _decided, not yet exercised_
 
-_The lesson behind this rule:_ a dashboard showing stale financial numbers, silently, because the sync step hadn't run. Nothing on the page said so.
+_The lesson behind this rule:_ a dashboard showing stale financial numbers, silently, because the refresh step hadn't run. Nothing on the page said so.
 
 **Live means live-fetch.** — **proven** A live view reads its source files in the page when it's opened (and again when it regains focus), with no build step and no copy of the data inside it. _The lesson:_ a dashboard that had its data baked into the page silently stopped showing new entries, because the copy and the source had drifted. When it was switched to reading the source on open, the drift class disappeared.
 
 **A live view puts a shape contract on its sources.** If a page parses work nodes directly, those files need a predictable shape. That shape is written in the source layer's contract, not discovered by the page. This is how one sphere's work dashboard pinned down the format of its node files.
 
-**Conflating kinds is a bug both ways.** A "live" view that went stale lies to the reader. A snapshot that gets re-synced loses the moment it existed to preserve. So `sync` refuses a snapshot: a new moment means a new snapshot.
+**Conflating kinds is a bug both ways.** A "live" view that went stale lies to the reader. A snapshot that gets refreshed loses the moment it existed to preserve. So `refresh` refuses a snapshot: a new moment means a new snapshot.
 
-**Don't over-sync.** Not everything deserves to be live. A snapshot that captures a moment well often beats a dashboard nobody keeps current. Reach for live only when freshness is the actual promise.
+**Don't over-refresh.** Not everything deserves to be live. A snapshot that captures a moment well often beats a dashboard nobody keeps current. Reach for live only when freshness is the actual promise.
 
 ### The render is deterministic — _decided, partly proven_
 
-**Live and synced renders involve no AI judgment:** the same sources produce the same output, every time. The intelligence was spent once, choosing what to show and designing how. That's what makes a live view trustworthy: nothing in it was guessed this time.
+**Live and refreshed renders involve no AI judgment:** the same sources produce the same output, every time. The intelligence was spent once, choosing what to show and designing how. That's what makes a live view trustworthy: nothing in it was guessed this time.
 
 **Synthesis belongs to snapshots, and only when they're generated.** A walkthrough or a report is composed by reading across the sphere, and that takes judgment. It's done once, stamped with provenance, and frozen. See [the one-shot template](#the-one-shot-template-snapshots).
 
@@ -116,7 +116,7 @@ Separately from freshness, each projection declares how it opens. That depends o
 | **static** | Snapshots and one-off renders: a walkthrough of a code change, a technical explainer, a year-in-review | **Self-contained:** data, styles and scripts inside the one file, so it opens with a double-click and no server |
 | **served** | Live views and anything interactive: work tracking, a checklist, a "mark done" button | Opened through a local server that the sphere starts |
 
-Live projections are served. Snapshots are static. A synced projection can be either: static with its data rendered in, or served if it's interactive.
+Live projections are served. Snapshots are static. A refreshed projection can be either: static with its data rendered in, or served if it's interactive.
 
 ### Serving
 
@@ -142,14 +142,14 @@ A sphere defines a default stack for projections, so templates and shared stylin
 
 **Libraries are saved locally, not loaded from the internet.** A projection that fetches code from a third-party server when it opens has stopped being private and stopped working offline.
 
-**Once it needs an app, it's no longer a projection.** At tier 3 the thing is an application that *reads* the sphere. The sphere doesn't host it. Its registry entry says `kind: external`, names the app's home, and declares how the app stays in sync with the sphere's files. That last part is not optional. An outside app with no declared sync is exactly how a view ends up silently stale.
+**Once it needs an app, it's no longer a projection.** At tier 3 the thing is an application that *reads* the sphere. The sphere doesn't host it. Its registry entry says `kind: external`, names the app's home, and declares how the app stays current with the sphere's files. That last part is not optional. An outside app with no declared refresh is exactly how a view ends up silently stale.
 
 ```yaml
 - name: portfolio
   kind: external
   home: ~/projects/portfolio-app    # outside the sphere
   sources: [layers/knowledge/money/]
-  sync: on-ground                    # on-ground | on-open | manual (shown as stale after 1 day)
+  refresh: on-ground                 # on-ground | on-open | manual (shown as stale after 1 day)
   sharing: private
 ```
 
@@ -249,7 +249,7 @@ Each projection has a registry entry:
 ```yaml
 - name: work-dashboard
   namespace: work
-  kind: live                    # live | synced | snapshot | external
+  kind: live                    # live | refreshed | snapshot | external
   opens: served                 # static | served
   lifespan: long-lived          # long-lived | time-bound
   freshness: on-open            # on-open | stale after 1 day | frozen
@@ -279,11 +279,11 @@ Each comes from a real failure:
 **Senses:**
 - `projection-registered`, `projection-instantiated`, `projection-retired`, `projection-orphaned`
 - `template-extracted`
-- `sync-requested`, `projection-stale`
+- `refresh-requested`, `projection-stale`
 
 **Commands** (natural phrasing works too):
 - `show my things`, `list projections`
-- `sync [projection]`, `sync all` (skips snapshots and live views, which have nothing to sync)
+- `refresh [projection]`, `refresh all` (skips snapshots and live views, which have nothing to refresh)
 - `save this as a template`, `new [thing] from [template]`
 - `retire [projection]`
 

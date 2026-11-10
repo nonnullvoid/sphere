@@ -105,8 +105,9 @@ There are two ways:
 ## Agents — _decided, not yet exercised_
 
 - **Where an agent is defined follows what it's for:** an agent about the human's life is defined in their sphere; an agent about one codebase is defined with that code. **Anywhere else, it's referenced, not copied** (see [registries](registries.md)).
-- **Every agent has a home in the sphere,** at least a reference, wherever its definition lives.
-- **Its trust lives in the sphere, in that home:** the rung it has earned for each kind of work, and its recent outcomes. Trust is the human's judgment of the agent, so it stays with the human even when the definition lives elsewhere.
+- **Every agent has a home in the sphere,** at least a reference, wherever its definition lives: its own file in `core/ai/agents/`, beside the personas. A generated `index.md` there lists them all (see [registries](registries.md#where-a-registry-lives--decided-not-yet-exercised)).
+- **Its trust lives in that file:** the rung it has earned for each kind of work. Rungs change only on the human's say. Trust is the human's judgment of the agent, so it stays with the human even when the definition lives elsewhere.
+- **Its history lives in `core/records/agents/<agent>.md`:** every run's outcome, and why each promotion or demotion happened, appended and never rewritten. It's the same pattern as a work node's `work.md` and `progress.md`: a current-state file plus a history file. Placement keeps the history private: `core/records/` never travels (see [replication](replication.md)), so an agent's file can be shared without its run history.
 - **Teams are registered as they're used.** When agents work together (a pipeline, a panel, a lead with specialists), the team gets an entry once it has actually run. Shapes that haven't run yet are noted as slots, not specified in advance.
 
 ### Right-sized intelligence
