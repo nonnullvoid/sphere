@@ -15,10 +15,10 @@ Work is anything the human is trying to change in the world: a job hunt, a kitch
 Three ideas shape everything below:
 
 1. **One kind of thing, recursive.** Every piece of work is a **work node**, and any node can hold other nodes. A node can be a task to its parent and a project in its own right; labels are a light judgment, never a structural rule. — **proven**
-2. **Plans give direction.** A plan says where the work is going and why this path, so what to do next comes from the plan, not from a fresh judgment call at every session. Plans live alongside the work, not inside it. — _decided, not yet exercised_
+2. **Plans give direction.** A plan says where the work is going and why this path, so what to do next comes from the plan, not from a fresh judgment call in every window. Plans live alongside the work, not inside it. — _decided, not yet exercised_
 3. **Plan is asserted; progress is measured.** A plan is what we believe the path is. Progress is what actually happened, read from evidence, never from checkboxes. **The gap between the two is the most useful signal the work layer produces.** — **proven**
 
-And one promise: **at the start and end of every session, the work it touched is true.** In between, the sphere may update work as you mention changes, but it doesn't promise to. Boundaries can be checked; ambience can't. — **proven**
+And one promise: **when a window attaches and when it grounds, the work it touched is true.** In between, the sphere may update work as you mention changes, but it doesn't promise to. Boundaries can be checked; ambience can't. — **proven**
 
 ---
 
@@ -71,7 +71,7 @@ layers/work/
 
 **Every node has exactly two required files.** Anything else the work needs (screenshots, a draft document, a spreadsheet, an `assets/` folder) can live in the node's folder too, but **every extra file is linked from the node's References**, so nothing in the folder goes unexplained. Templates can add extras for kinds of work.
 
-**One rule across the sphere:** every living thing is **a current-state file plus a history file**. Work nodes have `work.md` + `progress.md`, plans have `plan.md` + `history.md`, and sessions work the same way (see [state](state.md)).
+**One rule across the sphere** (see [nodes](nodes.md)): every living thing is **a current-state file plus a history file**. Work nodes have `work.md` + `progress.md`, plans have `plan.md` + `history.md`, and focus nodes have `focus.md` + `history.md` (see [focus](focus.md)).
 
 ### `work.md`
 
@@ -105,7 +105,7 @@ The **body** is the node's context: the distilled, current truth about this work
 
 ### `progress.md`
 
-The node's history, in order and never rewritten. Each ground adds an entry: what happened, what was decided, highlights of the discussion, and a link to the [session file](state.md#the-session-file--proven-shape).
+The node's history, in order and never rewritten. Each ground adds an entry: what happened, what was decided, highlights of the discussion, and a link to the [focus node](focus.md#historymd) that did it.
 
 `work.md` holds the current understanding; `progress.md` holds the trail of how it got there. A cold resume reads both: the first for where things are, the latest entries of the second for how they got there.
 
@@ -128,10 +128,11 @@ Paused always says why, because paused work without a reason quietly becomes for
 
 **Ongoing work doesn't finish.** If someone marks an ongoing node done, the sphere asks whether it has really ended (a responsibility handed over, a routine retired) or whether something inside it finished.
 
-**Focus: is it in view right now.** — _decided, not yet exercised_ Focus is independent of state. A paused node can stay pinned, and a planned one can be the focus of the week.
+**Focus: is it in view right now.** — _unexercised_ Focus is independent of state. A paused node can stay in focus, and a planned one can be the focus of the week.
 
-- **`pinned`** is the human's choice, and always wins.
-- **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. Suggestions appear as suggestions in the Focused view. They're never written into a node as a decision.
+- **A work node is in focus when an open [focus node](focus.md) holds it,** foreground or background. That's a fact read from the focus tree, not a guess stored on the work.
+- **`pinned`** is the human's choice, and always wins: a background focus node the human keeps open on purpose.
+- **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. A suggestion is a suggestion to open a focus node, shown as one in the Focused view. It's never written into a node as a decision.
 
 The marks are the base build's defaults. A [witness theme](#witness-optional) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it's shown.
 
@@ -184,7 +185,7 @@ A plan has two files: **`plan.md`**, its current version, and **`history.md`**, 
 
 ### Following a plan
 
-What to do next comes from the plan's steps and the work's real progress. A session that does something different **records the deviation and its reason,** and the sphere raises it at ground: *"This session worked on the offer comparison before the onsite. The plan has it after. Update the plan, or note it as an exception?"*
+What to do next comes from the plan's steps and the work's real progress. A focus that does something different **records the deviation and its reason,** and the sphere raises it at ground: *"This focus worked on the offer comparison before the onsite. The plan has it after. Update the plan, or note it as an exception?"*
 
 ---
 
@@ -226,7 +227,8 @@ Children show their name relative to their parent (`.interview`). The folders on
 
 Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the active work folder stays readable. **Its row stays in the index,** collapsed under Archived, so old work can still be found, referenced or revived without digging through history.
 
-- **Subtrees archive together.** Archiving a node takes its finished children with it. Children still in progress **block** the archive until each is finished, moved under a new parent, or explicitly dropped.
+- **Subtrees archive together.** Archiving a node takes its finished children with it. Children still in progress **block** the archive until each is finished, moved under a new parent, or explicitly dropped. This is [finishing a node](nodes.md#finishing-a-node--decided-not-yet-exercised) for work: the sphere lists them and asks once.
+- **A focus that still holds the work** is named before it's archived: *"f21 still holds this. Close f21 too, or let it keep going?"*
 - **Links are fixed by the tooling.** `parent:` fields use names, so they never break.
 - **The sphere can suggest archiving** work that has been done for a while. The human decides.
 
@@ -236,11 +238,11 @@ Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the ac
 
 | Moment | What happens |
 |---|---|
-| **Open** | If the session is clearly about a node, the sphere notes it. It never blocks on the question. |
+| **Open** | A focus names the work it's for in `holds:` when it opens. If that isn't clear, the sphere proposes it, and never blocks on the question. |
 | **During** | When the human mentions a change ("the phone screen went well"), the sphere may update the node right away. That's done opportunistically, never promised. |
 | **Ground** | Each touched node's `progress.md` gets an entry; its `summary`, `state` and Now section are refreshed; progress is re-measured; the index is rebuilt. New facts are proposed for the [knowledge](knowledge.md) layer, never written automatically. |
 
-**Which work a session belongs to is inferred,** from what the session talks about and which nodes it touches. A session that touches two nodes writes to both. Many sessions belong to no node at all, and that's fine. The sphere only asks when it has real evidence and can't resolve it.
+**Which work a focus holds starts from what it was opened for, and grows from what it touches.** If ground finds a touched work node outside the focus's holds, it asks once whether to hold it too (see [focus](focus.md#what-a-focus-node-holds)). A focus that touches two nodes writes to both. Many foci hold no work at all (research, a decision, the sphere itself), and that's fine.
 
 ## Work keeps its shape — _decided, not yet exercised_
 
@@ -255,14 +257,15 @@ Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the ac
 
 ```
 layers/ideas/
-├── queue.md          one line per idea: what it is, when it came, where it stands
-└── reports/
-    └── <idea>.md     what an investigation found
+├── queue.md          one line per open idea: what it is, when it came, where it stands
+├── reports/
+│   └── <idea>.md     what an investigation found
+└── archived/         graduated and parked ideas: their lines and reports
 ```
 
 - **Capture has no friction.** The sphere writes an idea straight into the queue, with no review. That's the deliberate opposite of [knowledge capture](knowledge.md#how-knowledge-gets-in--proven), where every fact is proposed first.
 - **The queue is a research backlog, not a to-do list.** An idea can be investigated, by the sphere or an agent, often without the human, into a short written report: what it would take, what it's up against, whether it holds up.
-- **Every idea graduates or is parked.** It graduates into a work node, a fact in the knowledge layer, or a proposed change to the sphere ([evolution](evolution.md)). Or it's parked, with a line saying why. Either way it leaves the active queue.
+- **Every idea graduates or is parked.** It graduates into a work node, a fact in the knowledge layer, or a proposed change to the sphere ([evolution](evolution.md)). Or it's parked, with a line saying why. Either way it leaves the active queue: its line, with where it went, and its report move to `layers/ideas/archived/` (see [finished things move out of the way](registries.md#conventions-and-swappable-parts)).
 - **The queue is surfaced at the anchors** (see [rhythm](rhythm.md#anchors--proven)), so ideas don't rot unseen.
 
 ---
@@ -332,11 +335,11 @@ A model that tries to be all three goes stale on all three.
 
 ## The interface
 
-What any replacement for this work model has to honor, so that projections, sessions, plans and other spheres keep working (see [registries](registries.md#conventions-and-swappable-parts)):
+What any replacement for this work model has to honor, so that projections, focus nodes, plans and other spheres keep working (see [registries](registries.md#conventions-and-swappable-parts)):
 
 - Each node has a stable name, a `title`, an optional `kind`, a `parent`, a `state`, an optional `focus`, and a one-line `summary`.
 - A generated index lists every node with those fields.
-- Each node keeps a history that sessions can append to.
+- Each node keeps a history that focus nodes append to at ground.
 - Nodes can name the plan and major version they follow.
 - Names are unique and stable, so any node can be referred to from anywhere.
 

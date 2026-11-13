@@ -74,7 +74,7 @@ A **skill** is portable: it has to work on its own, in any agent that loads skil
 | **Procedure:** invoked to do a task | plan my day; draft a PR description | **Yes** | Self-contained and used on request, so portable as a skill |
 | **Guard:** always applies | outbound messages are drafted, never sent without approval | No | A skill loads only when relevant; a guard must apply to every action |
 | **Instinct:** triggered by a sphere event | on ground, propose new facts for the knowledge layer | No | Fires on something the sphere notices, which needs the sphere's [senses](#the-registry--proven) |
-| **Structural:** mechanics of the sphere itself | how ground reconciles the session registry | No | Meaningless outside a sphere |
+| **Structural:** mechanics of the sphere itself | how ground reconciles the focus registry | No | Meaningless outside a sphere |
 
 **The test:** if it still works with the sphere taken away, it's a skill. Otherwise it's a frame that lives only inside the sphere.
 
@@ -102,7 +102,7 @@ Going the other way, a procedure frame **exports as a plain skill** with no tran
 | **Ability** | A capability that serves an intent ("plan my day") |
 | **Command** | The words the human says to invoke an ability |
 | **Instinct** | An ability that runs without being invoked, on a sense |
-| **Sense** | An event the sphere notices (`session-started`, `work-grounded`, `decision-point`…) |
+| **Sense** | An event the sphere notices (`focus-opened`, `work-grounded`, `decision-point`…) |
 
 Builds ship a small core sense vocabulary (around 15 events). Spheres add their own as they grow. The protocol itself contributes two: `lens-shifted` and `frame-shifted` (see [Cascade](#cascade--proven)).
 
@@ -139,26 +139,26 @@ For a **non-technical human**, this structure is present but never shown. They n
 
 ## Frontmatter — **proven** (shape) · _field names decided, not yet exercised_
 
+**One shape for every lens and frame,** in every sphere and every build, the common set included. The first key says what the file is and names it: `lens:` in a lens, `frame:` in a frame. Inside a frame, `lens:` names the lens or lenses it derives from.
+
 Lens:
 
 ```yaml
-type: lens
-name: outbound-comms
+lens: outbound-comms
 version: 3
 version_note: Added the exception for notes to myself.
 derives_from: conversation 2026-10-24; a near-miss with an unreviewed reply
 status: active               # active | drafting | deprecated
 updated: 2026-10-24
 verified: true               # the human has confirmed this version
-sharing: public              # public | protected | private
+sharing: public              # public | protected | private; optional until: <date>
 frames: [comms-guard, draft-message, unsent-drafts]
 ```
 
 Guard, instinct or structural frame:
 
 ```yaml
-type: frame
-name: comms-guard
+frame: comms-guard
 kind: guard                  # guard | instinct | structural
 lens: [outbound-comms]       # one or more
 derives_from: [outbound-comms@3]
@@ -166,12 +166,17 @@ version: 2
 version_note: Standing approvals now name their scope.
 status: active
 updated: 2026-10-24
+sharing: public              # defaults to its lens's level, never more open unless the human says so
 reads: [layers/work]         # data locations: stay home
 writes: []
-protocol: [I-trust-what-leaves, A-review-outbound]   # protocol entries: travel
+protocol: [I-trust-what-leaves, A-review-outbound, draft-left-unsent]   # intents, abilities, senses: travel
 ```
 
-Procedure frame. This is standard Agent Skills frontmatter. The sphere's fields go inside `metadata`, which the standard provides for exactly this, so the file stays a valid skill everywhere. Its values are strings, so lists are comma-separated:
+- **Data locations** (`reads`, `writes`) are paths. They never travel; an exported frame keeps the fields and drops the values.
+- **Protocol entries** (`protocol`) travel. Intents are `I-…`, abilities `A-…`, and senses go by their own event names (`focus-grounded`). Each entry is defined in the registry, `protocol.md`.
+- **Empty is explicit.** A guard that reads and writes nothing says `reads: []`, so "touches no data" is a statement, not an omission.
+
+Procedure frame. This is standard Agent Skills frontmatter. The same fields go inside `metadata`, prefixed `sphere-`, which the standard provides for exactly this, so the file stays a valid skill everywhere. Its values are strings, so lists are comma-separated:
 
 ```yaml
 name: draft-message
@@ -180,7 +185,13 @@ metadata:
   sphere-lens: outbound-comms
   sphere-derives-from: outbound-comms@3
   sphere-version: "2"
+  sphere-version-note: Learned the short-reply form.
+  sphere-status: active
+  sphere-updated: "2026-10-24"
+  sphere-sharing: public
   sphere-reads: layers/work
+  sphere-writes: ""
+  sphere-protocol: I-trust-what-leaves, A-draft-message
 ```
 
 ### Versioning and drift — _decided, not yet exercised_

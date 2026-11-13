@@ -19,7 +19,7 @@ They combine freely. Coding can happen together at the desk, or unattended overn
 
 **The word "mode" is never used alone.** It's always *operating mode* or *collaboration mode*. Other things that vary by case get their own names: an outbound message's *send mode*, a registry's *maintenance*, a frame's *variants*. Bare "mode" would collide with whatever comes next.
 
-**Modes belong to the sphere, not to the session.** A mode is a configuration the sphere runs in. A session runs in one, and so can a scheduled job or an agent's run that has no session at all. Whatever runs records which modes it ran in, so a later reader knows how the work was done.
+**Modes belong to the sphere, not to a window.** A mode is a configuration the sphere runs in. A [focus node](focus.md) records the modes it's worked in, whether a window works it with the human, an agent runs it, or a scheduled job does, so a later reader knows how the work was done.
 
 ---
 
@@ -66,7 +66,7 @@ core/ai/personas/
 ```
 
 - **Personas share the sphere's memory.** They read the same work, knowledge and lenses. A persona is a character, not a separate mind. If something needs its own separate memory, it's a separate sphere.
-- **One persona at a time** in any session or run, with one operating mode. Different sessions can run different personas at once. One persona is marked as the default.
+- **One persona at a time** in any window, with one operating mode. Different foci can run different personas at once. One persona is marked as the default.
 - **Switching persona is always explicit,** because it's a bigger change than switching operating mode: *"switch to Forge."* The sphere can suggest a switch, but never makes one silently.
 - **Operating modes work with any persona,** unless one says it belongs to a particular persona.
 - **Guardrails hold for every persona.** No persona is exempt.
@@ -119,7 +119,7 @@ It's a structural frame: it **composes** lenses and frames, it doesn't hold unde
 
 ### Switching
 
-**A new session or run starts in its persona's default operating mode,** unless the human says otherwise. From there, how a switch happens depends on what changes:
+**A newly opened focus starts in its persona's default operating mode,** unless the human says otherwise. From there, how a switch happens depends on what changes:
 
 | Change | How |
 |---|---|
@@ -127,7 +127,7 @@ It's a structural frame: it **composes** lenses and frames, it doesn't hold unde
 | **Behavior** (tone, attention, questions) | Announced in a line: *"Switching to planning."* The human can say no |
 | **Guardrails** (adds or relaxes one, for example privacy) | Suggested and confirmed: *"This sounds personal. Want me to switch to reflecting, where nothing gets sent?"* |
 
-The human can always switch explicitly: *"let's brainstorm."* An operating mode can change mid-session as the work shifts. It's a relabel, not a restart. Switching in one session doesn't change any other.
+The human can always switch explicitly: *"let's brainstorm."* An operating mode can change partway through a focus as the work shifts. It's a relabel, not a restart. Switching in one focus doesn't change any other.
 
 ### Sphere authoring: changing the sphere itself — _decided, not yet exercised_
 
@@ -136,7 +136,7 @@ One operating mode is different from the rest. **Sphere authoring is the only op
 It doesn't give the AI more authority. Nothing does. It widens what can be changed and adds checks to how each change is made.
 
 - **Outside it, internals are read-only.** The sphere can still notice that a lens or a guardrail should change. It records that as a proposal for the next [reflection](evolution.md) and leaves the file alone. The sphere's notes and records aren't internals: it keeps those current without asking, as always.
-- **Only the human starts it.** The sphere never infers it, and never suggests switching into it. It ends with the session or run, and never carries over to the next one.
+- **Only the human starts it.** The sphere never infers it, and never suggests switching into it. It ends when the window detaches, and never carries over to the next one.
 - **Every change is shown and confirmed.** Each edit to a guardrail, lens or frame is shown as a change (what was there, what will be) and waits for the human's yes. The AI never approves its own change (see [evaluator-not-self](../common/core/protocol/frames/human-is-highest/evaluator-not-self.md)). Each change is recorded with its reason.
 - **Never unattended.** Sphere authoring runs only *together* or *supervised*. An unattended run can queue a proposed change for the human to review, the same way agents queue drafts and never send, but it can't apply one.
 
@@ -180,4 +180,4 @@ Three registers that are easy to blur, kept apart:
 ## Open questions
 
 1. **Sharing operating modes:** a well-made operating mode could be shared as a public seed. How does that interact with the sharing levels of the lenses and frames in its loadout? (Likely: a mode can't be more open than what it points to, as with [frames and lenses](protocol.md#sharing--decided-not-yet-exercised).)
-2. **Collaboration modes and sessions:** if work moves from *together* to *unattended* partway through, is that one session changing collaboration mode, or a handoff to a new run?
+2. **Collaboration modes and focus:** _answered by [focus](focus.md#windows-sessions-and-agents)._ Work moving from *together* to *unattended* is one focus node changing its collaboration mode. Whether a new window attaches for the unattended part doesn't matter: the memory is the node's.

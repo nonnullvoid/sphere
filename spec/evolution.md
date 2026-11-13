@@ -121,7 +121,7 @@ A sphere's own evolution is tracked like any other work, as [work nodes](work.md
 
 - **An evolution stream:** an ongoing node that never finishes. Each substantial evolution effort becomes a bounded project under it.
 - **A pending queue** for items noticed but not yet acted on: findings, friction, ideas about the sphere. One line each: what kind of change (add / refactor / drop), the target, a line of context, and how soon (now / soon / someday).
-- At each evolution session, the queue is triaged. Each item is done on the spot, promoted to a project, or dropped.
+- Each time evolution comes up, the queue is triaged. Each item is done on the spot, promoted to a project, or dropped.
 
 ---
 
@@ -129,24 +129,24 @@ A sphere's own evolution is tracked like any other work, as [work nodes](work.md
 
 How big a structural change is decides how it's made.
 
-### Targeted: one session
+### Targeted: one sitting
 
-**When:** the whole change can be done completely and correctly in one session. Adding a command, splitting a frame, renaming a lens, adding a sense.
+**When:** the whole change can be done completely and correctly in one sitting, between two grounds. Adding a command, splitting a frame, renaming a lens, adding a sense.
 
 **How:** size it → propose → confirm → make it → announce → ground.
 
-### Phased: several sessions, then a declared cutover
+### Phased: several sittings, then a declared cutover
 
-**When:** new structure has to be built over several sessions before the old one can retire. A new layer, a whole new area of lenses and frames, a change in how something is stored.
+**When:** new structure has to be built over several sittings before the old one can retire. A new layer, a whole new area of lenses and frames, a change in how something is stored.
 
 **How:**
 1. Create a project under the evolution stream.
-2. Build the new structure across sessions. **The old structure keeps working the whole time.** The sphere is never left half-migrated between sessions.
-3. Each session grounds its partial work.
-4. **Declare a cutover session** explicitly. One session does the final switch: moves, reference updates, retiring the old.
+2. Build the new structure across sittings, as one focus. **The old structure keeps working the whole time.** The sphere is never left half-migrated between grounds.
+3. Each sitting grounds its partial work.
+4. **Declare a cutover** explicitly. One ground does the final switch: moves, reference updates, retiring the old.
 5. Ground and announce.
 
-**The cutover is declared, never gradual.** A migration that drifts across sessions leaves the sphere in two shapes at once.
+**The cutover is declared, never gradual.** A migration that drifts across sittings leaves the sphere in two shapes at once.
 
 ### Fork: build a new sphere alongside the old
 
@@ -154,8 +154,8 @@ How big a structural change is decides how it's made.
 
 Two ways to fork:
 
-- **A directory fork.** Build the new sphere in a new folder, from a clean start that absorbs what worked. The old sphere keeps running, untouched. Test the new one for a few sessions, then switch the door to point at it. Keep the old one read-only for a while before retiring it. Best when the new design differs so much that a diff would be noise.
-- **A branch fork.** First ground every open session. Then build the new structure on a `fork/<name>` branch while `main` keeps running. Test it, then merge, tagging the old state (`sphere-v<N>`) and the new (`sphere-v<N+1>`). The old sphere stays recoverable from its tag. Best when the change is large but still reads as a coherent diff.
+- **A directory fork.** Build the new sphere in a new folder, from a clean start that absorbs what worked. The old sphere keeps running, untouched. Test the new one for a few days, then switch the door to point at it. Keep the old one read-only for a while before retiring it. Best when the new design differs so much that a diff would be noise.
+- **A branch fork.** First ground every open focus. Then build the new structure on a `fork/<name>` branch while `main` keeps running. Test it, then merge, tagging the old state (`sphere-v<N>`) and the new (`sphere-v<N+1>`). The old sphere stays recoverable from its tag. Best when the change is large but still reads as a coherent diff.
 
 **In both:** the old sphere isn't modified during the fork, and the switch is one deliberate act.
 
@@ -164,5 +164,5 @@ Two ways to fork:
 ## Open questions
 
 1. **The rhythm.** Is "every couple of weeks" right for most spheres, or should each sphere learn its own?
-2. **Where the pending queue lives** with simple sessions: in the evolution work node, or in a small file of its own?
+2. **Where the pending queue lives:** in the evolution work node, or in a small file of its own?
 3. **Announcing for non-technical humans.** Is a plain-words announcement enough, or should some changes stay silent unless asked about?

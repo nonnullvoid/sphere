@@ -7,7 +7,9 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 ## Chapters
 
 - [Protocol](protocol.md): lenses, frames, skills, the registry, co-authoring, sharing levels
-- [State](state.md): the state machine; simple sessions (parallel sessions planned); six operations; ground and resume; the session registry; commits
+- [State](state.md): the state machine; operations and their contracts; ground; sharing one sphere; without git; commits and conflicts
+- [Nodes](nodes.md): the one shape (node, tree, map); current state plus history; where the tree lives; four kinds of file; designing with the shape
+- [Focus](focus.md): focus nodes; windows, sessions and agents; foreground and background; holds and the tree; open, attach, close
 - [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving, the idea queue, witness
 - [Knowledge](knowledge.md): domains and topics with namespaced names; facts and reads; two grades; capture, compiling and freshness; facts about other people
 - [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught

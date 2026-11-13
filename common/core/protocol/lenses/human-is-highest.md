@@ -1,6 +1,9 @@
 ---
 lens: human-is-highest
 version: 2
+version_note: Rewritten against the source lens. Why the order exists, earned trust, the graded bar, raising rather than routing around, absence, overrides that don't carry over.
+derives_from: practice in spheres in daily use
+status: active
 updated: 2026-10-28
 verified: true
 sharing: public

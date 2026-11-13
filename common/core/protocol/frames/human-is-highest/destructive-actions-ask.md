@@ -1,10 +1,16 @@
 ---
 frame: destructive-actions-ask
 kind: guard
-lens: human-is-highest
+lens: [human-is-highest]
+derives_from: [human-is-highest@2]
 version: 1
+version_note: First draft.
+status: active
 updated: 2026-10-25
 sharing: public
+reads: []
+writes: []
+protocol: [I-nothing-lost-by-accident]
 ---
 
 # Destructive actions ask

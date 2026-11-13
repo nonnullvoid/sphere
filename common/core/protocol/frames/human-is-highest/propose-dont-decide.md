@@ -1,10 +1,16 @@
 ---
 frame: propose-dont-decide
 kind: guard
-lens: human-is-highest
+lens: [human-is-highest]
+derives_from: [human-is-highest@2]
 version: 1
+version_note: First draft.
+status: active
 updated: 2026-10-25
 sharing: public
+reads: []
+writes: []
+protocol: [I-nothing-changes-without-me, A-propose-change]
 ---
 
 # Propose, don't decide
@@ -14,7 +20,7 @@ sharing: public
 - facts entering the knowledge layer
 - what's in focus
 - a lens's sharing level
-- switching persona or level of sessions
+- switching persona
 - trust granted to another sphere
 
 ## What the sphere does

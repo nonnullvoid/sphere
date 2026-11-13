@@ -24,7 +24,7 @@ Three things make it different from a memory feature:
 |---|---|
 | **The human** | The authority. Brings the understanding, sets the direction, decides. |
 | **The AI** | Reads the sphere, does the work, drafts changes to the sphere itself, and proposes. It never decides on the human's behalf. |
-| **The sphere** | The files. Always in one consistent state, surviving every session. |
+| **The sphere** | The files. Always in one consistent state, surviving every window. |
 
 The human doesn't need to understand the structure to use it. The AI operates it; the human talks.
 
@@ -46,13 +46,13 @@ my-sphere/
 │   ├── protocol/            lenses, frames, and the protocol registry
 │   ├── operating-modes/     kinds of work the sphere knows how to do
 │   ├── records/             private history that never travels
-│   │   ├── sessions/        one file per session (also the session registry)
 │   │   └── agents/          each agent's outcomes, and why its trust changed
 │   ├── manifest.md          what the sphere can do, and when to load each part
 │   ├── layers.md            layer registry
 │   └── surface.md           surface registry
 ├── layers/
 │   ├── work/                what the human is changing
+│   ├── focus/               what the human is focusing on with the model: one node per pursuit (the folder is the registry)
 │   ├── knowledge/           what's true: domains, topics, facts and reads
 │   ├── ideas/               maybes, queued until they graduate or are parked
 │   ├── literacy/            what the human understands, and the library of what's been taught
@@ -74,7 +74,9 @@ Two kinds of thing live in these folders:
 
 **Startup.** The harness opens a door file, which points to `sphere.md`, which loads a small startup set: who the human is, who the AI is, the rules, and the capability manifest that says what everything else is for. Everything else is read only when a task needs it. See [loading](spec/loading.md).
 
-**A session** starts from the last grounded state and ends by **grounding**. Ground compacts what happened into the sphere: the work's progress, proposed facts, a session record. Then it commits, staging only what the session touched. A new session with no memory of the last one can **resume** cold. See [state](spec/state.md).
+**Nodes.** Everything the sphere holds is one shape: a **node** (a flat folder with a name, a one-line summary, what's true now, and what happened), in a **tree**, linked across trees into a **map**. Work, knowledge, focus and the protocol are each a tree of nodes. New parts are designed by fitting this shape first. See [nodes](spec/nodes.md).
+
+**Focus.** Every pursuit is a **focus node**: an intention plus the memory of pursuing it. A window opens a focus, or attaches to one, and works it, as a session with the human or as an agent. It ends by **grounding**: ground compacts what happened into the sphere (the work's progress, proposed facts, the focus node's history) and commits, staging only what the focus touched. A fresh window with no memory of the last one can **attach** cold. Foci form a tree; a child narrows its parent. See [focus](spec/focus.md) and [state](spec/state.md).
 
 **Work** is a set of nodes, each a folder with `work.md` (what it is) and `progress.md` (what happened). They're flat on disk, nested only by reference, and indexed by a generated view. See [work](spec/work.md).
 
@@ -82,7 +84,7 @@ Two kinds of thing live in these folders:
 
 **Rhythm.** The sphere fits around the human's days: it offers a start and a wrap, catches the wrap the human forgot, and surfaces work that's waiting in a moment when the human is there. See [rhythm](spec/rhythm.md).
 
-**Modes and agents.** Every session or run has an *operating mode* (what kind of work) and a *collaboration mode* (who does it: the human, together, supervised, unattended). Agents earn their way toward *unattended* one kind of work at a time; the guardrails never move. See [modes](spec/modes.md) and [agent trust](spec/agent-trust.md).
+**Modes and agents.** Every focus node has an *operating mode* (what kind of work) and a *collaboration mode* (who does it: the human, together, supervised, unattended). Agents earn their way toward *unattended* one kind of work at a time; the guardrails never move. See [modes](spec/modes.md) and [agent trust](spec/agent-trust.md).
 
 **Projections** are the views people actually look at: dashboards, maps, a home page. They're rendered from the files, honest about how fresh they are, and never the source of truth. See [projections](spec/projections.md).
 
@@ -112,7 +114,7 @@ These run through every chapter:
 1. **The human is the authority.** The AI proposes; the human decides.
 2. **Truth lives in one place.** Everything else is a view of it, and views are checked, not trusted. See [registries](spec/registries.md).
 3. **Everything is readable.** Plain files, plain words. If a human can't audit it, it doesn't belong in a sphere.
-4. **Promise boundaries, not ambience.** A sphere guarantees what's true at the start and end of a session, not continuous perfection in between.
+4. **Promise boundaries, not ambience.** A sphere guarantees what's true when a window attaches and when it grounds, not continuous perfection in between.
 5. **Honest status.** Every chapter marks what's **proven** in daily use, what's **advanced** with known sharp edges, and what's still **unexercised**.
 6. **Conventions, with swappable parts.** Every part has a standard shape, and any part can be replaced by another that honors the same interface. See [registries](spec/registries.md#conventions-and-swappable-parts).
 7. **Never against the human's will.** A sphere records where it came from and can compare itself to a published architecture, but nothing forces it to conform. See [versions](spec/VERSIONS.md).
@@ -124,7 +126,9 @@ These run through every chapter:
 | Chapter | What it covers |
 |---|---|
 | [protocol](spec/protocol.md) | Lenses, frames, skills, the registry, co-authoring, sharing levels |
-| [state](spec/state.md) | Simple sessions (parallel trees planned), ground and resume, the session registry, commits |
+| [state](spec/state.md) | The state machine, operations and their contracts, ground, sharing one sphere, without git, commits, conflicts |
+| [nodes](spec/nodes.md) | The one shape: node, tree, map; current state plus history; four kinds of file; designing with the shape |
+| [focus](spec/focus.md) | Focus nodes: windows, sessions and agents; foreground and background; holds; the tree; open, attach, close |
 | [work](spec/work.md) | Work nodes (area / project / task), state and focus, plans, progress, archiving, ideas, witness |
 | [knowledge](spec/knowledge.md) | Domains, topics, facts and reads; how sure each is; how knowledge gets in |
 | [registries](spec/registries.md) | Conventions, swappable parts, how each registry is maintained, and how drift is caught |

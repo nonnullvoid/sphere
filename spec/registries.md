@@ -8,7 +8,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 ## The idea
 
-A sphere grows to hundreds of files. Reading them all at the start of every session is slow and expensive, so the sphere keeps **registries**: short files listing what exists, what each thing is, and where to find it.
+A sphere grows to hundreds of files. Reading them all in every window is slow and expensive, so the sphere keeps **registries**: short files listing what exists, what each thing is, and where to find it.
 
 The trap is that a list kept by hand drifts. Something changes, nobody updates the list, and from then on the sphere reasons from a picture that's no longer true. So the rule is:
 
@@ -27,10 +27,13 @@ Registries are one instance of a broader stance: **a sphere is a framework, not 
 **Convention over configuration.** — **proven** Every part of a sphere has a standard shape it's assumed to have:
 - a layer has a contract
 - a work node has a type and a status
-- a session has a record
+- a focus has a node
 - a projection has a registered home
+- a finished thing has an `archived/` folder
 
 Conforming costs nothing; only *deviating* costs configuration. A sphere may deviate, but **deviation is explicit**, a configured exception the sphere knows about, never a silent one. If something needs special wiring to work, first ask whether it should become a convention instead. The payoff is that a sphere seeded from another comes up working, because it follows the same conventions.
+
+**Finished things move out of the way.** — _decided, not yet exercised_ When something is finished (a work node done, a focus closed, an idea graduated or parked), it gets a final status **and is moved**, with everything under it, into an `archived/` folder beside where it lived: `layers/work/archived/`, `layers/focus/archived/`, `layers/ideas/archived/`. Marking it isn't enough. The status says what happened; the move keeps the live folder small, so the sphere scans only what's still in play. Archived things stay findable: references use names, not paths, and a search that asks for history looks in `archived/` too.
 
 **Stable interface, swappable implementation.** — _designed; swapping unexercised_ The *interface* a part must honor is fixed and written down in its registry. The *implementation* behind it is free to vary. A sphere can replace how it tracks work, or how it stores knowledge, with its own design and keep running, **as long as the new part honors the registered interface.** The test of a real interface: could another sphere's version slot in behind it? A registry that lists only *what exists*, and never the contract it all satisfies, can't support that. **Name the interface, or it isn't swappable.**
 
@@ -51,23 +54,23 @@ Every registry has the same four properties:
 
 Placement follows from two questions. It's never assigned case by case.
 
-1. **Source or view?** Each item holds its own truth (its identity, its links, its definition) in its own file. A registry over items that have their own files is a **view**. It's a **source** only when its items have no other home. Fast-changing runtime state (heartbeats, last-rendered times) is neither: it's a disposable side file, never committed. See [state](state.md#the-session-registry).
+1. **Source or view?** Each item holds its own truth (its identity, its links, its definition) in its own file. A registry over items that have their own files is a **view**. It's a **source** only when its items have no other home. Fast-changing runtime state (heartbeats, last-rendered times) is neither: it's a disposable side file, never committed. See [focus](focus.md#the-focus-folder-is-the-registry).
 2. **For a view, where does it live?** With its items, by default. It moves only as far as it must to be seen when it's needed:
    - **in `core/`** if it's needed before anything else loads (the layer registry, loading indexes);
-   - **in `surface/state/`** if it must show live state *across* sessions (which sessions are running right now);
+   - **in `surface/state/`** if it must show live state *across* foci (which foci are in the foreground right now);
    - **otherwise, next to its items** (the work index sits in `layers/work/`).
 
-With [parallel sessions](state.md#later-parallel-sessions--planned) (planned), two views point in opposite directions. Each session should see only *committed* work, so the work index stays with the work, on each session's branch. But knowing which sessions are live is the whole point of the session state, so it lives in shared, always-latest space. Same pattern, opposite answers, because their visibility needs are opposite.
+Two views show the pattern pointing in opposite directions. The work index should show only *committed* work, so it stays with the work and is rebuilt from what's grounded. But knowing which foci are in the foreground is the whole point of focus runtime state, so it lives in `surface/state/`, always latest. Same pattern, opposite answers, because their visibility needs are opposite.
 
 ### Who owns a registry
 
 A separate question from where it lives:
 - **Structural registries** describe the sphere's anatomy: the layers, surface and protocol registries, and the capability manifest. They belong to the sphere's own framework frames.
-- **Content registries** catalogue a domain's items: work, knowledge, projections, sessions. They belong to that domain's frames.
+- **Content registries** catalogue a domain's items: work, knowledge, focus, projections. They belong to that domain's frames.
 
 Don't centralize content registries, and don't scatter structural ones.
 
-**The word "registry" is kept for these indexes.** Live data a content registry happens to track (which sessions are running right now, when a view last rendered) isn't a registry. It's state, and it lives in `surface/state/`. Calling it a registry invites people to treat disposable runtime data as something to keep and maintain.
+**The word "registry" is kept for these indexes.** Live data a content registry happens to track (which foci are in the foreground right now, when a view last rendered) isn't a registry. It's state, and it lives in `surface/state/`. Calling it a registry invites people to treat disposable runtime data as something to keep and maintain.
 
 ### Senses — _decided, not yet exercised_
 
@@ -87,7 +90,7 @@ Don't centralize content registries, and don't scatter structural ones.
 
 **AI-maintained doesn't mean unchecked.** An instruction in a frame to "rebuild this at every ground" is a habit, and habits lapse. A registry that says it's rebuilt every ground can go months without being rebuilt, with nothing noticing. So every registry, however it's maintained, has a [drift check](#drift-checks--proven) that runs in the tooling.
 
-**Authored registries are reconciled.** A registry that is the truth for some human decision (the session registry: what a session is for, whether it's abandoned) stores only those decisions. It computes everything else, and at ground it's checked against the facts it sits next to, with mismatches put to the human as questions. See [state](state.md#the-session-registry).
+**Authored registries are reconciled.** A registry that is the truth for some human decision (the focus folder: what each focus is for, what it holds, whether it's closed) stores only those decisions. It computes everything else, and at ground it's checked against the facts it sits next to, with mismatches put to the human as questions. See [focus](focus.md#the-focus-folder-is-the-registry).
 
 ## The registries in a sphere
 
@@ -103,7 +106,7 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Idea queue** (`layers/ideas/queue.md`) | every open idea and where it stands | AI-maintained, written directly | its `reports/` folder | [work](work.md#ideas-come-before-work--proven) |
 | **Agents** (`core/ai/agents/index.md`) | every agent: where its definition lives, its earned rung per kind of work | generated | each agent's file in `core/ai/agents/` | [agent trust](agent-trust.md#agents--decided-not-yet-exercised) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
-| **Sessions** | which sessions exist and what they're for | authored | git, for the facts | [state](state.md) |
+| **Focus** (`layers/focus/`) | which foci are open and what each holds; the folder listing is the registry | authored, in each node's `focus.md` | git, for the facts | [focus](focus.md) |
 
 "Likely maintenance" is the default a build ships with. A sphere's own frame for a registry can choose differently.
 
@@ -151,11 +154,11 @@ Every surface space is described on three independent axes:
 |---|---|---|
 | **Kind** | projections · state · raw · inbox · outbox | what the space holds, and so where a thing goes |
 | **Visibility** | private · protected · public (default private) | who may see it |
-| **Flatness** | flatspace: always-latest, the same for every session | where it sits in git. The same for all of surface, but declared explicitly |
+| **Flatness** | flatspace: always-latest, the same for every window | where it sits in git. The same for all of surface, but declared explicitly |
 
 **Kind isn't visibility.** A projection is rendered for a human, but that doesn't make it public. Most of surface is private.
 
-**Flatness is what makes surface surface.** The rest of a sphere is *branchspace*: it moves with sessions and is committed when they ground. Surface is *flatspace*: one always-latest copy that every session sees, whichever branch it's on. Most of it is a materialized view over branchspace (projections re-render, the session list rebuilds from session files), so it can always be reproduced. With [simple sessions](state.md#simple-sessions--proven), on one shared line, the difference is invisible. It matters once sessions branch.
+**Flatness is what makes surface surface.** The rest of a sphere is committed when a focus grounds, and is true only once it has. Surface is *flatspace*: one always-latest copy that every window sees. Most of it is a materialized view over what's committed (projections re-render, the focus list rebuilds from focus nodes), so it can always be reproduced.
 
 **Liveness is a disposable side-layer.** The one part of surface that isn't a view is liveness: heartbeats, which windows are attached right now. It exists nowhere else, it changes every few minutes, and it's fine to lose in a crash. So it's never committed, or surface's history would churn with every heartbeat. A space declares whether it carries one.
 
@@ -165,7 +168,7 @@ Each entry in `core/surface.md`:
 - space: state
   kind: state
   sharing: private
-  rendered-by: sessions           # the frame that writes here
+  rendered-by: focus-nodes        # the frame that writes here
   flatspace: true
   liveness: side-layer            # none | side-layer
 ```
@@ -185,7 +188,7 @@ Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and th
 
 The capability manifest is a human-facing view, so it's committed: a person can read it to see what their sphere knows how to do. See [loading](loading.md).
 
-**Conflicts in a committed view are never resolved by hand.** When two sessions both change a view, as happens when two devices sync, or when [parallel sessions](state.md#later-parallel-sessions--planned) merge, it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
+**Conflicts in a committed view are never resolved by hand.** When two devices both change a view and their copies merge, it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
 
 ---
 
@@ -225,4 +228,4 @@ For a **non-technical human**, registries exist but are never mentioned. They're
 ## Open questions
 
 1. **When views rebuild.** At every ground, or only when their sources changed? Rebuilding everything is simpler; rebuilding only what changed is faster in a large sphere.
-2. **Views outside git.** In a gitless fallback sphere (one session at a time), "never edited by hand" still holds, but there's no merge to regenerate after. Anything else needed?
+2. **Views outside git.** In a gitless fallback sphere (one focus in the foreground at a time), "never edited by hand" still holds, but there's no merge to regenerate after. Anything else needed?

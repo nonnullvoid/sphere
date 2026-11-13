@@ -41,22 +41,22 @@ Builds choose which anchors they ship and what each one shows. The base build sh
 
 1. checks the real clock (never assumes what day it is)
 2. syncs the calendar, if it has one
-3. surfaces what's pending: waiting work, open sessions, anything that arrived overnight
+3. surfaces what's pending: waiting work, open foci, anything that arrived overnight
 4. hands back **candidates** for today
 
 **It never picks the work.** The human chooses from the candidates, or ignores them.
 
-**Opening a session is not the morning signal.** A session start greets in a line and loads its [handshake slice](loading.md#at-startup-the-handshake-slice). The full orientation renders only when the human signals the day has begun. Sessions open many times a day; mornings happen once. A sphere that gives a morning briefing on every open becomes noise fast.
+**Attaching a window is not the morning signal.** A window attaching greets in a line and loads its [handshake slice](loading.md#at-startup-the-handshake-slice). The full orientation renders only when the human signals the day has begun. Windows attach many times a day; mornings happen once. A sphere that gives a morning briefing on every open becomes noise fast.
 
 ### The forgotten wrap
 
-**Humans forget to wrap.** The day ends mid-thought and the session is left open. So the sphere can watch for the end of the day: once it's late enough, it offers the wrap, and if the human has gone, it [grounds](state.md#ground--proven) what's open so nothing is left dirty overnight.
+**Humans forget to wrap.** The day ends mid-thought and a window is left with unsaved work. So the sphere can watch for the end of the day: once it's late enough, it offers the wrap, and if the human has gone, it [grounds](state.md#ground--proven) what's open so nothing is left dirty overnight.
 
 The trigger is an offer when the human is there, and a safety net when they aren't. It never closes work the human is still in the middle of.
 
 ### The time signal
 
-**The sphere checks the real clock,** the local time on the human's device, at session start and at each anchor. It never infers the time from the conversation. A conversation that started yesterday is still running today, and an AI's sense of "now" can be months off. Because it's the device's time, travel needs no special handling: the anchors, the pattern and the after-hours bias all move with the human.
+**The sphere checks the real clock,** the local time on the human's device, when a window attaches and at each anchor. It never infers the time from the conversation. A conversation that started yesterday is still running today, and an AI's sense of "now" can be months off. Because it's the device's time, travel needs no special handling: the anchors, the pattern and the after-hours bias all move with the human.
 
 ---
 
@@ -80,9 +80,9 @@ Work happens in every [collaboration mode](modes.md#collaboration-modes--decided
 
 | Surface | When the human sees it |
 |---|---|
-| **The ground line** | After every ground, one line of what's waiting: *"2 sessions waiting for your input."* |
+| **The ground line** | After every ground, one line of what's waiting: *"2 foci waiting for your input."* |
 | **The anchors** | The morning orientation and the wrap list everything waiting |
-| **In the session** | A question asked in the session the human is in |
+| **In the window** | A question asked in the window the human is in |
 | **A projection** | A dashboard or home page, for a sphere that has one |
 | **A notification** | A message on a channel the human chose, for what can't wait |
 
@@ -92,7 +92,7 @@ Work happens in every [collaboration mode](modes.md#collaboration-modes--decided
 
 When something needs the human, the sphere reaches for the **cheapest and most present channel first**:
 
-1. ask in the session the human is in, if there is one
+1. ask in the window the human is in, if there is one
 2. otherwise, pause the work, mark it waiting, and surface it at the next ground or anchor
 3. a projection, for a sphere that has one
 4. a notification, only for what can't wait for the next anchor

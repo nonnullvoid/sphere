@@ -12,7 +12,7 @@ A sphere's files are its truth, but files aren't how most people want to see the
 
 One rule underneath all of it: **a projection is never the source of truth.** It's a picture of the files. If the picture and the files disagree, the files win, and the picture is fixed by re-rendering it, never by editing it. — **proven**
 
-**Sessions are the interaction boundary; projections are the communication boundary.** A session is the live conversation: the human attaches, works, and leaves. A projection is the standing display: it stays, and the human comes back to it. They come back for two reasons:
+**Windows are the interaction boundary; projections are the communication boundary.** A window is the live conversation: the human attaches, works, and leaves. A projection is the standing display: it stays, and the human comes back to it. They come back for two reasons:
 - **to audit and follow:** what's in motion, what the sphere is doing and why;
 - **to learn:** reports, guides and references the sphere prepared for them to read.
 
@@ -28,11 +28,11 @@ Every projection touches three kinds of data, and each has exactly one home:
 
 | Kind | What it is | Lives | Committed? |
 |---|---|---|---|
-| **Source truth** | The facts the view shows: work nodes, knowledge, sessions, witness entries, lenses | In the layer that owns it | Yes, like any truth |
+| **Source truth** | The facts the view shows: work nodes, knowledge, focus nodes, witness entries, lenses | In the layer that owns it | Yes, like any truth |
 | **The definition** | What this projection *is*: which sources it reads, what it shows, how it's laid out, what it leaves out | In the **projection node**, `layers/projections/<name>/` | Yes. It's authored, and it changes like any other authored file |
 | **Derived view data** | Anything computed from truth for the view's convenience: a rollup, a sorted list, a chart series | Beside the artifact, `surface/projections/<name>/` | No. It's a cache, rebuildable from the other two at any time |
 
-**Source truth isn't only knowledge.** Work, sessions, witness and lenses all own truth too. A projection reads each from its owner, never from a copy.
+**Source truth isn't only knowledge.** Work, focus, witness and lenses all own truth too. A projection reads each from its owner, never from a copy.
 
 **The missing-fact rule.** If a view needs a value that no layer owns and that can't be derived from one, that's not view data. It's a **missing fact**. Give it an owner (an existing layer, or a new one with a contract) before the view shows it. A view that quietly invents its own facts has become a second source of truth. See [views that accept input](#views-that-accept-input--decided-not-yet-exercised).
 
@@ -63,13 +63,12 @@ A new look is a template change. A new data source is a definition change. A new
 
 ### Which truth a view shows
 
-Projections live outside the session boundary: a human opens their dashboard without caring which session is running. So:
+Projections live outside any focus: a human opens their dashboard without caring which focus is in the foreground. So:
 
-- **The artifact renders from grounded truth on the main line,** never from an in-flight session. What it shows is what's been saved.
-- **A session can preview its unsaved changes** by rendering into scratch (`surface/projections/_scratch/`), clearly marked as a preview. The real artifact doesn't change until the session grounds.
-- **A change to the definition rides the session** like any other authored file. It's previewed in scratch, and it reaches the real artifact when it's grounded.
+- **The artifact renders from grounded truth on the main line,** never from a focus's unsaved work. What it shows is what's been saved.
+- **A focus can preview its unsaved changes** by rendering into scratch (`surface/projections/_scratch/`), clearly marked as a preview. The real artifact doesn't change until the focus grounds.
+- **A change to the definition rides the focus** like any other authored file. It's previewed in scratch, and it reaches the real artifact when it's grounded.
 
-With [simple sessions](state.md#simple-sessions--proven), on one shared line, these are the same thing in practice. They only come apart when sessions branch.
 
 ---
 
@@ -209,13 +208,13 @@ Views built before a sphere adopted this structure, by hand and unregistered, ar
 
 ## Surface: where artifacts live — **proven**
 
-`surface/` holds everything a sphere renders or exchanges, organized by kind. It's flatspace: one always-latest copy that every session sees (see [registries](registries.md#the-surface-registry--decided-not-yet-exercised)).
+`surface/` holds everything a sphere renders or exchanges, organized by kind. It's flatspace: one always-latest copy that every window sees (see [registries](registries.md#the-surface-registry--decided-not-yet-exercised)).
 
 ```
 surface/
 ├── projections/
 │   ├── assets/          shared stylesheet, components, navigation, theme tokens
-│   ├── _scratch/        ephemeral renders and session previews, not registered, safe to clear
+│   ├── _scratch/        ephemeral renders and focus previews, not registered, safe to clear
 │   └── <namespace>/     one level by content type, chosen by the build (e.g. me/, work/)
 │       ├── <name>/      one projection: the artifact and its derived data
 │       └── _legacy/     retired views in this namespace, kept as reference
@@ -233,7 +232,7 @@ surface/
 
 ## Matter, not machinery
 
-Projections show the human's **matter**: their work, their world, their growth. They don't show the sphere's **machinery**: lenses, frames, registries, sessions, git.
+Projections show the human's **matter**: their work, their world, their growth. They don't show the sphere's **machinery**: lenses, frames, registries, focus nodes, git.
 
 - **For a non-technical human** this is absolute. Their projections are a home page, "my things," and a witness view of how they're growing. Nothing else.
 - **For people building their own sphere,** machinery views are allowed as an option: a map of layers, a view of the protocol. They're never the default front door.

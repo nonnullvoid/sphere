@@ -32,6 +32,7 @@ layers/knowledge/
 │   └── …                         domains can nest (money.taxes, money.investing)
 ├── <topic>/                      a topic: one thing worth knowing about
 │   ├── topic.md                  its facts, reads and history
+│   ├── history.md                its history, once it grows too long for topic.md
 │   └── sources/                  research, documents, analyses it was built from (optional)
 ├── history/                      narratives that span topics, append-only
 └── index.md                      generated: every domain and topic, and how they relate
@@ -69,7 +70,7 @@ Then three parts.
 | Fact | Current → intended | As of | Source |
 |---|---|---|---|
 | `filing-status` | married filing jointly | 2026-10-01 | **verified**: last year's return |
-| `estimated-payments` | 2 of 4 → 4 of 4 | 2026-10-15 | **stated**: the human, in session |
+| `estimated-payments` | 2 of 4 → 4 of 4 | 2026-10-15 | **stated**: the human, in conversation |
 
 **Current → intended** is what makes a fact useful for work. The gap between the two is often where a work node comes from.
 
@@ -140,14 +141,14 @@ As the human talks, the sphere notices facts worth keeping. **It fires only on d
 
 Candidates go into a **proposal list** for the domain they belong to, each with the fact in the human's own words, where it came up, and where it would land. At ground, the sphere offers them as one batch:
 
-> I picked up 3 facts this session:
+> I picked up 3 facts since the last ground:
 > - Estimated tax payments: 2 of 4 made (stated)
 > - The lease ends in August (verified: lease PDF)
 > - The landlord seems open to renewing (a read, inferred from his last email)
 >
 > Save all, some, or none?
 
-**The exception:** when a fact is about to be lost (the topic is changing, or the session is ending in a hurry), the sphere asks right then, in one line: *"Worth keeping: the lease ends in August. Save it?"*
+**The exception:** when a fact is about to be lost (the topic is changing, or the window is closing in a hurry), the sphere asks right then, in one line: *"Worth keeping: the lease ends in August. Save it?"*
 
 ### 2. Compiled from sources
 
@@ -212,6 +213,6 @@ Knowledge is the sphere's model of *its human's* world, and it's private. It nev
 ## Open questions
 
 1. **Freshness windows.** Should domains declare them, or should the sphere learn them? And what's the default for a domain that declares nothing?
-2. **Batch size at ground.** When a session produces many candidates, should the sphere offer them all, or only the most useful few?
+2. **Batch size at ground.** When one ground has many candidates, should the sphere offer them all, or only the most useful few?
 3. **Finished work into history.** When a work node is archived, does any of its `progress.md` belong in the knowledge layer's history, or does history stay narrative only?
 4. **Domain overview files.** Should a domain folder hold a short overview of itself, or is the generated index enough?

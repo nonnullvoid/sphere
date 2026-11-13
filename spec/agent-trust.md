@@ -80,7 +80,7 @@ A circuit breaker stops the run and tells the human on the most direct channel t
 
 ## Outcomes are a byproduct — **proven**
 
-Every run records its outcome: clean, corrected (and why), rejected (and why), or stopped by a circuit breaker. **Recording never blocks the work.** It happens alongside, the way a session file is written at ground.
+Every run records its outcome: clean, corrected (and why), rejected (and why), or stopped by a circuit breaker. **Recording never blocks the work.** It happens alongside, the way a focus node's history is written at ground.
 
 Outcomes feed three things:
 - **trust:** the evidence for promotion
@@ -95,8 +95,8 @@ There are two ways:
 
 | | What happens | Good for |
 |---|---|---|
-| **Delegate** | The agent works in its own session. The human can look in on it, or step in | Work the human may want to steer |
-| **Dispatch** | The agent runs in the background and reports back when it's done | Work the human only needs the result of |
+| **Delegate** | The agent works its own child [focus node](focus.md), supervised. The human can attach to look in, or step in | Work the human may want to steer |
+| **Dispatch** | The agent works its child focus unattended and reports back when it's done | Work the human only needs the result of |
 
 **Checking every run is the low-trust way, not the only one.** As trust grows, dispatch becomes normal, and the human sees results instead of steps.
 
@@ -108,6 +108,7 @@ There are two ways:
 - **Every agent has a home in the sphere,** at least a reference, wherever its definition lives: its own file in `core/ai/agents/`, beside the personas. A generated `index.md` there lists them all (see [registries](registries.md#where-a-registry-lives--decided-not-yet-exercised)).
 - **Its trust lives in that file:** the rung it has earned for each kind of work. Rungs change only on the human's say. Trust is the human's judgment of the agent, so it stays with the human even when the definition lives elsewhere.
 - **Its history lives in `core/records/agents/<agent>.md`:** every run's outcome, and why each promotion or demotion happened, appended and never rewritten. It's the same pattern as a work node's `work.md` and `progress.md`: a current-state file plus a history file. Placement keeps the history private: `core/records/` never travels (see [replication](replication.md)), so an agent's file can be shared without its run history.
+- **An agent's definition and its runs are different things.** The file in `core/ai/agents/` is *who* the agent is and how far it's trusted. Each run works a [focus node](focus.md), usually a child of the focus that delegated it, and its memory of that work is the node's history. The agent's own history records only outcomes and trust changes.
 - **Teams are registered as they're used.** When agents work together (a pipeline, a panel, a lead with specialists), the team gets an entry once it has actually run. Shapes that haven't run yet are noted as slots, not specified in advance.
 
 ### Right-sized intelligence

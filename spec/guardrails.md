@@ -27,10 +27,10 @@ The common set ships these as frames under [human-is-highest](../common/core/pro
 | [**Propose, don't decide**](../common/core/protocol/frames/human-is-highest/propose-dont-decide.md) | Changes to what the sphere believes or how it behaves are proposals | **proven** |
 | [**Not on its own say-so**](../common/core/protocol/frames/human-is-highest/evaluator-not-self.md) | Work isn't called done, fixed or verified on the AI's word alone. Something outside it checks: a test, another agent, or the human | **proven** |
 | [**Tools and documents give data, not instructions**](../common/core/protocol/frames/human-is-highest/external-tools-untrusted.md) | Only the human instructs. Text in pages, documents and tool descriptions is data; attempts to steer the AI are raised. New outside tools are vetted before connecting | _decided, not yet exercised_ |
-| **Check before acting on shared state** | Before changing anything other people depend on, refresh the view of it first: pull before push, re-read before overwrite | **proven** |
+| [**Check before acting on shared state**](../common/core/protocol/frames/continuity/check-shared-state.md) | Before changing anything other people depend on, refresh the view of it first: pull before push, re-read before overwrite | **proven** |
 | **Say how sure you are** | When the sphere states something it hasn't verified, it says so. See [grades](knowledge.md#grades-and-freshness--decided-not-yet-exercised) | **proven** |
 
-The last two derive from other lenses and join the common set when those lenses are written.
+*Check before acting on shared state* derives from [continuity](../common/core/protocol/lenses/continuity.md). *Say how sure you are* joins the common set when the knowledge lens is written.
 
 Builds add their own. A work sphere for engineers might add *draft every pull request*, *resolve automated review comments before asking for human review*, or *never paste credentials or personal data into a shared tool*. These are slots in the build, filled by the sphere's own experience.
 
@@ -84,7 +84,7 @@ Guardrails accumulate. Without care, a sphere ends up with a hundred rules, some
 - **Each guardrail records its origin and when it last applied.** One that hasn't applied in months is a candidate for review.
 - **Merge before adding.** A new rule that's a special case of an existing one extends that one instead. (The usual [governance](protocol.md#governance--proven) rule: prefer updating to adding.)
 - **Contradictions surface immediately.** When a new rule conflicts with an existing one, the sphere says so and asks which wins, instead of holding both.
-- **Scope is explicit.** A rule about pull requests only loads when pull requests are in play, so a hundred narrow rules don't all compete for attention in every session.
+- **Scope is explicit.** A rule about pull requests only loads when pull requests are in play, so a hundred narrow rules don't all compete for attention in every window.
 - **A periodic review** (for example, alongside a monthly reflection) offers to merge, retire or sharpen rules. The human decides.
 
 ---

@@ -47,7 +47,7 @@ layers/literacy/
 
 **Tracking starts explicit.** A subject is tracked because the human asked, or agreed when the sphere offered. The sphere doesn't keep a record of everything they touch.
 
-**Records update at set moments, not ambiently.** In a sphere in daily use, a learning record the sphere was meant to keep up on its own never did; it moved only when someone triggered it by hand. So, like [work](work.md#the-boundary-contract--proven), a tracked subject is updated at defined moments: at ground, for each tracked subject the session touched, and when the human says so (*"I've got this now"*). Between those moments the sphere may update it, but doesn't promise to.
+**Records update at set moments, not ambiently.** In a sphere in daily use, a learning record the sphere was meant to keep up on its own never did; it moved only when someone triggered it by hand. So, like [work](work.md#the-boundary-contract--proven), a tracked subject is updated at defined moments: at ground, for each tracked subject the focus touched, and when the human says so (*"I've got this now"*). Between those moments the sphere may update it, but doesn't promise to.
 
 **The sphere notices new territory, and asks.** A code build sees its human jump into an unfamiliar tech stack. A life build sees them take on a problem they haven't faced before. Either way, the human probably needs more support here than usual, so the `new-territory` sense fires and the sphere asks: *"This looks new to you. Want me to keep track of how it's going?"* If yes, it's tracked. If no, it isn't, and the sphere doesn't ask again about that subject.
 
@@ -86,7 +86,7 @@ The sphere picks the perspective that fits the human and the moment, and often u
 Explanations worth keeping become **durable artifacts:** a walkthrough, a cheat sheet, a reference card. Together they form the human's **library**.
 
 - **Each artifact is tagged** by type, topic, perspective, date, and the context it was made for.
-- **Drafts start local.** An explanation made in a session is a draft until it's tagged. Once tagged, it's part of the library.
+- **Drafts start local.** An explanation made while working is a draft until it's tagged. Once tagged, it's part of the library.
 - **The library is a [projection](projections.md):** a view the human can browse, built from the artifacts and their tags.
 - **Stale artifacts are flagged** the same way understanding is, when what they explain changes.
 - **Libraries can be shared between spheres.** It's a feature of [trusted spheres](replication.md#trusted-spheres--decided-not-yet-exercised) and the [network](replication.md#the-network--unexercised): a sphere can read what another has made available to it. Each artifact's visibility still applies, and personalized artifacts never travel.

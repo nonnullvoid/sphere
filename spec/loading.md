@@ -8,14 +8,14 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 ## The idea
 
-A sphere that has been used for a year holds hundreds of lenses, frames, work nodes and topics. If every session read all of it, two things would go wrong:
+A sphere that has been used for a year holds hundreds of lenses, frames, work nodes and topics. If every window read all of it, two things would go wrong:
 
-- **It gets expensive.** Every session pays for the whole sphere, whatever the task.
+- **It gets expensive.** Every window pays for the whole sphere, whatever the task.
 - **It gets worse.** This is the bigger problem. A model given a very large context attends to it unevenly: what's in the middle gets less weight than what's at the start and end. Loading everything doesn't make the sphere better informed. It makes it *worse at the question in front of it.*
 
 So loading is about quality first and cost second. — **proven**
 
-**The scaling invariant:** _a session's cost scales with the breadth of the task, not the size of the sphere._ A narrow question in a large sphere should cost about what it costs in a small one. Three things make that hold:
+**The scaling invariant:** _a window's cost scales with the breadth of the task, not the size of the sphere._ A narrow question in a large sphere should cost about what it costs in a small one. Three things make that hold:
 
 1. **Bodies load on demand.** The text of a lens or frame is read only when it's used.
 2. **The index is hierarchical, not flat.** The sphere sees a short list of what exists, and opens a level deeper only where the task points.
@@ -29,8 +29,8 @@ _The evidence so far:_ one sphere cut its always-loaded engine from about 19 KB 
 
 | Tier | What | When it loads | How often |
 |---|---|---|---|
-| **1. Identity core** | Who the human is, who the AI is, the rules, the kernel of the engine | Every session, at startup | Always |
-| **2. Capability manifest** | One line per lens: its job and when to load it; under each, its frames' scope and triggers | Every session, at startup | Always |
+| **1. Identity core** | Who the human is, who the AI is, the rules, the kernel of the engine | Every window, at startup | Always |
+| **2. Capability manifest** | One line per lens: its job and when to load it; under each, its frames' scope and triggers | Every window, at startup | Always |
 | **3. Frame text** | The full mechanics of a frame | When the frame is invoked | Often |
 | **4. Lens text** | The full understanding behind a set of frames | When the *why* is in question: a judgment call, a change, evolution | Rarely |
 
@@ -40,13 +40,13 @@ This works because **a frame is self-sufficient to run** (see [protocol](protoco
 
 ### The kernel split — _decided, partly exercised_
 
-The core is split too. A small **kernel** loads every session: the state machine, the guards, the instincts that must always be on. The **deeper engine mechanics** (how evolution runs, how replication works, how the registries rebuild) load only when the sphere is being worked on, not when it's being used.
+The core is split too. A small **kernel** loads in every window: the state machine, the guards, the instincts that must always be on. The **deeper engine mechanics** (how evolution runs, how replication works, how the registries rebuild) load only when the sphere is being worked on, not when it's being used.
 
 ### The floor is governed — _decided, not yet exercised_
 
-What loads every session is the **floor**, and floor creep is the one real per-session cost of a large sphere. Every addition seems small, and together they undo the whole model. So:
+What loads in every window is the **floor**, and floor creep is the one real per-window cost of a large sphere. Every addition seems small, and together they undo the whole model. So:
 
-- **Admission to the floor is rare.** A thing earns its place by being needed in nearly every session, not by being important.
+- **Admission to the floor is rare.** A thing earns its place by being needed in nearly every window, not by being important.
 - **Admission is reversible.** Anything on the floor can be moved back to on-demand. Evolution's reflection looks at the floor's size and asks whether each item still earns its place.
 - **The floor's size is visible.** The startup check reports it, so growth is noticed.
 
@@ -101,19 +101,19 @@ Startup reads only the **handshake slice** of each file it needs: the focused se
 
 _An example already in the spec:_ the [work tree view](work.md) is built from node frontmatter alone. Opening the sphere shows every node's state without reading a single node's body.
 
-### Mid-session
+### While working
 
-- **Don't re-read what's already loaded.** If a file was read this session and hasn't changed, use what's in context.
+- **Don't re-read what's already loaded.** If a file was read in this window and hasn't changed, use what's in context.
 - **Stop at the shallowest depth** that answers the need (see [progressive disclosure](#progressive-disclosure--decided-not-yet-exercised)).
 - **Prefer pointers to payloads.** Refer to a file by name instead of quoting it back. Summarize a long result instead of carrying all of it forward.
-- **Let ground compact.** A long session doesn't have to carry everything it ever read. Ground saves what matters to files, and the next session starts clean from them.
-- **Hand off before the window degrades.** — **proven** When a session's context is well past half full, the sphere offers to ground and continue in a fresh session, while it can still write a good handoff. Waiting until attention has already slipped makes the handoff worse (see [why sessions exist](state.md#why-sessions-exist--proven)).
+- **Let ground compact.** A long-running window doesn't have to carry everything it ever read. Ground saves what matters to files, and the next window attaches clean from them.
+- **Hand off before the window degrades.** — **proven** When a window's context is well past half full, the sphere offers to ground and attach a fresh window to the same focus, while it can still write a good handoff. Waiting until attention has already slipped makes the handoff worse (see [why windows end](state.md#why-windows-end-and-why-thats-fine--proven)).
 
 ---
 
 ## Operating mode loadout — _decided, not yet exercised_
 
-Every [operating mode](modes.md#operating-modes--decided-not-yet-exercised) (coding, brainstorming, planning, research…) carries a **loadout**: the frames worth warming up front for that kind of work. The floor always loads. The loadout is the only part that varies. It's **a hint, never a gate**: everything stays reachable, and if a coding session suddenly needs the meeting frames, they load on demand at the cost of one extra read.
+Every [operating mode](modes.md#operating-modes--decided-not-yet-exercised) (coding, brainstorming, planning, research…) carries a **loadout**: the frames worth warming up front for that kind of work. The floor always loads. The loadout is the only part that varies. It's **a hint, never a gate**: everything stays reachable, and if a coding focus suddenly needs the meeting frames, they load on demand at the cost of one extra read.
 
 The operating mode is declared by the human (preferred), inferred from how the work opens, and changeable at any time. Which frames each loadout warms is learned from use.
 
@@ -136,7 +136,7 @@ None of this is visible. They notice only that the sphere is quick, stays on top
 
 ## Open questions
 
-1. **Measuring the invariant.** What's the test that shows a session's cost tracks the task, not the sphere? Probably a fixed set of narrow tasks, run against the same sphere at different sizes.
+1. **Measuring the invariant.** What's the test that shows a window's cost tracks the task, not the sphere? Probably a fixed set of narrow tasks, run against the same sphere at different sizes.
 2. **Search at scale.** When discovery shifts to searching, is plain text search enough, or does a large sphere need an index built for it?
 3. **Floor budget.** Should a build ship a size budget for the floor, or only report its size?
 4. **Learned warm-up.** How does a sphere learn which frames an operating mode's loadout should warm up, without loading them all to find out?

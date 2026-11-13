@@ -1,10 +1,16 @@
 ---
 frame: outbound-guard
 kind: guard
-lens: human-is-highest
+lens: [human-is-highest]
+derives_from: [human-is-highest@2]
 version: 2
+version_note: Four send modes replace standing approvals. Vetted starts empty. Agents never send. Receipts.
+status: active
 updated: 2026-10-28
 sharing: public
+reads: []
+writes: []
+protocol: [I-trust-what-leaves, A-draft-outbound, A-register-vetted, outbound-sent]
 ---
 
 # Outbound guard

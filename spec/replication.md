@@ -28,7 +28,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 |---|---|
 | The human's profile, voice and principles | `core/user/` |
 | The AI's personas and their relationship with this human | `core/ai/` |
-| Session records, decisions, history | `core/records/`, `layers/knowledge/history/` |
+| Focus nodes and their history, records, decisions | `layers/focus/`, `core/records/`, `layers/knowledge/history/` |
 | Layer data: work, knowledge, everything in `layers/` | `layers/` |
 | Rendered views | `surface/` |
 | **Private lenses**, and frames that inherit their level | `core/protocol/` (`sharing: private`). See [sharing](protocol.md#sharing--decided-not-yet-exercised) |

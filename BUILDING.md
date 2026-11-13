@@ -11,7 +11,7 @@ You don't need the whole architecture on day one. A sphere that holds a few thin
 - **Who you are, and how you like to work:** a short profile and a few principles.
 - **Your work,** one node per thing you're doing, each with a next action.
 - **Facts worth keeping,** with where they came from.
-- **Ground at the end of each session,** and resume at the start of the next.
+- **Ground before you close a window,** and attach to the focus at the start of the next.
 - **The outbound guard:** nothing leaves under your name without you seeing it.
 
 Everything else (mirrors, several personas or operating modes, sharing) can wait until you feel the need. Add things when something's missing, not because the architecture has a chapter on it.
@@ -60,11 +60,11 @@ The same applies to anything a sphere promises to do every time: if it matters, 
 
 When a frame's value is in getting operations exactly right (git, file moves, servers), write a script. When its value is understanding, write the lens or frame text.
 
-_What goes wrong otherwise:_ a session system described entirely in prose took many iterations to make git behave, and every session re-derived the same commands. The understanding was settled early. The mechanics kept breaking, because prose isn't a program.
+_What goes wrong otherwise:_ a session system described entirely in prose took many iterations to make git behave, and every window re-derived the same commands. The understanding was settled early. The mechanics kept breaking, because prose isn't a program.
 
 **Don't build what the harness already does.** The AI tool your sphere runs in keeps gaining features: permissions, memory, scheduling, background agents. Before writing mechanics for something, check whether the harness handles it. When it starts to, retire your version.
 
-_What goes wrong otherwise:_ a sphere kept a frame for handling stalled permission prompts long after the harness handled them itself. It cost reading time every session and did nothing.
+_What goes wrong otherwise:_ a sphere kept a frame for handling stalled permission prompts long after the harness handled them itself. It cost reading time in every window and did nothing.
 
 ---
 
@@ -72,15 +72,15 @@ _What goes wrong otherwise:_ a sphere kept a frame for handling stalled permissi
 
 At startup, load only what tells the sphere **who** and **where**: the personas, the rules, and the registries that point at everything else. Load the rest when a task needs it.
 
-Count what your startup reads. If it keeps growing, move something behind a registry pointer. A sphere that reads everything at the start of every session gets slower and more expensive as it gets better.
+Count what your startup reads. If it keeps growing, move something behind a registry pointer. A sphere that reads everything in every window gets slower and more expensive as it gets better.
 
 ## 8. Ground for a stranger
 
-The test of a good ground: **could a new session, with no memory of this one, continue the work?** Write `progress.md` entries for that reader. Say what happened, what was decided and why, and the single next step.
+The test of a good ground: **could a fresh window, with no memory of this one, continue the work?** Write `progress.md` entries for that reader. Say what happened, what was decided and why, and the single next step.
 
-- Stage only what this session touched. Other changes belong to other sessions, or to you.
+- Stage only what this focus touched. Other changes belong to other foci, or to you.
 - Propose facts; don't write them. You decide what becomes knowledge.
-- Ground often enough that a lost session costs little.
+- Ground often enough that a lost window costs little.
 
 ---
 
@@ -122,7 +122,7 @@ Mark what you've exercised for real versus what you've only designed. Ideas look
 | Editing an index or registry by hand | Edit the source; let the view rebuild |
 | A rule with no reason | Rule, why, and when it applies |
 | The AI writing facts on its own | Facts proposed at ground; you decide |
-| Promising the sphere is always up to date | Promise the boundaries: true at session start and end |
+| Promising the sphere is always up to date | Promise the boundaries: true when a window attaches and when it grounds |
 | A startup that reads everything | Who and where at startup; the rest on demand |
 | Private files in something you share | Build exports from an allowlist |
 | Prose instructions for exact operations | A script, plus a short frame saying when to run it |

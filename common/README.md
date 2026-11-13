@@ -21,5 +21,8 @@ common/core/protocol/
 | Lens | Frames | Status |
 |---|---|---|
 | [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted | draft 2 |
+| [nodes](core/protocol/lenses/nodes.md) | node-shape · kinds-of-file | draft 1 |
+| [continuity](core/protocol/lenses/continuity.md) | state-machine · check-shared-state · without-git | draft 1 |
+| [focus](core/protocol/lenses/focus.md) | focus-nodes · focus-holds · focus-tree | draft 1 |
 
-_More lenses follow once this first one's shape is agreed._
+_More lenses follow, one at a time._
