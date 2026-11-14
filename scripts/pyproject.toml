@@ -1,0 +1,26 @@
+# Dev-time lint config for the sphere tools. The tools themselves are stdlib-only Python 3.9.
+#   uvx ruff check scripts
+#   uvx ruff format --check scripts
+#   uvx basedpyright scripts
+[tool.ruff]
+target-version = "py39"
+line-length = 120
+# The two command-line tools have no .py extension.
+extend-include = ["sphere", "structure-check"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.basedpyright]
+pythonVersion = "3.9"
+include = ["sphere", "structure-check", "sphere_shapes.py", "tests"]
+extraPaths = [".", "tests"]
+# basedpyright's default ("recommended") mode, minus four checks that fight this code:
+# argparse.Namespace attributes are Any by design; a typed Namespace per verb would add a class per verb.
+reportAny = false
+# Many calls are made for their effect (subprocess.run, os.makedirs, the tests' self.ok); `_ =` everywhere hides that.
+reportUnusedCallResult = false
+# @override is typing.override, Python 3.12+; the tools are stdlib-only on 3.9.
+reportImplicitOverride = false
+# Long messages are split across lines as adjacent strings, the way ruff format leaves them.
+reportImplicitStringConcatenation = false

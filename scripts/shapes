@@ -1,0 +1,76 @@
+# Node shapes: each tree's frontmatter, declared once.
+# structure-check reads this file, and so does `sphere` when it writes a focus.md.
+# Change a tree's frontmatter and its block here in the same commit (spec/nodes.md, "The shape check").
+#
+#   tree <name>
+#   nodes folder <dir>          each subfolder of <dir> is a node (and each subfolder of <dir>/archived)
+#   nodes file <dir> [deep]     each .md file in <dir> is a node; deep: at any depth
+#   current <file>              folder nodes: the current-state file, which carries the frontmatter
+#   history <file>              folder nodes: the history file
+#   keys <key>...               keys every node has, even when empty, in this order; <key>? marks one it may leave out
+#   optional <key>...           more keys a node may leave out (anywhere)
+#   archived <key>...           keys a node has exactly when it's in <dir>/archived
+#   values <key> <value>...     the only values <key> may take (its first word is checked)
+#   format <key> <kind> [arg]   name (= the node's name), date (YYYY-MM-DD), int (0 or more),
+#                               version (<major>.<minor>), list [item-pattern], list+ [item-pattern] (one or more)
+#   name <pattern>              node names (file name without .md, or folder name) match this pattern
+#   skip <name>...              folders or files under <dir> that aren't nodes of this tree
+#
+# structure-check reads frontmatter and folder listings only, never bodies, and skips <dir>/archived
+# unless asked (--archive). Rules beyond these lines (idea, plan, focus) live in sphere_shapes.py.
+#
+#   kind history <file>...      history files by name: append-only, merged by union, never reversed
+#   kind reference <prefix>...  reference files: changed only on the human's yes; a revert proposes, never writes
+
+tree focus
+nodes folder layers/focus
+current focus.md
+history history.md
+keys number name aka parent status intention holds through operating-mode collaboration-mode persona points-at opened
+values status open closed
+
+tree lens
+nodes file core/protocol/lenses
+keys lens version version_note derives_from status updated verified sharing frames
+values status active drafting deprecated
+values verified true false
+values sharing public protected private
+
+tree frame
+nodes file core/protocol/frames deep
+keys frame kind lens derives_from version version_note status updated sharing reads writes protocol
+values kind guard instinct structural
+values status active drafting deprecated
+values sharing public protected private
+skip SKILL.md README.md
+
+tree idea
+nodes file layers/ideas
+name ^\d{8}-[a-z0-9]+(-[a-z0-9]+)*$
+keys idea title captured topics stage refinements refined? related? outcome? change? horizon?
+archived outcome
+format idea name
+format captured date
+format topics list ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+format refinements int
+format refined date
+format related list
+values stage raw shaping ready
+values outcome graduated parked
+values change add refactor drop
+values horizon now soon someday
+
+tree plan
+nodes folder layers/work/plans
+current plan.md
+history history.md
+keys plan title parent? for state version summary created updated
+format plan name
+format for list+ ^work:\S+$
+format version version
+format created date
+format updated date
+values state active done dropped
+
+kind history history.md progress.md
+kind reference layers/knowledge/ core/protocol/ core/user/

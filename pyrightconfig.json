@@ -1,0 +1,3 @@
+{
+  "extends": "scripts/pyproject.toml"
+}

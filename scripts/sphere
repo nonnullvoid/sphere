@@ -1,0 +1,1521 @@
+#!/usr/bin/env python3
+"""sphere: the mechanics of focus nodes (spec/focus.md, spec/state.md).
+
+It moves files and makes commits. What they mean stays with the AI and the human.
+Standard library only; runs on Python 3.9 (what macOS ships beside git).
+
+Reading order: small helpers first (stopping, git, history files, foci,
+heartbeats, holds, what changed, committing), then one function per verb,
+then the command line at the bottom.
+"""
+
+import argparse
+import datetime
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import time
+from collections.abc import Callable, Sequence
+from contextlib import contextmanager, nullcontext, suppress
+from dataclasses import dataclass
+from typing import NoReturn, Optional
+
+sys.dont_write_bytecode = True
+HERE = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, HERE)
+from sphere_shapes import (  # noqa: E402
+    ARCHIVE,
+    FOCUS,
+    Shapes,
+    Tree,
+    check_node,
+    format_list,
+    frontmatter_value,
+    parse_list,
+    read_shapes,
+    set_frontmatter_value,
+)
+
+USAGE = """\
+usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's options)
+
+  init [--git]                 make this folder a sphere: f0-main, core/shapes, .gitattributes, .gitignore
+  open <name> -i <intention>   open a focus under --parent (default f0); --holds a,b; --attach
+  attach <focus>               foreground it and print its briefing
+  ground [focus]               commit this focus's held files, its own files and history appends
+  detach <focus>               ground, then send to the background
+  close <focus> -m <why>       ground, write the last entry, give its holds back, archive
+  list                         what's in focus: the tree, needs-attention first
+  peek [--today]               what's unsaved, by focus, plus out of focus; recent grounds
+  undo <focus> [--yes]         reverse this focus's last ground, as a new commit
+  revert <focus> [--to <commit>] [--yes]    reverse this focus's grounds after <commit>
+  revert --sphere --to <commit> [--yes]     reverse everything after <commit>
+
+A focus is named by number (f21 or 21), reference (f21-plumbing-quotes), name, or aka.
+Environment: SPHERE_FOCUS (this window's focus; every command refreshes its heartbeat),
+SPHERE_CLIENT (the window's label), SPHERE_ROOT (where to look for the sphere).
+Exit codes: 0 done · 1 error · 2 ambiguous name · 3 needs the human's answer · 4 read-only (without git)."""
+
+MAIN = "f0-main"
+HEARTBEATS = "surface/state/focus"
+GITLESS_LOCK = HEARTBEATS + "/LOCK"
+SHAPES_IN_SPHERE = "core/shapes"
+SHAPES_TEMPLATE = os.path.join(HERE, "shapes")
+FOREGROUND_MINUTES = 30
+QUIET_DAYS = 21
+LOCK_TRIES, LOCK_WAIT_SECONDS = 20, 0.5
+
+ERROR, AMBIGUOUS, NEEDS_ANSWER, READ_ONLY = 1, 2, 3, 4
+
+# Set once by enter_sphere() (or by init).
+USE_GIT = False
+SHAPES = Shapes([], [], [])  # set from core/shapes when the command starts
+
+
+# ================================================================ stopping
+
+
+class Stop(Exception):
+    """Ends the command. The message goes to stderr; the code is the exit code."""
+
+    def __init__(self, message: str, code: int = ERROR):
+        super().__init__(message)
+        self.code: int = code
+
+
+def fail(message: str) -> NoReturn:
+    raise Stop("sphere: " + message, ERROR)
+
+
+def ask(message: str) -> NoReturn:
+    """Stop for the human's answer (exit 3)."""
+    raise Stop(message, NEEDS_ANSWER)
+
+
+def warn(message: str) -> None:
+    print(message, file=sys.stderr)
+
+
+# ================================================================ git
+
+
+def run_git(
+    args: Sequence[str], env: Optional[dict[str, str]] = None, input: Optional[str] = None
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(["git"] + list(args), capture_output=True, text=True, env=env, input=input)
+
+
+def run_git_binary(
+    args: Sequence[str], env: Optional[dict[str, str]] = None, input: Optional[bytes] = None
+) -> subprocess.CompletedProcess[bytes]:
+    """For patches, which may hold binary files."""
+    return subprocess.run(["git"] + list(args), capture_output=True, env=env, input=input)
+
+
+def git(*args: str, env: Optional[dict[str, str]] = None) -> str:
+    """Run git and return its output; a failure ends the command."""
+    result = run_git(args, env=env)
+    if result.returncode != 0:
+        fail(f"git {args[0]} failed: {result.stderr.strip()}")
+    return result.stdout.rstrip("\n")
+
+
+def git_ok(*args: str, env: Optional[dict[str, str]] = None) -> bool:
+    return run_git(args, env=env).returncode == 0
+
+
+def short(sha: str) -> str:
+    return git("rev-parse", "--short", sha)
+
+
+def commit_log(*args: str) -> list[tuple[str, str]]:
+    """(sha, subject) pairs, newest first. Arguments go to git log as they are."""
+    result = run_git(["log", "--format=%H%x09%s"] + list(args))
+    if result.returncode != 0:
+        return []
+    pairs = [line.split("\t", 1) for line in result.stdout.splitlines() if "\t" in line]
+    return [(sha, subject) for sha, subject in pairs]
+
+
+def show_commits(shas: list[str]) -> None:
+    for sha in shas:
+        print("  " + git("log", "-1", "--date=format:%Y-%m-%d %H:%M", "--format=%h %ad %s", sha))
+
+
+# ================================================================ files and time
+
+
+def read_text(path: str) -> str:
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return handle.read()
+    except OSError:
+        return ""
+
+
+def write_text(path: str, text: str) -> None:
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(text)
+
+
+def append_line_once(path: str, line: str) -> None:
+    text = read_text(path)
+    if line in text.split("\n"):
+        return
+    if text and not text.endswith("\n"):
+        text += "\n"
+    write_text(path, text + line + "\n")
+
+
+def now_minute() -> str:
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+def today() -> str:
+    return datetime.date.today().isoformat()
+
+
+def utc_stamp() -> str:
+    return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def modified_within(path: str, minutes: int) -> bool:
+    return os.path.exists(path) and time.time() - os.path.getmtime(path) < minutes * 60
+
+
+def unique(items: list[str]) -> list[str]:
+    return list(dict.fromkeys(items))
+
+
+def is_under(path: str, folder: str) -> bool:
+    return path == folder or path.startswith(folder + "/")
+
+
+def overlaps(a: str, b: str) -> bool:
+    return is_under(a, b) or is_under(b, a)
+
+
+# ================================================================ history files (newest first)
+
+
+def add_entry(path: str, heading: str, text: str) -> None:
+    """Add a history entry at the top: history files are newest first."""
+    write_text(path, f"## {now_minute()} — {heading}\n\n{text}\n\n" + read_text(path))
+
+
+def latest_field(path: str, field_name: str) -> str:
+    """The newest `**Field:** …` line's text, e.g. latest_field(h, "Next")."""
+    marker = f"**{field_name}:**"
+    for line in read_text(path).split("\n"):
+        if line.startswith(marker):
+            return line[len(marker) :].strip()
+    return ""
+
+
+def latest_entry_date(path: str) -> Optional[datetime.date]:
+    match = re.search(r"^## (\d{4}-\d{2}-\d{2})", read_text(path), re.MULTILINE)
+    return datetime.date.fromisoformat(match.group(1)) if match else None
+
+
+def latest_entries(path: str, count: int) -> str:
+    lines: list[str] = []
+    seen = 0
+    for line in read_text(path).split("\n"):
+        if line.startswith("## "):
+            seen += 1
+        if seen > count:
+            break
+        if seen:
+            lines.append(line)
+    return "\n".join(lines)
+
+
+# ================================================================ foci
+
+
+def number_of(ref: str) -> str:
+    """f21-plumbing-quotes → f21"""
+    return ref.split("-", 1)[0]
+
+
+def number_value(ref: str) -> int:
+    return int(number_of(ref)[1:])
+
+
+def focus_refs(folder: str) -> list[str]:
+    if not os.path.isdir(folder):
+        return []
+    refs = [
+        name
+        for name in os.listdir(folder)
+        if re.match(r"^f[0-9]+-", name) and os.path.isfile(f"{folder}/{name}/focus.md")
+    ]
+    return sorted(refs, key=number_value)
+
+
+def open_refs() -> list[str]:
+    """What's open is the top level of layers/focus. A status that disagrees is the shape check's to report."""
+    return focus_refs(FOCUS)
+
+
+def focus_dir(ref: str) -> str:
+    return f"{FOCUS}/{ref}" if os.path.isdir(f"{FOCUS}/{ref}") else f"{ARCHIVE}/{ref}"
+
+
+def focus_file(ref: str) -> str:
+    return focus_dir(ref) + "/focus.md"
+
+
+def history_file(ref: str) -> str:
+    return focus_dir(ref) + "/history.md"
+
+
+def ref_of_number(number: str) -> str:
+    for ref in open_refs() + focus_refs(ARCHIVE):
+        if number_of(ref) == number:
+            return ref
+    return ""
+
+
+def parent_ref(ref: str) -> str:
+    """The parent's reference, or "" for main."""
+    return ref_of_number(frontmatter_value(focus_file(ref), "parent"))
+
+
+def holds_of(ref: str) -> list[str]:
+    return parse_list(frontmatter_value(focus_file(ref), "holds"))
+
+
+def children(number: str) -> list[str]:
+    return [ref for ref in open_refs() if frontmatter_value(focus_file(ref), "parent") == number]
+
+
+def next_number() -> int:
+    """One more than the highest number in layers/focus/, archived included."""
+    numbers = [number_value(ref) for ref in focus_refs(FOCUS) + focus_refs(ARCHIVE)]
+    return max(numbers, default=0) + 1
+
+
+def resolve(query: str, include_archived: bool = False) -> str:
+    """A number, reference, name or aka → one reference. Stops when it isn't clear."""
+    wanted = query.lower()
+    if wanted.isdigit():
+        wanted = "f" + wanted
+    refs = open_refs() + (focus_refs(ARCHIVE) if include_archived else [])
+    exact: list[str] = []
+    partial: list[str] = []
+    for ref in refs:
+        akas = parse_list(frontmatter_value(focus_file(ref), "aka"))
+        if wanted in (number_of(ref), ref, ref.split("-", 1)[1]) or wanted in akas:
+            exact.append(ref)
+        elif wanted in ref:
+            partial.append(ref)
+    if len(exact) == 1:
+        return exact[0]
+    if exact:
+        raise Stop(f"sphere: '{query}' matches more than one focus: {' '.join(exact)}. Which?", AMBIGUOUS)
+    if partial:
+        raise Stop(f"sphere: no focus is called '{query}'. Did you mean: {' '.join(partial)}?", AMBIGUOUS)
+    fail(f"no open focus matches '{query}'")
+
+
+def focus_tree() -> Tree:
+    tree = SHAPES.tree("focus")
+    if tree is None:
+        fail("the shapes file declares no focus tree")
+    return tree
+
+
+def shape_ok(folder: str) -> bool:
+    """Check a focus.md against the focus tree's declared shape; print what's wrong."""
+    findings = check_node(focus_tree(), folder)
+    for finding in findings:
+        warn(str(finding))
+    return not findings
+
+
+# ================================================================ heartbeats (runtime, gitignored, never for main)
+
+
+def heartbeat_path(number: str) -> str:
+    return f"{HEARTBEATS}/{number}.json"
+
+
+def beat(number: str) -> None:
+    if not number or number == "f0":
+        return
+    os.makedirs(HEARTBEATS, exist_ok=True)
+    client = os.environ.get("SPHERE_CLIENT", "unknown")
+    write_text(heartbeat_path(number), json.dumps({"last_seen": utc_stamp(), "client": client}) + "\n")
+
+
+def clear_heartbeat(number: str) -> None:
+    if os.path.exists(heartbeat_path(number)):
+        os.remove(heartbeat_path(number))
+
+
+def liveness(number: str) -> str:
+    """root (main), foreground (a heartbeat in the last 30 minutes), stale (older), or background (none)."""
+    if number == "f0":
+        return "root"
+    path = heartbeat_path(number)
+    if not os.path.exists(path):
+        return "background"
+    return "foreground" if modified_within(path, FOREGROUND_MINUTES) else "stale"
+
+
+def last_seen(number: str) -> str:
+    try:
+        return json.loads(read_text(heartbeat_path(number))).get("last_seen", "")
+    except ValueError:
+        return ""
+
+
+# ================================================================ holds and owners
+
+
+def hold_path(hold: str) -> str:
+    """`work:home.kitchen` → layers/work/home.kitchen; a plain path stays a path."""
+    if ":" in hold:
+        tree, name = hold.split(":", 1)
+        return f"layers/{tree}/{name}"
+    return hold[2:].rstrip("/") if hold.startswith("./") else hold.rstrip("/")
+
+
+@dataclass
+class Owner:
+    prefix: str
+    ref: str
+    own_folder: bool  # the focus's own folder, rather than one of its holds
+
+
+def owner_table() -> list[Owner]:
+    """Each open focus owns its own folder and its holds. Main holds nothing."""
+    table: list[Owner] = []
+    for ref in open_refs():
+        table.append(Owner(f"{FOCUS}/{ref}", ref, True))
+        if ref != MAIN:
+            table += [Owner(hold_path(hold), ref, False) for hold in holds_of(ref)]
+    return table
+
+
+def owners_of(path: str, table: list[Owner]) -> list[str]:
+    """The open foci that hold a path. The most specific hold wins; two only when they tie."""
+    best, owners = -1, []
+    for owner in table:
+        if not is_under(path, owner.prefix):
+            continue
+        if len(owner.prefix) > best:
+            best, owners = len(owner.prefix), [owner.ref]
+        elif len(owner.prefix) == best and owner.ref not in owners:
+            owners.append(owner.ref)
+    return owners
+
+
+# ================================================================ what changed (a fact from git, never stored)
+
+
+@dataclass
+class Change:
+    path: str
+    new: bool  # not tracked yet
+    owners: list[str]
+
+
+def changed_files(table: list[Owner]) -> list[Change]:
+    if not USE_GIT:
+        return []
+    output = git("status", "--porcelain=v1", "-z", "--no-renames", "--untracked-files=all")
+    changes: list[Change] = []
+    for entry in output.split("\0"):
+        if not entry:
+            continue
+        status, path = entry[:2], entry[3:]
+        if is_under(path, "surface/state"):
+            continue
+        changes.append(Change(path, status == "??", owners_of(path, table)))
+    return changes
+
+
+def stage_of(ref: str, changes: list[Change]) -> str:
+    """working (unsaved changes it holds) or grounded."""
+    return "working" if any(ref in change.owners for change in changes) else "grounded"
+
+
+@dataclass
+class Sorting:
+    mine: list[str]  # staged by this ground
+    for_main: list[str]  # changed, held by no open focus: main's ground takes the tracked ones
+    new_unheld: list[str]  # new files no open focus holds: often scratch; staged only with --also
+
+
+def sort_changes(ref: str, changes: list[Change], also: list[str]) -> Sorting:
+    sorting = Sorting([], [], [])
+    parent = parent_ref(ref)
+    parent_history = history_file(parent) if parent else None
+    for change in changes:
+        unheld = not change.owners
+        # Three separate reasons a change is this focus's; kept apart so each rule reads on its own.
+        if change.path in also:  # noqa: SIM114
+            sorting.mine.append(change.path)
+        elif ref == MAIN and (MAIN in change.owners or (unheld and not change.new)):  # noqa: SIM114
+            sorting.mine.append(change.path)
+        elif ref != MAIN and (ref in change.owners or change.path == parent_history):
+            sorting.mine.append(change.path)
+        elif unheld and change.new:
+            sorting.new_unheld.append(change.path)
+        elif unheld:
+            sorting.for_main.append(change.path)
+    return sorting
+
+
+# ================================================================ committing: short lock, pull, commit, push
+
+
+@contextmanager
+def ground_lock(ref: str):
+    """A short lock around pull–commit–push, so two windows never commit at once."""
+    path = git("rev-parse", "--git-path", "sphere-ground.lock")
+    for _ in range(LOCK_TRIES):
+        try:
+            os.mkdir(path)
+            break
+        except FileExistsError:
+            time.sleep(LOCK_WAIT_SECONDS)
+    else:
+        holder = read_text(path + "/by").strip()
+        fail(
+            f"another ground holds the lock ({holder}). Try again. "
+            f"If no ground is running, a crash left it: remove {path}"
+        )
+    write_text(path + "/by", f"{ref} pid {os.getpid()} {datetime.datetime.now():%Y-%m-%d %H:%M:%S}\n")
+    try:
+        yield
+    finally:
+        shutil.rmtree(path, ignore_errors=True)
+
+
+def has_upstream() -> bool:
+    return bool(git("remote")) and git_ok("rev-parse", "-q", "--verify", "@{u}")
+
+
+def pull() -> None:
+    """Take the other devices' grounds first. Only when there's an upstream."""
+    if not has_upstream():
+        return
+    if not git_ok("fetch", "-q"):
+        fail("stopped at pull: fetch failed. Nothing was committed.")
+    if git_ok("merge-base", "--is-ancestor", "@{u}", "HEAD"):
+        return
+    if not git_ok("merge", "-q", "--no-edit", "@{u}"):
+        fail(
+            "stopped at pull: the other device's changes didn't merge cleanly. Nothing was committed.\n"
+            "        Resolve it (check-shared-state: propose, never silently), then ground again."
+        )
+
+
+def push() -> str:
+    """Push when there's an upstream. Returns a note for the ground's report line ("" when pushed or no remote)."""
+    if not git("remote"):
+        return ""
+    if not has_upstream():
+        return "not pushed: no upstream"
+    if not git_ok("push", "-q"):
+        warn("sphere: committed here, but the push failed; the next ground pushes it.")
+        return "not pushed: the push failed"
+    return ""
+
+
+def commit(subject: str, paths: list[str], body: str = "") -> bool:
+    """Stage and commit exactly these paths. False when there was nothing to commit."""
+    paths = unique(paths)
+    if not paths:
+        return False
+    if not git_ok("add", "-A", "--", *paths):
+        fail("staging failed: " + run_git(["add", "-A", "--"] + paths).stderr.strip())
+    if git_ok("diff", "--cached", "--quiet", "--", *paths):
+        return False
+    message = ["-m", subject] + (["-m", body] if body else [])
+    result = run_git(["commit", "-q"] + message + ["--only", "--"] + paths)
+    if result.returncode != 0:
+        fail("the commit failed (a commit check? fix the cause; never skip it): " + result.stderr.strip())
+    return True
+
+
+# ================================================================ without git: one focus in the foreground
+
+
+def gitless_lock_holder() -> str:
+    words = read_text(GITLESS_LOCK).split()
+    return words[0] if words else ""
+
+
+def take_gitless_lock(ref: str) -> None:
+    os.makedirs(HEARTBEATS, exist_ok=True)
+    client = os.environ.get("SPHERE_CLIENT", "unknown").replace(" ", "_")
+    write_text(GITLESS_LOCK, f"{ref} {utc_stamp()} {client}\n")
+
+
+def gitless_guard(ref: str, take_over: bool = False) -> None:
+    """Without git only one focus is in the foreground; any other window is read-only."""
+    holder = gitless_lock_holder()
+    if holder and holder != ref and not take_over:
+        if modified_within(GITLESS_LOCK, FOREGROUND_MINUTES):
+            message = (
+                f"Read-only: {holder} is in the foreground, and without git only one focus can be. "
+                f"Wait, or take over: sphere attach {ref} --take-over"
+            )
+        else:
+            message = (
+                f"A lock from {holder} is older than {FOREGROUND_MINUTES} minutes: maybe a crash. "
+                f"Take it over? sphere attach {ref} --take-over"
+            )
+        raise Stop(message, READ_ONLY)
+    take_gitless_lock(ref)
+
+
+def release_gitless_lock(ref: str) -> None:
+    if not USE_GIT and gitless_lock_holder() == ref:
+        os.remove(GITLESS_LOCK)
+
+
+# ================================================================ a focus's commits
+
+
+def opening_commit(ref: str) -> Optional[str]:
+    """The commit that opened this focus. Anything before it belongs to an older focus with the same number."""
+    if ref == MAIN:
+        return None
+    opened = re.compile(r" — opened " + re.escape(ref) + r"(;|$)")
+    for sha, subject in commit_log("-F", f"--grep=opened {ref}"):
+        if opened.search(subject):
+            return sha
+    return None
+
+
+def commits_since_opening(ref: str, after: Optional[str] = None, path: Optional[str] = None) -> list[tuple[str, str]]:
+    exclude = [f"^{sha}" for sha in (opening_commit(ref), after) if sha]
+    return commit_log("HEAD", *exclude, *(["--", path] if path else []))
+
+
+def reversed_shas() -> set[str]:
+    """Commits already reversed, read from the `Reverses:` trailers of undo and revert commits."""
+    bodies = git("log", "--format=%B", "-E", r"--grep=^(undo|revert) \[")
+    return {line[len("Reverses: ") :].strip() for line in bodies.split("\n") if line.startswith("Reverses: ")}
+
+
+def grounds_in_effect(ref: str, after: Optional[str] = None) -> list[str]:
+    """This focus's grounds since it opened (and after `after`), newest first, minus those already reversed."""
+    done = reversed_shas()
+    return [
+        sha
+        for sha, subject in commits_since_opening(ref, after)
+        if subject.startswith(f"ground [{ref}]") and sha not in done
+    ]
+
+
+def last_own_ground(ref: str) -> Optional[str]:
+    for sha, subject in commits_since_opening(ref):
+        if subject.startswith(f"ground [{ref}]"):
+            return sha
+    return None
+
+
+def waiting(ref: str) -> int:
+    """What's waiting for this focus: reports added to its history by others since its own
+    last ground, plus offers made to it that it hasn't answered."""
+    return len(offers_waiting(ref)) + reports_waiting(ref)
+
+
+def reports_waiting(ref: str) -> int:
+    if not USE_GIT:
+        return 0
+    own = (f"ground [{ref}]", f"undo [{ref}]", f"revert [{ref}]")
+    after = last_own_ground(ref)
+    touched = commits_since_opening(ref, after, history_file(ref))
+    return sum(1 for _, subject in touched if not subject.startswith(own))
+
+
+def history_entries(path: str) -> list[tuple[str, str, str]]:
+    """(date-time, heading, body) for each `## <date> — <heading>` entry, newest first."""
+    entries: list[tuple[str, str, str]] = []
+    for chunk in re.split(r"^## ", read_text(path), flags=re.MULTILINE)[1:]:
+        first, _, body = chunk.partition("\n")
+        stamp, _, heading = first.partition(" — ")
+        entries.append((stamp.strip(), heading.strip(), body))
+    return entries
+
+
+def offers_waiting(ref: str) -> list[str]:
+    """Offers to this focus (`## <date> — offer to fNN` in an open sender's history) that its own
+    history hasn't answered since: an entry after the offer mentioning accepted or declined and the sender."""
+    number = number_of(ref)
+    answers = history_entries(history_file(ref))
+    waiting_from: list[str] = []
+    for sender in open_refs():
+        if sender == ref:
+            continue
+        sender_number = number_of(sender)
+        for stamp, heading, _ in history_entries(history_file(sender)):
+            if heading != f"offer to {number}":
+                continue
+            answered = any(
+                answer_stamp > stamp
+                and re.search(r"\b(accepted|declined)\b", text, re.IGNORECASE)
+                and re.search(rf"\b{sender_number}\b", text)
+                for answer_stamp, answer_heading, answer_body in answers
+                for text in [answer_heading + "\n" + answer_body]
+            )
+            if not answered:
+                waiting_from.append(f"{sender} ({stamp})")
+    return waiting_from
+
+
+def last_ground_date(ref: str) -> str:
+    sha = last_own_ground(ref) if USE_GIT else None
+    return git("log", "-1", "--date=short", "--format=%cd", sha) if sha else ""
+
+
+# ================================================================ verbs
+
+MAIN_FOCUS_MD = """\
+---
+number: f0
+name: main
+aka: [sphere]
+parent:
+status: open
+intention: The sphere itself. Quick windows ground here; every top-level focus is its child.
+holds: []
+through: []
+operating-mode:
+collaboration-mode: together
+persona:
+points-at: []
+opened: {opened}
+---
+
+## Now
+
+Main holds nothing. Quick work grounds here by appending to history.md; real work gets its own focus.
+"""
+
+
+def cmd_init(args: argparse.Namespace) -> None:
+    """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes and .gitignore."""
+    global SHAPES
+    main_dir = f"{FOCUS}/{MAIN}"
+    if os.path.exists(main_dir):
+        fail("this is already a sphere (layers/focus/f0-main exists)")
+    if args.git and not os.path.isdir(".git"):
+        git("init", "-q")
+    os.makedirs(main_dir)
+    write_text(f"{main_dir}/focus.md", MAIN_FOCUS_MD.format(opened=today()))
+    add_entry(
+        f"{main_dir}/history.md",
+        "opened",
+        "**Did:** Created the sphere and its root focus.\n**Next:** Open a focus for the first thing worth pursuing.",
+    )
+    os.makedirs("core", exist_ok=True)
+    if not os.path.exists(SHAPES_IN_SPHERE):
+        shutil.copyfile(SHAPES_TEMPLATE, SHAPES_IN_SPHERE)
+    SHAPES = read_shapes(SHAPES_IN_SPHERE)  # pyright: ignore[reportConstantRedefinition]  # set once, at start
+    append_line_once(".gitattributes", "history.md merge=union")
+    append_line_once(".gitattributes", "progress.md merge=union")
+    append_line_once(".gitignore", "surface/state/")
+    if not shape_ok(main_dir):
+        fail("f0-main/focus.md is out of shape (above)")
+
+    top = run_git(["rev-parse", "--show-toplevel"])
+    if top.returncode == 0 and os.path.realpath(top.stdout.strip()) == os.path.realpath("."):
+        paths = [main_dir, SHAPES_IN_SPHERE, ".gitattributes", ".gitignore"]
+        git("add", "--", *paths)
+        git("commit", "-q", "-m", f"ground [{MAIN}] — sphere created", "--", *paths)
+        print(f"Sphere ready: f0-main open · {short('HEAD')}")
+    else:
+        print("Sphere ready: f0-main open.")
+        print(
+            "There's no git here, so there's no undo, and only one focus can be in the foreground at a time. "
+            "Set up git? (git init, then: sphere ground)"
+        )
+
+
+def new_focus_md(number: str, name: str, parent_number: str, args: argparse.Namespace, holds: list[str]) -> str:
+    def optional(value: str) -> str:
+        return f" {value}" if value else ""
+
+    return f"""\
+---
+number: {number}
+name: {name}
+aka: []
+parent: {parent_number}
+status: open
+intention: {args.intention}
+holds: {format_list(holds)}
+through: {format_list(parse_list(args.through))}
+operating-mode:{optional(args.operating_mode)}
+collaboration-mode: {args.collaboration_mode}
+persona:{optional(args.persona)}
+points-at: {format_list(parse_list(args.points_at))}
+opened: {today()}
+---
+
+## Now
+
+Just opened: {args.intention}
+"""
+
+
+def soft_claims(holds: list[str], parent: str) -> tuple[list[str], list[str]]:
+    """Which new holds another focus already has (a warning, never a refusal),
+    and which equal one of the parent's own holds (carved out of the parent)."""
+    claims: list[str] = []
+    carved: list[str] = []
+    for hold in holds:
+        path = hold_path(hold)
+        for owner in owner_table():
+            if owner.own_folder or not overlaps(path, owner.prefix):
+                continue
+            if owner.ref == parent and path == owner.prefix:
+                carved.append(hold)
+            elif owner.ref != parent:
+                claims.append(f"{hold} is already in focus in {owner.ref}")
+    return unique(claims), unique(carved)
+
+
+def cmd_open(args: argparse.Namespace) -> None:
+    """Open a focus under its parent. Opening a child is a ground of the parent; an equal hold is carved out of it."""
+    name = args.name
+    if not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", name):
+        fail(f"open: name two or three words, lowercase, with hyphens (got '{name}')")
+    if not args.intention:
+        fail("open: say what it's for: -i <intention>")
+    parent = resolve(args.parent)
+    parent_number = number_of(parent)
+    holds = parse_list(args.holds)
+
+    with ground_lock(parent) if USE_GIT else nullcontext():
+        if USE_GIT:
+            pull()
+        number = f"f{next_number()}"
+        ref = f"{number}-{name}"
+        folder = f"{FOCUS}/{ref}"
+        claims, carved = soft_claims(holds, parent)
+        if parent_number == "f0":
+            carved = []
+
+        os.makedirs(folder)
+        write_text(f"{folder}/focus.md", new_focus_md(number, name, parent_number, args, holds))
+        add_entry(f"{folder}/history.md", "opened", f"**Did:** Opened under {parent}.\n**Next:** {args.intention}")
+        if not shape_ok(folder):
+            shutil.rmtree(folder)
+            fail("open: the new focus.md came out of shape (above); nothing was written")
+
+        if carved:  # the parent's hold shrinks by what the child takes
+            kept = [hold for hold in holds_of(parent) if hold not in carved]
+            set_frontmatter_value(focus_file(parent), "holds", format_list(kept))
+            if not shape_ok(focus_dir(parent)):
+                fail(f"open: carving left {parent}/focus.md out of shape (above)")
+        add_entry(history_file(parent), f"opened {ref}", f"{ref}: {args.intention}")
+
+        if USE_GIT:
+            changes = changed_files(owner_table())
+            paths = [
+                change.path
+                for change in changes
+                if is_under(change.path, folder)
+                or is_under(change.path, focus_dir(parent))
+                or ref in change.owners
+                or (parent_number != "f0" and parent in change.owners)
+            ]
+            subject = f"ground [{parent}] — opened {ref}" + (f"; carved {', '.join(carved)}" if carved else "")
+            commit(subject, paths)
+            push()
+
+    for claim in claims:
+        warn(f"In focus already: {claim}. Ask through {parent}, or just read?")
+    state = "background"
+    if args.attach:
+        beat(number)
+        state = "foreground"
+        if not USE_GIT:
+            take_gitless_lock(ref)
+    print(f"{ref} open · {state} · under {parent}" + (f" · carved {' '.join(carved)}" if carved else ""))
+
+
+def cmd_attach(args: argparse.Namespace) -> None:
+    """Bring a focus to the foreground (a heartbeat) and print its briefing material."""
+    ref = resolve(args.focus or MAIN)
+    number = number_of(ref)
+    if not USE_GIT:
+        gitless_guard(ref, args.take_over)
+    beat(number)
+    stale_alerts(ref)
+    if ref == MAIN:
+        cmd_list(args)
+        print("f0-main open · the sphere")
+        return
+    changes = changed_files(owner_table())
+    print(f"== {ref} · {stage_of(ref, changes)} · parent {parent_ref(ref)}")
+    print(read_text(focus_file(ref)).rstrip("\n"))
+    print("\n== latest history")
+    print(latest_entries(history_file(ref), 2))
+    print("== holds")
+    for hold in holds_of(ref):
+        path = hold_path(hold)
+        print(f"{hold} → {path}" + ("" if os.path.exists(path) else " (doesn't exist yet)"))
+        if os.path.isfile(f"{path}/progress.md"):
+            for line in latest_entries(f"{path}/progress.md", 1).split("\n"):
+                print("    " + line)
+    count = waiting(ref)
+    if count:
+        print(f"== waiting for you: {count} (reports or requests in history.md since its last ground, and offers)")
+        for offer in offers_waiting(ref):
+            print(f"  offer from {offer}")
+    kids = children(number)
+    if kids:
+        print("== open children: " + " ".join(kids))
+    print(f"{ref} open · foreground")
+
+
+def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[list[str]] = None) -> None:
+    """The ground: commit what this focus owns, plus its own folder and any report line to its parent.
+    Changes no open focus holds are never a reason to stop: they're left for main and named in one line."""
+    also = also or []
+    folder = focus_dir(ref)
+    if not shape_ok(folder):
+        ask(f"{ref}/focus.md is out of shape (above). Fix it, then ground.")
+    parent = parent_ref(ref)
+
+    if not USE_GIT:
+        gitless_guard(ref)
+        beat(number_of(ref))
+        if report and parent:
+            add_entry(history_file(parent), f"{ref} reported", f"{ref}: {report}")
+        print(f"Saved {ref} (no git: files written, nothing committed; undo isn't available).")
+        return
+
+    sorting = sort_changes(ref, changes_now(), also)
+    if not sorting.mine and not report:
+        beat(number_of(ref))
+        print(f"Nothing to ground in {ref}.")
+        print_left_for_main(ref, sorting)
+        return
+    if f"{folder}/history.md" not in sorting.mine:
+        ask(
+            f"{ref} has unsaved changes but no new history entry. "
+            f"Add one to {folder}/history.md (Did, Decided, Next, Pointers), then ground."
+        )
+    if report and parent:  # reporting up: one line added to the parent's history
+        add_entry(history_file(parent), f"{ref} reported", f"{ref}: {report}")
+        sorting.mine.append(history_file(parent))
+    summary = summary or latest_field(f"{folder}/history.md", "Did")[:72] or "grounded"
+
+    with ground_lock(ref):
+        pull()
+        if not commit(f"ground [{ref}] — {summary}", sorting.mine):
+            print(f"Nothing to ground in {ref}.")
+            return
+        push_note = push()
+    beat(number_of(ref))
+    print(
+        f"Grounded {ref}: {len(unique(sorting.mine))} files · {short('HEAD')}"
+        + (f" · {push_note}" if push_note else "")
+    )
+    print_left_for_main(ref, sorting)
+
+
+def changes_now() -> list[Change]:
+    return changed_files(owner_table())
+
+
+def print_left_for_main(ref: str, sorting: Sorting) -> None:
+    if ref == MAIN:
+        if sorting.new_unheld:
+            print(
+                "New files in no focus, not grounded (often scratch; --also <path> to include): "
+                + ", ".join(sorting.new_unheld)
+            )
+        return
+    left = sorting.for_main + [f"{path} (new)" for path in sorting.new_unheld]
+    if left:
+        print("Left for main (no open focus holds them): " + ", ".join(left))
+
+
+def cmd_ground(args: argparse.Namespace) -> None:
+    """Commit this focus's held files, its own files and history appends."""
+    ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
+    ground_focus(ref, args.m, args.report, clean_paths(args.also))
+
+
+def clean_paths(paths: list[str]) -> list[str]:
+    return [path[2:] if path.startswith("./") else path for path in paths]
+
+
+def cmd_detach(args: argparse.Namespace) -> None:
+    """Ground, then send the focus to the background (its heartbeat goes)."""
+    ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
+    if ref == MAIN:
+        fail("main can't be detached: it's always open, and has no heartbeat")
+    try:
+        ground_focus(ref, args.m, args.report, clean_paths(args.also))
+    except Stop as stop:
+        warn(str(stop))
+        raise Stop("sphere: detach stopped at its ground step", stop.code) from stop
+    clear_heartbeat(number_of(ref))
+    release_gitless_lock(ref)
+    print(f"{ref} open · background")
+
+
+def attached_below(number: str) -> list[str]:
+    """Foci in this focus's open subtree with a window attached."""
+    found: list[str] = []
+    for child in children(number):
+        if liveness(number_of(child)) == "foreground":
+            found.append(child)
+        found += attached_below(number_of(child))
+    return found
+
+
+def decide_holds(ref: str, holds: list[str], parent: str, choice: Optional[str]) -> tuple[str, bool]:
+    """Closing a child asks about its holds: give them back to the parent (the default), or release them.
+    Returns the answer and whether it was the default. Main holds nothing, so a top-level focus releases."""
+    if not holds or not parent or parent == MAIN or parent not in open_refs():
+        return "release", False
+    if choice:
+        return choice, False
+    if sys.stdin.isatty():
+        answer = input(f"{ref} held {', '.join(holds)}. Give it back to {parent}, or release it? [back] ")
+        return ("release", False) if answer.strip().lower().startswith("r") else ("back", False)
+    return "back", True
+
+
+def cmd_close(args: argparse.Namespace) -> None:
+    """Ground, write the last entry, give the holds back to the parent (or release them), and archive."""
+    ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
+    close_focus(ref, args.m, args.outcome, args.children, args.holds, clean_paths(args.also))
+
+
+def close_focus(ref: str, why: str, outcome: str, children_choice: str, holds_choice: str, also: list[str]) -> None:
+    number = number_of(ref)
+    folder = f"{FOCUS}/{ref}"
+    if ref == MAIN:
+        fail("main is never closed: there's nothing to close. Attach to a focus to close it.")
+    if not why:
+        fail("close: say how it ended and why: -m <why>")
+    parent = parent_ref(ref)
+    kids = children(number)
+
+    if kids and not children_choice:
+        changes = changes_now()
+        lines: list[str] = []
+        for kid in kids:
+            state = (
+                "unsaved changes"
+                if stage_of(kid, changes) == "working"
+                else "next: " + latest_field(history_file(kid), "Next")
+            )
+            if liveness(number_of(kid)) == "foreground":
+                state += "; a window is attached"
+            lines.append(f"  {kid} ({state})")
+        ask(
+            f"{ref} has open children:\n"
+            + "\n".join(lines)
+            + f"\nClose them too (--children close), move them up to {parent} (--children up), or keep {ref} open?"
+        )
+    if kids and children_choice == "close":
+        busy = attached_below(number)
+        if busy:
+            fail(
+                f"close: {' '.join(busy)} has a window attached and is never closed under it. "
+                f"Move children up (--children up), or keep {ref} open."
+            )
+        for kid in kids:  # deepest first: each child closes its own children before itself
+            close_focus(kid, f"closed with {ref}: {why}", outcome, "close", holds_choice, also)
+    moved: list[str] = []
+    if kids and children_choice == "up":
+        for kid in kids:
+            set_frontmatter_value(focus_file(kid), "parent", number_of(parent))
+            if not shape_ok(focus_dir(kid)):
+                fail(f"close: moving {kid} up left it out of shape")
+            moved.append(focus_file(kid))
+
+    holds = holds_of(ref)  # read now: children closed above gave theirs back into it
+    answer, by_default = decide_holds(ref, holds, parent, holds_choice)
+
+    if USE_GIT:
+        if not shape_ok(folder):
+            ask(f"{ref}/focus.md is out of shape (above). Fix it, then close.")
+        sorting = sort_changes(ref, changes_now(), also)
+        paths = [path for path in sorting.mine if not is_under(path, folder)]
+        lock = ground_lock(ref)
+    else:
+        gitless_guard(ref)
+        sorting, paths, lock = Sorting([], [], []), [], nullcontext()
+
+    with lock:
+        if USE_GIT:
+            pull()
+        add_entry(f"{folder}/history.md", f"closed: {outcome}", f"**Did:** Closed ({outcome}). {why}")
+        set_frontmatter_value(f"{folder}/focus.md", "status", "closed")
+        if answer == "back":
+            parent_holds = holds_of(parent)
+            set_frontmatter_value(
+                focus_file(parent), "holds", format_list(parent_holds + [h for h in holds if h not in parent_holds])
+            )
+            if not shape_ok(focus_dir(parent)):
+                fail(f"close: giving the hold back left {parent}/focus.md out of shape (above)")
+        if parent:
+            note = f"{ref} closed ({outcome}): {why}"
+            if holds:
+                note += f"\nIts hold {'came back here' if answer == 'back' else 'was released'}: {', '.join(holds)}"
+            add_entry(history_file(parent), f"closed {ref}", note)
+            paths += [focus_file(parent), history_file(parent)]
+        os.makedirs(ARCHIVE, exist_ok=True)
+        os.rename(folder, f"{ARCHIVE}/{ref}")
+        clear_heartbeat(number)
+
+        if USE_GIT:
+            paths += [c.path for c in changes_now() if is_under(c.path, folder) or is_under(c.path, f"{ARCHIVE}/{ref}")]
+            paths += moved
+            changed = {c.path for c in changes_now()}
+            subject = f"ground [{ref}] — closed ({outcome}): {why}"
+            commit(subject, [path for path in paths if path in changed or path in sorting.mine])
+            push()
+        else:
+            release_gitless_lock(ref)
+
+    if holds and answer == "back":
+        print(
+            f"Its hold went back to {parent}{' (the default; --holds release releases it)' if by_default else ''}: "
+            + ", ".join(holds)
+        )
+    elif holds:
+        print("Its hold is released: " + ", ".join(holds))
+    if moved:
+        print(f"Moved up to {parent}: {' '.join(kids)}")
+    print(f"{ref} closed ({outcome}) · archived")
+
+
+# ---------------------------------------------------------------- seeing: list and peek
+
+
+def stale_alerts(except_ref: str) -> None:
+    """The one sphere-wide item that interrupts: unsaved work whose window went quiet."""
+    if not USE_GIT:
+        return
+    changes = changes_now()
+    for ref in open_refs():
+        number = number_of(ref)
+        if ref != except_ref and liveness(number) == "stale" and stage_of(ref, changes) == "working":
+            warn(
+                f"! {ref} has unsaved changes and its window went quiet (last seen {last_seen(number)}). Recover them?"
+            )
+
+
+def attention_items(refs: list[str], changes: list[Change]) -> list[str]:
+    items: list[str] = []
+    for ref in refs:
+        number = number_of(ref)
+        if ref == MAIN:
+            continue
+        live, stage = liveness(number), stage_of(ref, changes)
+        if live == "stale" and stage == "working":
+            items.append(
+                f"! {ref}: unsaved changes, and its window went quiet (last seen {last_seen(number)}). Recover them?"
+            )
+        elif live == "background" and stage == "working":
+            items.append(f"! {ref}: unsaved changes with no window attached. Ground them?")
+        elif live == "stale":
+            items.append(f"· {ref}: its window went quiet after saving. Clear the heartbeat: sphere detach {number}")
+        last = latest_entry_date(history_file(ref))
+        quiet = (datetime.date.today() - last).days if last else 0
+        if live != "foreground" and quiet >= QUIET_DAYS:
+            items.append(f"? {ref}: quiet for {quiet} days. Keep it in the background, or close it?")
+    return items
+
+
+def tree_lines(number: str, depth: int, changes: list[Change], printed: list[str]) -> None:
+    for ref in children(number):
+        pad = "  " * depth
+        printed.append(ref)
+        line = f"{pad}{ref}  {liveness(number_of(ref))} · {stage_of(ref, changes)}"
+        last = last_ground_date(ref)
+        line += f" · last ground {last}" if last else ""
+        count = waiting(ref)
+        line += f" · {count} waiting" if count else ""
+        print(line)
+        next_step = latest_field(history_file(ref), "Next")
+        if next_step:
+            print(f"{pad}    next: {next_step}")
+        tree_lines(number_of(ref), depth + 1, changes, printed)
+
+
+def cmd_list(_args: Optional[argparse.Namespace] = None) -> None:
+    """What's in focus: needs-attention first, then the tree under main."""
+    changes = changes_now()
+    refs = open_refs()
+    print(f"What's in focus: {len([r for r in refs if r != MAIN])} open")
+    attention = attention_items(refs, changes)
+    if attention:
+        print("Needs attention")
+        for item in attention:
+            print("  " + item)
+    out_of_focus = len([c for c in changes if not c.owners])
+    line = "f0-main  the sphere"
+    line += f" · {out_of_focus} changed out of focus" if out_of_focus else ""
+    line += f" · {waiting(MAIN)} waiting" if waiting(MAIN) else ""
+    print(line)
+    printed: list[str] = []
+    tree_lines("f0", 1, changes, printed)
+    for ref in refs:
+        if ref != MAIN and ref not in printed:
+            print(f"  {ref}  (its parent {frontmatter_value(focus_file(ref), 'parent')} isn't open)")
+
+
+def cmd_peek(args: argparse.Namespace) -> None:
+    """What's unsaved, by focus, plus what's out of focus; then recent grounds."""
+    if not USE_GIT:
+        peek_without_git()
+        return
+    changes = changes_now()
+    this_focus = os.environ.get("SPHERE_FOCUS", "")
+    in_focus = 0
+    for ref in open_refs():
+        if ref == MAIN:
+            continue
+        lines: list[str] = []
+        for change in changes:
+            if ref in change.owners:
+                in_focus += 1
+                twice = f"   (in focus twice: {' '.join(change.owners)})" if len(change.owners) > 1 else ""
+                lines.append(f"  {'new' if change.new else 'changed'}: {change.path}{twice}")
+        count = waiting(ref)
+        if count:
+            lines.append(f"  waiting for you: {count} (reports or requests since its last ground, and offers)")
+        label = liveness(number_of(ref))
+        if this_focus and this_focus in (number_of(ref), ref):
+            label = "this focus"
+        if lines or label == "this focus":
+            print(f"{ref} ({label})")
+            for line in lines:
+                print(line)
+    outside = [c for c in changes if not c.owners or c.owners == [MAIN]]
+    if outside:
+        print("Out of focus (main's)")
+        for change in outside:
+            print(f"  {'new' if change.new else 'changed'}: {change.path}")
+        print("  → yours? ground it into main, set it aside, or leave it")
+    print(f"Unsaved: {in_focus} in focus · {len(outside)} out of focus")
+    if args.today:
+        print("Today:")
+        log = git("log", "--since=midnight", "--date=format:%H:%M", "--format=  %h %ad %s")
+    else:
+        print("Recent grounds:")
+        log = git("log", "-5", "--date=short", "--format=  %h %ad %s")
+    if log:
+        print(log)
+
+
+def peek_without_git() -> None:
+    """Without git, "changed" means modified since that focus last wrote its history."""
+    table = owner_table()
+    for ref in open_refs():
+        print(f"{ref} ({liveness(number_of(ref))})")
+        since = os.path.getmtime(history_file(ref))
+        for path in files_newer_than(since):
+            owners = owners_of(path, table)
+            if ref in owners or (ref == MAIN and not owners):
+                print(f"  changed since its last ground: {path}")
+    print("(no git: changes are files modified since each focus last wrote its history; there's no undo)")
+
+
+def files_newer_than(since: float) -> list[str]:
+    found: list[str] = []
+    for folder, subfolders, names in os.walk("."):
+        subfolders[:] = [d for d in subfolders if d != ".git" and os.path.join(folder, d) != "./surface/state"]
+        for name in names:
+            path = os.path.join(folder, name)
+            if os.path.getmtime(path) > since:
+                found.append(path[2:])
+    return sorted(found)
+
+
+# ---------------------------------------------------------------- undo and revert: new commits, never destructive
+
+
+def files_in_commit(sha: str) -> list[tuple[str, str]]:
+    """(status, path) for each file a commit changed: A added, M modified, D deleted."""
+    output = git("diff-tree", "-r", "--no-commit-id", "--name-status", "--no-renames", sha)
+    pairs = [line.split("\t", 1) for line in output.splitlines()]
+    return [(status, path) for status, path in pairs]
+
+
+def build_reversal(shas: list[str], index_env: dict[str, str]) -> list[str]:
+    """Stage the reversal of these commits (newest first) in a temporary index.
+    Appended history stays; a history file created or deleted whole goes with its node.
+    Reference files are left alone and returned, to propose to the human."""
+    reference: list[str] = []
+    for sha in shas:
+        if not git_ok("rev-parse", "-q", "--verify", f"{sha}^"):
+            fail(f"{short(sha)} is the first commit; there's nothing before it")
+        plain: list[str] = []
+        for status, path in files_in_commit(sha):
+            if SHAPES.is_history(path):
+                if status == "A":
+                    git("rm", "-q", "--cached", "--ignore-unmatch", "--", path, env=index_env)
+                elif status == "D":
+                    blob = git("rev-parse", f"{sha}^:{path}")
+                    git("update-index", "--add", "--cacheinfo", f"100644,{blob},{path}", env=index_env)
+            elif SHAPES.is_reference(path):
+                reference.append(path)
+            else:
+                plain.append(path)
+        if plain:
+            patch = run_git_binary(["diff", "--binary", "--no-renames", sha, f"{sha}^", "--"] + plain).stdout
+            if run_git_binary(["apply", "--cached"], env=index_env, input=patch).returncode != 0:
+                fail(
+                    f"can't reverse {short(sha)} cleanly: later grounds changed the same lines. "
+                    "Go back to an earlier point, or undo it by hand."
+                )
+    return unique(reference)
+
+
+def reverse(ref: str, subject: str, shas: list[str]) -> None:
+    """Reverse these commits (newest first) with one new commit. Nothing is rewritten."""
+    with ground_lock(ref):
+        pull()
+        unsaved = {change.path for change in changes_now()}
+        with tempfile.TemporaryDirectory() as scratch:
+            index_env = dict(os.environ, GIT_INDEX_FILE=os.path.join(scratch, "index"))
+            git("read-tree", "HEAD", env=index_env)
+            reference = build_reversal(shas, index_env)
+            touched = git("diff", "--cached", "--name-only", "--no-renames", "HEAD", env=index_env).splitlines()
+            dirty = [path for path in touched if path in unsaved]
+            if dirty:
+                fail("these have unsaved changes; ground them or set them aside first: " + " ".join(dirty))
+            patch = run_git_binary(["diff", "--cached", "--binary", "--no-renames", "HEAD"], env=index_env).stdout
+
+        if patch and run_git_binary(["apply"], input=patch).returncode != 0:
+            fail("the reversal didn't apply to the working folder; nothing changed")
+        history = history_file(ref)
+        if not os.path.isfile(history):
+            history = history_file(MAIN)
+        before = read_text(history)
+        reversed_list = "; ".join(git("log", "-1", "--format=%h (%s)", sha) for sha in shas)
+        note = f"**Did:** Reversed: {reversed_list}. Appended history entries stay as they were."
+        if reference:
+            note += "\n**Next:** Reference files weren't reversed. Propose restoring them to the human: "
+            note += " ".join(reference)
+        add_entry(history, "undone", note)
+        body = "\n".join(f"Reverses: {git('rev-parse', sha)}" for sha in shas)
+        try:
+            commit(subject, touched + [history], body)
+        except Stop:  # put the folder back as it was
+            if patch:
+                run_git_binary(["apply", "-R"], input=patch)
+            write_text(history, before)
+            fail("the reversing commit failed; the folder is back as it was")
+        push()
+
+    print(f"Reversed {len(shas)} commit(s) for {ref} · {short('HEAD')}")
+    if reference:
+        print("Not reversed (reference; propose restoring the old version): " + " ".join(reference))
+    if os.path.isfile(focus_file(ref)) and not shape_ok(focus_dir(ref)):
+        warn(f"sphere: {ref}/focus.md is out of shape after the reversal (above)")
+
+
+def cmd_undo(args: argparse.Namespace) -> None:
+    """Reverse this focus's last ground (since it opened) with a new commit. Asks for --yes first."""
+    if not USE_GIT:
+        fail("undo isn't available without git: there's no history to go back to.")
+    ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN, include_archived=True)
+    grounds = grounds_in_effect(ref)
+    if not grounds:
+        print(f"Nothing to undo in {ref}.")
+        return
+    sha = grounds[0]
+    print(f"{ref}'s last ground:")
+    show_commits([sha])
+    for status, path in files_in_commit(sha):
+        print(f"    {status}\t{path}")
+    if not args.yes:
+        print("Undo reverses it with a new commit (history entries stay). Run again with --yes.")
+        return
+    was = git("log", "-1", "--format=%s", sha).split(" — ", 1)[-1]
+    reverse(ref, f"undo [{ref}] — reverses {short(sha)}: {was}", [sha])
+
+
+def cmd_revert(args: argparse.Namespace) -> None:
+    """Reverse a focus's grounds after a point (or, with --sphere, everything after it), as one new commit."""
+    if not USE_GIT:
+        fail("revert isn't available without git: there's no history to go back to.")
+    if args.sphere:
+        revert_sphere(args)
+        return
+    ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN, include_archived=True)
+    if not args.to:
+        print(f"{ref}'s grounds; pick the point to go back to: sphere revert {ref} --to <commit>")
+        show_commits(grounds_in_effect(ref)[:10])
+        return
+    if not git_ok("merge-base", "--is-ancestor", args.to, "HEAD"):
+        fail(f"{args.to} isn't an earlier point of this sphere")
+    shas = grounds_in_effect(ref, after=args.to)
+    if not shas:
+        print(f"Nothing of {ref}'s after {short(args.to)}.")
+        return
+    print(f"Going back to {short(args.to)} reverses {ref}'s grounds after it:")
+    show_commits(shas)
+    if not args.yes:
+        print("Other foci's commits stay. Run again with --yes.")
+        return
+    reverse(ref, f"revert [{ref}] — back to {short(args.to)} (reverses {len(shas)})", shas)
+
+
+def revert_sphere(args: argparse.Namespace) -> None:
+    if not args.to:
+        print("Recent grounds; pick one: sphere revert --sphere --to <commit>")
+        print(git("log", "-10", "--date=short", "--format=  %h %ad %s"))
+        return
+    if not git_ok("merge-base", "--is-ancestor", args.to, "HEAD"):
+        fail(f"{args.to} isn't an earlier point of this sphere")
+    busy = [ref for ref in open_refs() if liveness(number_of(ref)) == "foreground"]
+    if busy:
+        fail("revert --sphere reaches into every focus. Ground or detach these first: " + " ".join(busy))
+    shas = git("rev-list", "--no-merges", f"{args.to}..HEAD").splitlines()
+    if not shas:
+        print(f"Nothing after {args.to}.")
+        return
+    print(f"Reverting the whole sphere to {short(args.to)} reverses {len(shas)} commits:")
+    show_commits(shas)
+    if not args.yes:
+        print("This reaches into every focus. Confirm with --yes.")
+        return
+    reverse(MAIN, f"revert [{MAIN}] — sphere back to {short(args.to)}", shas)
+
+
+# ================================================================ the command line
+
+
+class Parser(argparse.ArgumentParser):
+    def error(self, message: str) -> NoReturn:
+        self.print_usage(sys.stderr)
+        raise Stop(f"sphere: {message}", ERROR)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = Parser(prog="sphere", allow_abbrev=False, usage=USAGE)
+    verbs = parser.add_subparsers(dest="verb", parser_class=Parser, prog="sphere")
+
+    def verb(
+        name: str, function: Callable[[argparse.Namespace], None], focus_help: Optional[str] = None
+    ) -> argparse.ArgumentParser:
+        sub = verbs.add_parser(name, help=function.__doc__, description=function.__doc__, allow_abbrev=False)
+        sub.set_defaults(run=function)
+        if focus_help:
+            sub.add_argument("focus", nargs="?", help=focus_help)
+        return sub
+
+    def ground_options(sub: argparse.ArgumentParser) -> None:
+        sub.add_argument("-m", default="", metavar="SUMMARY", help="the commit's summary (default: the entry's Did)")
+        sub.add_argument("--report", default="", metavar="LINE", help="add one line to the parent's history")
+        sub.add_argument(
+            "--also",
+            action="append",
+            default=[],
+            metavar="PATH",
+            help="include a changed file no focus holds (repeatable)",
+        )
+
+    sub = verb("init", cmd_init)
+    sub.add_argument("--git", action="store_true", help="run git init first")
+
+    sub = verb("open", cmd_open)
+    sub.add_argument("name", help="two or three lowercase words with hyphens")
+    sub.add_argument("-i", "--intention", default="", help="what it's for")
+    sub.add_argument("--parent", default="f0", help="the focus it opens under (default f0, main)")
+    sub.add_argument("--holds", default="", help="comma-separated tree:node or paths it holds")
+    sub.add_argument("--through", default="", help="comma-separated")
+    sub.add_argument("--operating-mode", default="")
+    sub.add_argument("--collaboration-mode", default="together")
+    sub.add_argument("--persona", default="")
+    sub.add_argument("--points-at", default="", help="comma-separated")
+    sub.add_argument("--attach", action="store_true", help="bring it to the foreground too")
+
+    sub = verb("attach", cmd_attach, "the focus (default main)")
+    sub.add_argument("--take-over", action="store_true", help="without git: take the one foreground slot")
+
+    ground_options(verb("ground", cmd_ground, "the focus (default $SPHERE_FOCUS, else main)"))
+    ground_options(verb("detach", cmd_detach, "the focus (default $SPHERE_FOCUS)"))
+
+    sub = verb("close", cmd_close, "the focus (default $SPHERE_FOCUS)")
+    ground_options(sub)
+    sub.add_argument("--outcome", choices=["done", "dropped"], default="done")
+    sub.add_argument(
+        "--children", choices=["close", "up"], help="when it has open children: close them too, or move them up"
+    )
+    sub.add_argument(
+        "--holds", choices=["back", "release"], help="give its holds back to the parent (the default) or release them"
+    )
+
+    verb("list", cmd_list)
+
+    sub = verb("peek", cmd_peek)
+    sub.add_argument("--today", action="store_true", help="today's commits instead of the last five")
+
+    sub = verb("undo", cmd_undo, "the focus (default $SPHERE_FOCUS, else main)")
+    sub.add_argument("--yes", action="store_true", help="do it (without it, only show what would be reversed)")
+
+    sub = verb("revert", cmd_revert, "the focus (default $SPHERE_FOCUS, else main)")
+    sub.add_argument("--to", help="the commit to go back to")
+    sub.add_argument("--sphere", action="store_true", help="every focus, not one")
+    sub.add_argument("--yes", action="store_true", help="do it (without it, only show what would be reversed)")
+    return parser
+
+
+def enter_sphere() -> None:
+    """Find the sphere (this folder or one above it), change into it, and see whether git is here."""
+    global USE_GIT, SHAPES
+    root = os.path.abspath(os.environ.get("SPHERE_ROOT") or os.getcwd())
+    while not os.path.isdir(f"{root}/{FOCUS}/{MAIN}") and root != os.path.dirname(root):
+        root = os.path.dirname(root)
+    if not os.path.isdir(f"{root}/{FOCUS}/{MAIN}"):
+        fail("not inside a sphere (no layers/focus/f0-main). Make one: sphere init")
+    os.chdir(root)
+    top = run_git(["rev-parse", "--show-toplevel"])
+    if not os.environ.get("SPHERE_NO_GIT") and top.returncode == 0:
+        if os.path.realpath(top.stdout.strip()) != os.path.realpath(root):
+            outer = top.stdout.strip()
+            fail(f"this sphere sits inside another git repository ({outer}). A sphere is its own repository.")
+        USE_GIT = True  # pyright: ignore[reportConstantRedefinition]  # set once, at start
+    SHAPES = read_shapes(  # pyright: ignore[reportConstantRedefinition]  # set once, at start
+        SHAPES_IN_SPHERE if os.path.isfile(SHAPES_IN_SPHERE) else SHAPES_TEMPLATE
+    )
+
+
+def main(argv: list[str]) -> int:
+    if not argv or argv[0] in ("help", "-h", "--help"):
+        print(USAGE)
+        return 0
+    args = build_parser().parse_args(argv)
+    if args.verb != "init":
+        enter_sphere()
+        this_focus = os.environ.get("SPHERE_FOCUS")
+        if this_focus and args.verb not in ("detach", "close"):  # any command refreshes this window's heartbeat
+            with suppress(Stop):
+                beat(number_of(resolve(this_focus)))
+    args.run(args)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except Stop as stop:
+        print(stop, file=sys.stderr)
+        sys.exit(stop.code)
