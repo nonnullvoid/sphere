@@ -1,6 +1,6 @@
 # Common protocol set
 
-_SPHERE-ARCH 1.0, draft._ The lenses and frames every build starts from. Each build copies what it needs from here and adds its own.
+_SPHERE-ARCH 1.0._ The lenses and frames every build starts from. Each build copies what it needs from here and adds its own.
 
 Everything here is **written fresh** for publishing. It's informed by what worked in spheres in daily use, but not copied from them. All of it is `sharing: public`, so it describes mechanics and never anyone's personal thinking. Lenses about a person's own principles and rhythms ship as empty slots in the builds, to be co-authored in each sphere.
 
@@ -18,11 +18,15 @@ common/core/protocol/
 
 ## Contents
 
-| Lens | Frames | Status |
+| Lens | Frames | Version |
 |---|---|---|
-| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted | draft 2 |
-| [nodes](core/protocol/lenses/nodes.md) | node-shape · kinds-of-file | draft 1 |
-| [continuity](core/protocol/lenses/continuity.md) | state-machine · check-shared-state · without-git | draft 1 |
-| [focus](core/protocol/lenses/focus.md) | focus-nodes · focus-holds · focus-tree | draft 1 |
+| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted | v2 |
+| [nodes](core/protocol/lenses/nodes.md) | node-shape · kinds-of-file | v1 |
+| [continuity](core/protocol/lenses/continuity.md) | state-machine · check-shared-state · without-git | v1 |
+| [focus](core/protocol/lenses/focus.md) | focus-nodes · focus-holds · focus-tree | v1 |
+| [sphere-framework](core/protocol/lenses/sphere-framework.md) | capability-manifest · protocol-registry · structure-check · manifest-check | v1 |
+| [readable-substrate](core/protocol/lenses/readable-substrate.md) | structure-check · manifest-check | v1 |
+| [work-tracking](core/protocol/lenses/work-tracking.md) | work-breakdown · work-progress · work-registry · plans | v1 |
+| [idea-capture](core/protocol/lenses/idea-capture.md) | idea-nodes | v1 |
 
 _More lenses follow, one at a time._
