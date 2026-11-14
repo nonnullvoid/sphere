@@ -1,6 +1,6 @@
 # Registries
 
-_Status: draft 4, for review._ How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
+How a sphere knows what it contains without reading everything: small index files that are generated from the files they describe, so they can't quietly go out of date.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -33,7 +33,7 @@ Registries are one instance of a broader stance: **a sphere is a framework, not 
 
 Conforming costs nothing; only *deviating* costs configuration. A sphere may deviate, but **deviation is explicit**, a configured exception the sphere knows about, never a silent one. If something needs special wiring to work, first ask whether it should become a convention instead. The payoff is that a sphere seeded from another comes up working, because it follows the same conventions.
 
-**Finished things move out of the way.** — _decided, not yet exercised_ When something is finished (a work node done, a focus closed, an idea graduated or parked), it gets a final status **and is moved**, with everything under it, into an `archived/` folder beside where it lived: `layers/work/archived/`, `layers/focus/archived/`, `layers/ideas/archived/`. Marking it isn't enough. The status says what happened; the move keeps the live folder small, so the sphere scans only what's still in play. Archived things stay findable: references use names, not paths, and a search that asks for history looks in `archived/` too.
+**Finished things move out of the way.** — _decided, not yet exercised_ When something is finished (a work node done, a focus closed, an idea graduated or parked, a plan done or dropped), it gets a final status **and is moved**, with everything under it, into an `archived/` folder beside where it lived: `layers/work/archived/`, `layers/focus/archived/`, `layers/ideas/archived/`, `layers/work/plans/archived/`. Marking it isn't enough. The status says what happened; the move keeps the live folder small, so the sphere scans only what's still in play. Archived things stay findable: references use names, not paths, and a search that asks for history looks in `archived/` too.
 
 **Stable interface, swappable implementation.** — _designed; swapping unexercised_ The *interface* a part must honor is fixed and written down in its registry. The *implementation* behind it is free to vary. A sphere can replace how it tracks work, or how it stores knowledge, with its own design and keep running, **as long as the new part honors the registered interface.** The test of a real interface: could another sphere's version slot in behind it? A registry that lists only *what exists*, and never the contract it all satisfies, can't support that. **Name the interface, or it isn't swappable.**
 
@@ -103,7 +103,7 @@ Don't centralize content registries, and don't scatter structural ones.
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
 | **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
 | **Literacy index** (`layers/literacy/index.md`) | every tracked subject and library artifact, and what's stale | generated | subject and artifact frontmatter | [literacy](literacy.md) |
-| **Idea queue** (`layers/ideas/queue.md`) | every open idea and where it stands | AI-maintained, written directly | its `reports/` folder | [work](work.md#ideas-come-before-work--proven) |
+| **Ideas** (`layers/ideas/`) | every open idea, one file each; collections by topic are computed from their `topics:` | authored, in each idea's file; the folder listing is the registry | each idea's frontmatter | [work](work.md#ideas-come-before-work--proven) |
 | **Agents** (`core/ai/agents/index.md`) | every agent: where its definition lives, its earned rung per kind of work | generated | each agent's file in `core/ai/agents/` | [agent trust](agent-trust.md#agents--decided-not-yet-exercised) |
 | **Projections** | every rendered view: source, freshness, home | generated | each projection's declaration | [projections](projections.md) |
 | **Focus** (`layers/focus/`) | which foci are open and what each holds; the folder listing is the registry | authored, in each node's `focus.md` | git, for the facts | [focus](focus.md) |
@@ -212,6 +212,8 @@ Registries come with checks that run at ground:
 - **Structure check:** every layer folder has a contract, and every contract has a folder.
 - **Freshness check:** a view was rebuilt after its sources last changed. For a generated view, it also matches what its sources would produce now.
 - **Reference check:** every link in a registry points at something that exists. Examples: a `parent:` naming a node that was renamed, or a command whose frame or layer no longer exists.
+- **Shape check:** every node has its parts, and its frontmatter matches its tree's shape as declared in `core/shapes` (see [nodes](nodes.md#the-shape-check--decided-not-yet-exercised)). Finished nodes are in `archived/`. — _decided, not yet exercised_
+- **Manifest check:** the capability manifest matches the frames, each lens's `frames:` matches its frames' `lens:`, and no frame lags behind its lens's version (see [readable-substrate](../common/core/protocol/lenses/readable-substrate.md)). — _decided, not yet exercised_
 
 A failed check doesn't block the ground. It reports what's wrong and offers to fix it. A check that stops work gets disabled; a check that offers a fix gets used.
 

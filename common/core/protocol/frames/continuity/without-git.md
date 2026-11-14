@@ -4,7 +4,7 @@ kind: structural
 lens: [continuity]
 derives_from: [continuity@1]
 version: 1
-version_note: First draft. The gitless fallback from spec/state.md.
+version_note: First draft. The gitless fallback.
 status: drafting
 updated: 2026-11-11
 sharing: public

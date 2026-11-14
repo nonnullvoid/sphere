@@ -4,7 +4,7 @@ kind: guard
 lens: [human-is-highest]
 derives_from: [human-is-highest@2]
 version: 2
-version_note: Four send modes replace standing approvals. Vetted starts empty. Agents never send. Receipts.
+version_note: Four send modes. Vetted starts empty. Agents never send. Receipts.
 status: active
 updated: 2026-10-28
 sharing: public
@@ -67,5 +67,5 @@ The sphere names this guard once, *"Sending without review, is that okay?"*, the
 
 ## Revision history
 
-- **v2 (2026-10-28):** Standing approvals replaced by four send modes (default, disclosure, vetted, voice). Vetted abilities registered explicitly and empty by default. Agents never send. Receipts. Handling for unclear "send it" and for redirects.
-- **v1 (2026-10-25):** First draft.
+- **v2:** Four send modes (default, disclosure, vetted, voice). Vetted abilities registered explicitly and empty by default. Agents never send. Receipts. Handling for unclear "send it" and for redirects.
+- **v1:** First draft.

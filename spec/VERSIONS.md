@@ -1,6 +1,6 @@
 # Versions
 
-_Status: draft 1, for review._ How the architecture, the builds and each sphere are versioned, and how a sphere takes in what a newer version offers without being forced to.
+How the architecture, the builds and each sphere are versioned, and how a sphere takes in what a newer version offers without being forced to.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -71,7 +71,7 @@ Every release of the architecture or a build ships an **upgrade note**. A living
 
 The first public release (v0.1, April 2026) was an early sketch. It described a sphere with a single protocol file, layer registries kept by hand inside the orchestrator, and an untyped output folder.
 
-**1.0 is the first stable architecture.** Almost none of it is invented for this release. It's a backport of what two spheres in daily use worked out over six months, including what broke along the way. Where something hasn't been proven yet, the chapters say so with their status tags.
+**1.0 is the first stable architecture.** Almost none of it is invented for this release: it comes from two spheres in daily use over six months, including what broke along the way. Where something hasn't been proven yet, the chapters say so with their status tags.
 
 What's new:
 
@@ -79,7 +79,7 @@ What's new:
 - **State:** the sphere as a state machine on one branch, with two levels (the sphere, always its latest commit; each focus node, working ↔ grounded). Operations as contracts, no separate sync (ground pulls and pushes); the words belong to the build (*ground* technical, *save* non-technical) and the human; peek shows what's unsaved; reverts aimed by node and by kind of file; a short lock at ground; a gitless fallback with one focus in the foreground. ([state](state.md))
 - **Nodes:** one shape for everything a sphere holds: a node (name, place, flat folder, one-line frontmatter, current state plus history), in a tree, linked across trees into a map; four kinds of file with one rule for several writers; new parts designed by fitting the shape before adding machinery. ([nodes](nodes.md))
 - **Focus:** what the human is focusing on with the model, as a fourth tree of nodes (intention plus memory). Sessions and agents are two ways of working a focus node, told apart by who chooses each step. Foreground and background; holds instead of branches; four kinds of file with one rule for several writers; a tree where children carve the parent's hold and report up by appending; *open focus*, *attach*, *close focus*. The focus folder is the registry: three kinds of truth, three homes. ([focus](focus.md))
-- **Work:** recursive work nodes with optional labels (area / project / task); separate state and focus; plans as a parallel, versioned hierarchy of phases and steps; plan asserted, progress measured; a tree view built from frontmatter; archiving; ideas in their own queue until they graduate; witness themes that own the growth model, over a plain ledger. ([work](work.md))
+- **Work:** recursive work nodes with optional labels (area / project / task); separate state and focus; plans as a parallel, versioned hierarchy of phases and steps; plan asserted, progress measured; a tree view built from frontmatter; archiving; ideas in collections by topic until they graduate; witness themes that own the growth model, over a plain ledger. ([work](work.md))
 - **Knowledge:** domains and topics with namespaced names; facts (firm) and reads (soft), each graded by source and firmness; capture discipline, compiling from sources, visible staleness; care for facts about other people. ([knowledge](knowledge.md))
 - **Registries:** conventions over configuration; stable interfaces with swappable parts; maintained per registry, checked by tooling, however it's maintained; surface defined by property. ([registries](registries.md))
 - **Loading:** four tiers (knowing-what eager, knowing-how lazy); a capability manifest; a governed floor; a window's cost scales with the task, not the sphere. ([loading](loading.md))

@@ -34,7 +34,7 @@ protocol: [I-delegate-and-hear-back, A-open-child, A-report-up, A-inspect, A-req
 4. **Ground the parent.** The carve changed the parent's file and holds, so it's committed under the parent's name: `ground [f20-kitchen-renovation] — opened f21; carved plumbing`. It can be reverted like any ground.
 5. **Tell the parent's window,** in one line: *"Opened f21-plumbing-quotes: get three quotes."*
 
-*Why carve:* in a sphere that ran parallel sessions daily, most conflicts came from one shared task list written by a parent and several children at once. Carving gives each list item a single writer.
+*Why carve:* in a sphere that ran parallel lines of work daily, most conflicts came from one shared task list written by a parent and several children at once. Carving gives each list item a single writer.
 
 ## Talking across an edge
 
@@ -54,7 +54,7 @@ protocol: [I-delegate-and-hear-back, A-open-child, A-report-up, A-inspect, A-req
 
 ## Closing a child
 
-- **Close ends it and returns its hold to the parent.** The last history entry says how it ended; the folder moves to `archived/`.
+- **Close ends it and asks once about its hold:** *"f21 held plumbing. Give it back to f20, or release it?"* Back is the default. The answer is written into the parent's `holds:` in the close commit, the child's last ground, so undoing the close restores everything. Ask before running the close; the tooling can't ask on its own. The last history entry says how it ended; the folder moves to `archived/`.
 - **What it learned is already where it belongs:** in work, in knowledge, in proposals to lenses. The parent's history has its report lines.
 
 ## Closing a focus that has open children
@@ -82,10 +82,10 @@ Follow [finishing a node](../nodes/node-shape.md#finishing-a-node). For a focus:
 | A focus delegates to an agent | Open a child in supervised or unattended mode, with the task as its intention and a standing approval to ground |
 | A child grounds | Append its history entry and one line to the parent's history. Fire `child-reported` |
 | A parent grounds with reports waiting | Roll them into the parent's Now |
-| Offering a change to a file another focus holds | Append the offer to your own history, naming the holder |
+| Offering a change to a file another focus holds | Add an entry to your own history headed `## <date> — offer to fNN`, naming the file and the change |
 | An offer naming this focus has no answer yet | Show it as waiting; on the human's call, apply it and append *accepted*, or append *declined* |
 | A focus wants something from a sibling | Ask through the parent; never message the sibling directly |
-| A child closes | Return its hold; move it to `archived/` |
+| A child closes | Ask once: hold back to the parent (default) or released; write it into the parent's `holds:`; move it to `archived/` |
 | Closing a focus with open children | List them with Next and unsaved work; ask once: close them too, move them up, or keep it open |
 
 ## Works with

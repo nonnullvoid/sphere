@@ -4,7 +4,7 @@ kind: structural
 lens: [continuity]
 derives_from: [continuity@1]
 version: 1
-version_note: First draft. Reworked 2026-11-11 for focus nodes.
+version_note: First draft.
 status: drafting
 updated: 2026-11-11
 sharing: public
@@ -51,7 +51,7 @@ Each operation acts on one focus node and is a move with a contract. The focus v
 2. **Write the focus node:** rewrite **Now** in `focus.md`, append a history entry. A child also appends one line to its parent's history. (Shapes in [focus-nodes](../focus/focus-nodes.md).)
 3. **Apply confirmed reference changes** (facts, lens edits the human said yes to), one at a time, each after re-reading the file.
 4. **Rebuild generated files from what's committed** plus this ground's own changes. Never from the working folder: it may hold other foci's unfinished work, and a view built from it would commit that work's shadow.
-5. **Reconcile this focus.** A touched file outside the focus's holds becomes one question: hold it too? Questions about other foci (quiet for weeks, stale unsaved work) aren't asked here; see [focus-nodes](../focus/focus-nodes.md#reconciling-each-question-where-it-belongs). This runs in the ground tooling, not as a habit, because a step that depends on remembering eventually gets skipped.
+5. **Reconcile this focus.** Other changed files no focus holds are listed and left for main; nothing stops. Ask *"hold it too?"* only about files this window edited outside the holds. Questions about other foci (quiet for weeks, stale unsaved work) aren't asked here; see [focus-nodes](../focus/focus-nodes.md#reconciling-each-question-where-it-belongs). This runs in the ground tooling, not as a habit, because a step that depends on remembering eventually gets skipped.
 6. **Commit under a short lock.** Two foci grounding at the same moment take turns. Pull, stage only this focus's files and appends, commit as `ground [f21-plumbing-quotes] — summary`, push.
 7. **Report in one line.** *"Grounded f21: 3 files · a1b2c3d"*, or *"Saved."* in a non-technical build.
 
@@ -67,7 +67,7 @@ Commits from different foci interleave. Every commit names its node, so:
 - **`revert` to a focus's earlier ground** reverses that focus's commits after it.
 - **Reverting the whole sphere** to a point in time reaches into every focus: every foreground focus grounds or detaches first, and the human confirms.
 
-Each kind of file is reversed the way it's written: current state is reversed; history is never removed (an entry is appended saying what was reversed and why); a reverted fact or lens change becomes a proposal to restore the old version; generated files are rebuilt.
+Each kind of file is reversed the way it's written: current state is reversed; appended history entries are never removed (an entry is appended saying what was reversed and why), though a history file created or deleted whole goes with its node; a reverted fact or lens change becomes a proposal to restore the old version; generated files are rebuilt.
 
 ## When the state isn't what was expected
 

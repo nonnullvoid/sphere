@@ -24,7 +24,7 @@ protocol: [I-never-overwrite-unseen]
 | **Current state** | `work.md`, `focus.md`, a draft, a view kept by hand | **Only whoever holds it** | Rewrite in place. Anyone else offers a change to the holder |
 | **History** | `progress.md`, `history.md` | Anyone | **Append only**, after re-reading. Never edit or delete an entry |
 | **Reference** | knowledge topics, lenses and frames, the human's profile, principles | **Nobody directly** | Propose; apply only when the human confirms, one change at a time, re-reading first |
-| **Generated** | indexes, the capability manifest, views | **Nobody** | Rebuild from sources. A hand edit is lost at the next rebuild |
+| **Generated** | indexes, the capability manifest, views | **Nobody by hand** | Rebuilt from sources, by tooling or the AI. A hand edit is lost at the next rebuild |
 
 **Write only to what you hold; anything else is appended, offered, proposed or rebuilt.**
 

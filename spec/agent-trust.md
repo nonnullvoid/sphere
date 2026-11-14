@@ -1,6 +1,6 @@
 # Agent trust
 
-_Status: draft 1, for review._ How an agent earns the right to do more of the work on its own, how that trust is measured and withdrawn, and how agents are put to work. This is about trust in agents. Trust between spheres is in [replication](replication.md#trusted-spheres--decided-not-yet-exercised).
+How an agent earns the right to do more of the work on its own, how that trust is measured and withdrawn, and how agents are put to work. This is about trust in agents. Trust between spheres is in [replication](replication.md#trusted-spheres--decided-not-yet-exercised).
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

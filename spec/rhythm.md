@@ -1,6 +1,6 @@
 # Rhythm
 
-_Status: draft 1, for review._ How a sphere fits around the human's days: when it orients them, when it wraps up, how it learns their pattern without holding them to it, and how work done without them reaches them when they're there.
+How a sphere fits around the human's days: when it orients them, when it wraps up, how it learns their pattern without holding them to it, and how work done without them reaches them when they're there.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

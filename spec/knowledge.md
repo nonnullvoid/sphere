@@ -1,6 +1,6 @@
 # Knowledge
 
-_Status: draft 2, for review._ How a sphere keeps its model of the world it operates in: the people, places, things and situations that matter to its human, held as facts and reads that are sourced, dated and readable, and kept honest about how sure they are.
+How a sphere keeps its model of the world it operates in: the people, places, things and situations that matter to its human, held as facts and reads that are sourced, dated and readable, and kept honest about how sure they are.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -166,8 +166,8 @@ The result is offered to the human like any capture. **The human fills the gaps.
 ### 3. Routed elsewhere
 
 Not everything that sounds like knowledge is:
-- **A speculative idea** goes to the [idea queue](work.md#ideas-come-before-work--proven), which takes it directly with no review, because ideas are maybes by nature.
-- **An idea about improving the sphere itself** goes to the [evolution](evolution.md) queue.
+- **A speculative idea** is captured as an [idea](work.md#ideas-come-before-work--proven), directly with no review, because ideas are maybes by nature.
+- **An idea about improving the sphere itself** is an idea tagged `sphere`, which [evolution](evolution.md) reviews.
 - **When it's unclear where something belongs,** the sphere proposes a home along with the capture.
 
 ### Where it lands

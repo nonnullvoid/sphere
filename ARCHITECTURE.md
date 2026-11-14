@@ -1,6 +1,6 @@
 # Sphere Architecture
 
-_SPHERE-ARCH 1.0, draft. The overview. Each section links to the chapter in [`spec/`](spec/README.md) that holds the detail._
+_SPHERE-ARCH 1.0. The overview. Each section links to the chapter in [`spec/`](spec/README.md) that holds the detail._
 
 ---
 
@@ -34,7 +34,8 @@ The human doesn't need to understand the structure to use it. The AI operates it
 
 ```
 my-sphere/
-├── CLAUDE.md, AGENTS.md     doors: what harnesses look for first, pointing to sphere.md
+├── AGENTS.md               the door: what AI tools look for first, pointing to sphere.md
+├── CLAUDE.md               one line, `@AGENTS.md`, for tools that only read their own file
 ├── sphere.md                the orchestrator: startup sequence and identity at a glance
 ├── core/
 │   ├── identity.json        id, name, version, and where this sphere was born from
@@ -54,7 +55,7 @@ my-sphere/
 │   ├── work/                what the human is changing
 │   ├── focus/               what the human is focusing on with the model: one node per pursuit (the folder is the registry)
 │   ├── knowledge/           what's true: domains, topics, facts and reads
-│   ├── ideas/               maybes, queued until they graduate or are parked
+│   ├── ideas/               maybes, one file each, grouped by topic, until they graduate or are parked
 │   ├── literacy/            what the human understands, and the library of what's been taught
 │   ├── projections/         projection definitions: what each view shows
 │   └── …                    whatever else this sphere needs

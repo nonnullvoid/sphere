@@ -1,6 +1,6 @@
 # Modes
 
-_Status: draft 2, for review._ How a sphere changes what it's doing and who's doing it, without becoming a different sphere. Also who the AI is in the sphere (its persona) and how it relates to who the human is.
+How a sphere changes what it's doing and who's doing it, without becoming a different sphere. Also who the AI is in the sphere (its persona) and how it relates to who the human is.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -159,6 +159,8 @@ A collaboration mode says **who does the work**:
 
 It's set per piece of work or per run, and recorded with it. Moving work toward *unattended* is trust, earned for a specific kind of work and revocable at any time.
 
+**Changing collaboration mode doesn't change the focus.** Work moving from *together* to *unattended* is one [focus node](focus.md#windows-sessions-and-agents) changing its collaboration mode. Whether a new window attaches for the unattended part doesn't matter: the memory is the node's.
+
 **However far it moves, the guardrails don't.** Unattended work still drafts, queues and waits for anything that needs the human's yes: being away isn't permission (see [human-is-highest](../common/core/protocol/lenses/human-is-highest.md)). **The dial moves execution, never authority.**
 
 How trust is earned, measured and withdrawn is in [agent trust](agent-trust.md).
@@ -180,4 +182,3 @@ Three registers that are easy to blur, kept apart:
 ## Open questions
 
 1. **Sharing operating modes:** a well-made operating mode could be shared as a public seed. How does that interact with the sharing levels of the lenses and frames in its loadout? (Likely: a mode can't be more open than what it points to, as with [frames and lenses](protocol.md#sharing--decided-not-yet-exercised).)
-2. **Collaboration modes and focus:** _answered by [focus](focus.md#windows-sessions-and-agents)._ Work moving from *together* to *unattended* is one focus node changing its collaboration mode. Whether a new window attaches for the unattended part doesn't matter: the memory is the node's.

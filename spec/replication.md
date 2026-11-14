@@ -1,6 +1,6 @@
 # Replication
 
-_Status: draft 3, for review._ How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
+How spheres reproduce and learn from each other: what can leave a sphere, how a new sphere starts from another, and how one sphere safely takes in what another learned.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -210,7 +210,7 @@ Spheres can let other spheres in, in specific and limited ways. For example, one
 - **The trusting sphere can narrow or revoke any grant, at any time,** and the change is immediate. Trust given is never trust owed.
 - **Trust is one-way.** Being trusted by a sphere grants nothing in return.
 
-For a non-technical human, all of this happens in plain words: *"Rutvij's sphere can suggest changes and keep things tidy. Want to change that?"*
+For a non-technical human, all of this happens in plain words: *"Sam's sphere can suggest changes and keep things tidy. Want to change that?"*
 
 **Honest limit:** until spheres can prove their identity (see [signing](#sphere-identity--decided-not-yet-exercised)), trust rests on how the humans set up access between their spheres. That's sound between people who share a home or a machine. Once trust has to cross a network, signing is what makes it safe.
 

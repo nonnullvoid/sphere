@@ -46,7 +46,7 @@ protocol: [I-one-way-to-read-anything, A-design-check]
 
 ## Checking the shape
 
-The shape check reads each tree's declared frontmatter shape and reports any node missing a part or using a key its tree doesn't declare. **Changing a tree's frontmatter means changing its declaration in the same commit;** otherwise the check reports every node in that tree.
+The shape check ([structure-check](../readable-substrate/structure-check.md)) reads each tree's declared frontmatter shape from `core/shapes` and reports any node missing a part or using a key its tree doesn't declare. **Changing a tree's frontmatter means changing its declaration in the same commit;** otherwise the check reports every node in that tree.
 
 ## Finishing a node
 
@@ -59,7 +59,7 @@ Set the final state, write the last history entry (how it ended, and why), and m
 Rules:
 - **Never end a child silently.** Unsaved work grounds first. A child with a window or run attached is moved up or left open.
 - **Finishing them too:** each child gets its own last entry first; the parent's last entry then sums up the subtree from what's already in its history.
-- **What a node held goes up a level:** to its parent, or released at the top.
+- **What a node held is settled when it ends:** ask once, back to the parent (default) or released; write the answer into the parent. Released at the top.
 - **Retiring a lens** retires only frames with no other lens; a shared frame stays.
 
 ## Designing something new

@@ -1,7 +1,7 @@
 ---
 lens: human-is-highest
 version: 2
-version_note: Rewritten against the source lens. Why the order exists, earned trust, the graded bar, raising rather than routing around, absence, overrides that don't carry over.
+version_note: Why the order exists, earned trust, the graded bar, raising rather than routing around, absence, overrides that don't carry over.
 derives_from: practice in spheres in daily use
 status: active
 updated: 2026-10-28
@@ -60,5 +60,5 @@ So "highest" is the right word. Not because the AI is lesser, but because author
 
 ## Revision history
 
-- **v2 (2026-10-28):** Rewritten against the source lens it was meant to carry. Adds why the order exists (meaning, the face in the world, complementarity), earned trust, the graded bar with the sphere's own state as the exception, scope, raising rather than routing around, absence, structured emergencies, overrides that don't carry over, and no false deference. Two new frames.
-- **v1 (2026-10-25):** First draft.
+- **v2:** Adds why the order exists (meaning, the face in the world, complementarity), earned trust, the graded bar with the sphere's own state as the exception, scope, raising rather than routing around, absence, structured emergencies, overrides that don't carry over, and no false deference. Two new frames.
+- **v1:** First draft.

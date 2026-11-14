@@ -1,6 +1,6 @@
 # Projections
 
-_Status: draft 4, for review._ How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
+How a sphere shows its state to people: rendered views of its files, such as dashboards, maps and pages, that are always honest about what they show and how fresh it is.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -178,7 +178,7 @@ A template is a projection shape captured once, so the next one like it is a fil
 - **Extract on the third repetition, never before.** The first two projections of a kind are written directly. Extracting earlier guesses at a pattern that doesn't exist yet. Bespoke projections stay bespoke.
 - **Chrome is shared; content isn't.** Projections share a stylesheet and a small set of components (header, panels, footer, freshness badge, navigation), so every view looks like part of the same sphere. The design effort goes into each view's content.
 - **Themes vary; structure doesn't.** A build or sphere can re-theme everything (colors, type, density) through design tokens, without touching a single projection's structure.
-- **Navigation comes from the registry, never hand-written into pages.** _The lesson:_ when each dashboard carried its own list of links, a new dashboard went a whole session unlinked from the others, and one page's list quietly drifted. One shared list, built from the registry, means adding a view is one change.
+- **Navigation comes from the registry, never hand-written into pages.** _The lesson:_ when each dashboard carried its own list of links, a new dashboard stayed unlinked from the others for a whole sitting, and one page's list quietly drifted. One shared list, built from the registry, means adding a view is one change.
 
 ### The one-shot template (snapshots)
 

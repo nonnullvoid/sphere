@@ -1,6 +1,6 @@
 # Work
 
-_Status: draft 3, for review. A starting point for architecture 1.0. A more flexible work model can replace it later, behind the [same interface](#the-interface)._
+_The work model for 1.0. A more flexible work model can replace it later, behind the [same interface](#the-interface)._
 
 How a sphere tracks what its human is doing: what a piece of work is, how work grows from a single thing into a tree, how plans give it direction, and how its real progress stays honest.
 
@@ -60,9 +60,10 @@ layers/work/
 ├── archived/
 │   └── <node>/          finished work, moved out of the way
 ├── plans/
-│   └── <plan>/
-│       ├── plan.md      the plan's current version
-│       └── history.md   every version, and the discussion behind it
+│   ├── <plan>/
+│   │   ├── plan.md      the plan's current version
+│   │   └── history.md   every version, and the discussion behind it
+│   └── archived/<plan>/ plans that are done or dropped
 ├── templates/           starting shapes for kinds of work
 └── index.md             generated: the work tree and its quick info
 ```
@@ -79,13 +80,12 @@ layers/work/
 
 ```yaml
 ---
-title: Google interview
+title: Onsite interview
 kind: task                      # optional: area | project | task; inferred when absent
 parent: jobhunt-may-2026        # a node name; absent for top-level work
-state: active                   # planned | active | paused | done | archived
+state: active                   # planned | active | paused | done | dropped
 paused:                         # when paused: blocked | waiting | on hold
 waiting_on:                     # required when paused
-focus: pinned                   # optional; see State and focus
 ongoing: false                  # true for work that never finishes (every area, some tasks)
 progress: 3/7                   # optional; see Plan vs progress
 summary: onsite scheduled, phone done    # one line, refreshed at ground
@@ -121,8 +121,10 @@ The node's history, in order and never rewritten. Each ground adds an entry: wha
 | **active** | Being worked on | 🔄 |
 | **paused** | Stopped for a reason: **blocked**, **waiting**, or **on hold**. Always says on what, in `waiting_on:` | ⛔ ⏳ ⏸️ |
 | **done** | Finished | ✅ |
-| **archived** | Done and moved out of the way | 📦 |
+| **dropped** | Ended without finishing. The last entry says why | ✖️ |
 | _(ongoing)_ | Never finishes: every area, and some tasks, like a practice routine | ♾️ |
+
+**Archived is where a node is, not a state.** A done or dropped node moves to `archived/` (see [Archiving](#archiving--decided-not-yet-exercised)); its state stays what it ended as.
 
 Paused always says why, because paused work without a reason quietly becomes forgotten work.
 
@@ -131,7 +133,7 @@ Paused always says why, because paused work without a reason quietly becomes for
 **Focus: is it in view right now.** — _unexercised_ Focus is independent of state. A paused node can stay in focus, and a planned one can be the focus of the week.
 
 - **A work node is in focus when an open [focus node](focus.md) holds it,** foreground or background. That's a fact read from the focus tree, not a guess stored on the work.
-- **`pinned`** is the human's choice, and always wins: a background focus node the human keeps open on purpose.
+- **There's no separate pin.** Keeping work in view on purpose means keeping a focus open that holds it, in the background if nothing is attached. The work node stores nothing about focus.
 - **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. A suggestion is a suggestion to open a focus node, shown as one in the Focused view. It's never written into a node as a decision.
 
 The marks are the base build's defaults. A [witness theme](#witness-optional) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it's shown.
@@ -170,6 +172,27 @@ A **plan** is direction a human understands: *how I'm approaching the job hunt*,
 - **Plans have their own tree.** A plan can hold sub-plans: *interview prep* within *the job hunt*.
 - **The link lives on the node.** A node's `plan:` field names the plan and the version it follows (`jobhunt-strategy@2`). Reassigning a node to another plan, or a newer version, is a one-line edit. *Which nodes follow this plan* is computed from those links, so the truth lives in one place.
 
+### A plan's frontmatter
+
+`plan.md` opens with enough to show the plan in one line, the same as a work node:
+
+```yaml
+---
+plan: jobhunt-strategy
+title: How I'm approaching the job hunt
+parent:                         # a plan name, for a sub-plan; absent at the top
+for: [work:jobhunt-may-2026]    # the work it was drafted for
+state: active                   # active | done | dropped
+version: 2.4                    # the current version, major.minor
+summary: applications done; preparing for onsites
+created: 2026-04-28
+updated: 2026-10-20
+---
+```
+
+- **`for:` says what the plan was made for.** Which nodes follow it is still computed from their `plan:` links; any node may follow a plan it wasn't made for.
+- **`state`** is `active` while the plan guides work, `done` when it has nothing left to guide, and `dropped` when it's given up, with why in `history.md`. Plans don't pause; the work does.
+
 ### Plans are versioned: major and minor
 
 A plan has two files: **`plan.md`**, its current version, and **`history.md`**, every version and the discussion behind each. Replanning is the system working, not failing.
@@ -186,6 +209,10 @@ A plan has two files: **`plan.md`**, its current version, and **`history.md`**, 
 ### Following a plan
 
 What to do next comes from the plan's steps and the work's real progress. A focus that does something different **records the deviation and its reason,** and the sphere raises it at ground: *"This focus worked on the offer comparison before the onsite. The plan has it after. Update the plan, or note it as an exception?"*
+
+### Finishing a plan
+
+**A plan that's done or dropped is archived like a work node:** a last `history.md` entry saying how it ended, then its folder moves to `layers/work/plans/archived/<plan>/`. Before it moves, the sphere looks both ways and asks once ([finishing a node](nodes.md#finishing-a-node--decided-not-yet-exercised)): sub-plans still active, and live work whose `plan:` still points at it. When the last work in a plan's `for:` is archived, the sphere asks whether the plan is done too. Links name the plan, so they still resolve.
 
 ---
 
@@ -209,25 +236,25 @@ What to do next comes from the plan's steps and the work's real progress. A focu
 It shows the work as a tree, one line per node:
 
 ```
-[jobhunt-may-2026] Find a new job  🔄 · pinned  [2/3]  onsite next week
+[jobhunt-may-2026] Find a new job  🔄 · in focus  [2/3]  onsite next week
 ├── [.interview-practice] Practice coding exercises  ♾️  [3/10]  focusing on leetcode
-└── [.interview] Google interview  🔄  [3/7]  onsite scheduled, phone done
+└── [.interview] Onsite interview  🔄  [3/7]  onsite scheduled, phone done
 ```
 
 Children show their name relative to their parent (`.interview`). The folders on disk stay flat.
 
 | Section | What's in it |
 |---|---|
-| **Focused** | Pinned nodes, then suggested ones (marked as suggestions) |
+| **Focused** | Work an open focus holds, then suggested ones (marked as suggestions) |
 | **Active** | Everything else in motion: active, paused, planned |
-| **Done** | Finished, not yet archived |
+| **Done** | Done or dropped, not yet archived |
 | **Archived** | Collapsed; listed on request |
 
 ## Archiving — _decided, not yet exercised_
 
 Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the active work folder stays readable. **Its row stays in the index,** collapsed under Archived, so old work can still be found, referenced or revived without digging through history.
 
-- **Subtrees archive together.** Archiving a node takes its finished children with it. Children still in progress **block** the archive until each is finished, moved under a new parent, or explicitly dropped. This is [finishing a node](nodes.md#finishing-a-node--decided-not-yet-exercised) for work: the sphere lists them and asks once.
+- **Subtrees archive together.** Archiving a node takes its finished children with it. Children still in progress **block** the archive until each is finished, moved under a new parent, or explicitly dropped (`state: dropped`, with why). This is [finishing a node](nodes.md#finishing-a-node--decided-not-yet-exercised) for work: the sphere lists them and asks once.
 - **A focus that still holds the work** is named before it's archived: *"f21 still holds this. Close f21 too, or let it keep going?"*
 - **Links are fixed by the tooling.** `parent:` fields use names, so they never break.
 - **The sphere can suggest archiving** work that has been done for a while. The human decides.
@@ -253,20 +280,57 @@ Archiving **moves** a node's folder to `layers/work/archived/<node>/`, so the ac
 
 ## Ideas come before work — **proven**
 
-**An idea is not work until it graduates.** Ideas are maybes by nature, and a work tree full of maybes stops saying what the human is actually doing. So ideas have their own queue, outside the tree:
+**An idea is not work until it graduates.** Ideas are maybes by nature, and a work tree full of maybes stops saying what the human is actually doing. So ideas live apart from work, **one file per idea,** where each can grow from a half-formed thought into something ready to act on. — _one file per idea decided, not yet exercised_
 
 ```
 layers/ideas/
-├── queue.md          one line per open idea: what it is, when it came, where it stands
-├── reports/
-│   └── <idea>.md     what an investigation found
-└── archived/         graduated and parked ideas: their lines and reports
+├── 20260925-interview-friends-about-finances.md
+├── 20261104-heat-pump-grant.md
+└── archived/                 ideas that graduated or were parked
 ```
 
-- **Capture has no friction.** The sphere writes an idea straight into the queue, with no review. That's the deliberate opposite of [knowledge capture](knowledge.md#how-knowledge-gets-in--proven), where every fact is proposed first.
-- **The queue is a research backlog, not a to-do list.** An idea can be investigated, by the sphere or an agent, often without the human, into a short written report: what it would take, what it's up against, whether it holds up.
-- **Every idea graduates or is parked.** It graduates into a work node, a fact in the knowledge layer, or a proposed change to the sphere ([evolution](evolution.md)). Or it's parked, with a line saying why. Either way it leaves the active queue: its line, with where it went, and its report move to `layers/ideas/archived/` (see [finished things move out of the way](registries.md#conventions-and-swappable-parts)).
-- **The queue is surfaced at the anchors** (see [rhythm](rhythm.md#anchors--proven)), so ideas don't rot unseen.
+- **An idea is a node kept in one file** ([nodes](nodes.md)): its current shape at the top, its history below. The name is the file's name: the capture date, compact, then a hyphenated slug. Folders never nest.
+- **Capture has no friction.** The sphere writes the file the moment the human names an idea, with no review. That's the deliberate opposite of [knowledge capture](knowledge.md#how-knowledge-gets-in--proven), where every fact is proposed first. **The capture is kept verbatim,** however vague or repetitive, **with the conversation around it:** the human's words where they fit, a short summary otherwise. An idea out of context is often unreadable a month later.
+- **Ideas are refined over time,** the way a lens is. Each time one is picked up, the AI proposes a clearer shape and the human decides what it says. The top of the file is rewritten; a dated refinement entry is added, newest first. Simple ideas stay a few lines; complex ones grow structure across a few sessions. **When it's ready to act on is the human's call.**
+- **A collection is every open idea that shares a topic.** An idea's frontmatter lists its `topics:`, so collections are computed, never kept: an idea can be in two, or none. *"Check my home ideas"* lists one collection.
+- **An idea can be investigated,** by the sphere or an agent, often without the human. The findings go in the idea's own file: what it would take, what it's up against, whether it holds up.
+- **Every idea graduates or is parked.** It graduates into a work node, a fact in the knowledge layer, a proposed change to the sphere ([evolution](evolution.md)), or another idea it's merged into. Or it's parked, with a line saying why. Either way its `outcome:` is set and the file moves to `layers/ideas/archived/`, findable by name. A parked idea can come back.
+- **The `sphere` topic is evolution's list.** Ideas about the sphere itself are captured like any other, tagged `sphere`, and [evolution](evolution.md#evolution-as-work--decided-not-yet-exercised) reviews them when evolution comes up. They may carry two optional fields: what kind of change (add / refactor / drop) and how soon (now / soon / someday).
+- **Open ideas are surfaced at the anchors** (see [rhythm](rhythm.md#anchors--proven)), newest first, so ideas don't rot unseen.
+
+### An idea's file
+
+```markdown
+---
+idea: 20260925-interview-friends-about-finances
+title: Ask friends how they actually handle money
+captured: 2026-09-25
+topics: [money]
+stage: shaping                 # raw | shaping | ready
+refinements: 2
+refined: 2026-10-14
+related: [20261002-shared-budget-sheet, knowledge:money.budgeting]
+outcome:                       # once settled: graduated <tree:name>, or parked <why>
+---
+
+# Ask friends how they actually handle money
+
+What the idea is now, rewritten as it's refined.
+
+## Findings
+What looking into it found, if anyone has.
+
+## Captured
+The human's words, verbatim, and the conversation around them.
+
+## Refinements
+### 2026-10-14
+What changed, and why. Newest first.
+```
+
+- **`stage`** is `raw` until the first refinement, `shaping` after, and `ready` only when the human says so.
+- **`refinements` and `refined`** are the count and latest date of the refinement entries, kept in frontmatter so a list never reads bodies.
+- **Refining rewrites the top, so only a focus that holds the idea does it** (`holds: [idea:<name>]`); capture is a new file, so any focus can do it. See [nodes](nodes.md#four-kinds-of-file--unexercised).
 
 ---
 
@@ -274,15 +338,15 @@ layers/ideas/
 
 **Senses:**
 - `work-node-added`, `work-node-moved`, `work-node-archived`
-- `work-state-changed`, `work-focus-changed`
+- `work-state-changed`
 - `work-progress-measured`, `work-stalled`
-- `plan-versioned`, `plan-deviation`, `plan-assumption-stale`
+- `plan-versioned`, `plan-deviation`, `plan-assumption-stale`, `plan-archived`
 - `work-index-stale`
 
 **Commands** (natural phrasing works too):
 - `add [task or project] [name] under [parent]`
 - `move [node] under [parent]`
-- `pin` / `unpin [node]`
+- `drop [node] [reason]`
 - `pause [node] [reason]`
 - `done`
 - `archive [node]`
@@ -347,5 +411,5 @@ What any replacement for this work model has to honor, so that projections, focu
 
 ## Open questions
 
-1. **Suggested focus.** Which signals, weighted how? Learned from what the human pins over time?
+1. **Suggested focus.** Which signals, weighted how? Learned from what the human keeps in focus over time?
 2. **Grouping top-level work** (life, work, home) as an optional namespace: needed, or does the tree already do this?

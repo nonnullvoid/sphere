@@ -1,7 +1,7 @@
 ---
 lens: continuity
 version: 1
-version_note: First draft. Reworked 2026-11-11 for focus nodes.
+version_note: First draft.
 derives_from: practice in spheres in daily use
 status: drafting
 updated: 2026-11-11
@@ -62,5 +62,4 @@ Underneath, the sphere's files are always in one of two states: **working** (cha
 
 ## Revision history
 
-- **v1 (2026-11-10):** First draft, written fresh after an idea-by-idea pass against the source lenses and frames in a sphere in daily use. Simple sessions only.
-  - _Reworked 2026-11-11, still v1 (never shipped):_ sessions replaced by focus nodes as what carries the thread; the session frame moved to the focus lens; `without-git` added.
+- **v1:** First draft.

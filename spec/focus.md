@@ -1,8 +1,8 @@
 # Focus
 
-_Status: draft 8, for review._ What the human is focusing on with the model, and how that focus is held, worked, narrowed and closed. A focus node is what earlier versions called a session record. Sessions and agents are two ways of working on one.
+What the human is focusing on with the model, and how that focus is held, worked, narrowed and closed. Sessions and agents are two ways of working on a focus node.
 
-_Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice). A focus tree one level deep is what one sphere ran daily as simple sessions, so those parts carry **proven**. The tree, holds and carving are **unexercised**: 1.0 is where they're first used._
+_Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice). A focus tree one level deep, one focus per thread of work side by side, has run daily in one sphere, so those parts carry **proven**. The deeper tree, holds and carving are **unexercised**._
 
 ---
 
@@ -102,7 +102,7 @@ The first column is the definition. A fixed intention is common for agents, but 
 
 ### Stage and liveness
 
-A node's **stage** is whether its held files have unsaved changes: **working** (unsaved changes) or **grounded** (clean), until it's **closed**. **Liveness** is foreground, background or stale. Crossing them gives a quick read of any node — **proven** (as simple-session lifecycle):
+A node's **stage** is whether its held files have unsaved changes: **working** (unsaved changes) or **grounded** (clean), until it's **closed**. **Liveness** is foreground, background or stale. Crossing them gives a quick read of any node — **proven** (in a tree one level deep):
 
 | stage ↓ · liveness → | background | foreground | stale |
 |---|---|---|---|
@@ -114,13 +114,12 @@ A node's **stage** is whether its held files have unsaved changes: **working** (
 - **How serious a stale node is depends on unsaved work, not on how long it's been quiet.** Stale with unsaved work: offer to recover it, never discard it. Stale and clean: clear the heartbeat.
 - **Closing ends attachment.** `close focus` detaches any window still attached.
 
-**Heartbeats** — _decided, not yet exercised_. Each foreground node has a heartbeat file at `surface/state/focus/<number>.json` holding `last_seen` and the window's client label. Any sphere command updates it; there's no list of which commands count. A node counts as foreground while `last_seen` is within 30 minutes. One file per node, so heartbeats never contend. If the file is lost, the tooling rebuilds it.
+**Heartbeats** — _decided, not yet exercised_. Each foreground node has a heartbeat file at `surface/state/focus/<number>.json` holding `last_seen` and the window's client label. Any sphere command updates it; there's no list of which commands count. The window says which focus it's in (the reference tooling reads `SPHERE_FOCUS`). **Heartbeats are per device** and never committed, so a focus in the foreground on another device looks background here; a close or a sphere revert can't see that window, and the human is the check. A node counts as foreground while `last_seen` is within 30 minutes. One file per node, so heartbeats never contend. If the file is lost, the tooling rebuilds it.
 
-### What it replaces
+### Focus in the other chapters
 
-- **Session liveness** (live / stale / detached) becomes foreground, stale and background.
-- **Work's focus axis** stops being a guess. A piece of [work](work.md#state-and-focus--two-separate-axes) is **in focus** when an open focus node, foreground or background, holds it. `pinned` is a background focus node the human keeps open on purpose. Suggestions from signals (deadlines, the week's plan) become suggestions to open a focus node.
-- **Rhythm** _(to check against [rhythm](rhythm.md))_: a day or a week can be a long-lived background focus node, brought to the foreground by the morning and evening routines.
+- **Work's focus axis** comes from focus nodes, not from a guess. A piece of [work](work.md#state-and-focus--two-separate-axes) is **in focus** when an open focus node, foreground or background, holds it. `pinned` is a background focus node the human keeps open on purpose. Suggestions from signals (deadlines, the week's plan) are suggestions to open a focus node.
+- **[Rhythm](rhythm.md):** a day or a week can be a long-lived background focus node, brought to the foreground by the morning and evening routines.
 
 ---
 
@@ -144,7 +143,7 @@ layers/focus/
 ### Names: a number and a memorable name
 
 Every focus node has **both**:
-- **A number** (`f21`): the shorthand. Stable for the node's whole life, and **never reused**: the next number is one more than the highest in `layers/focus/`, `archived/` included. `f0` is always [main](#main-the-root-focus--decided-not-yet-exercised).
+- **A number** (`f21`): the shorthand. Stable for the node's whole life. The next number is one more than the highest in `layers/focus/`, `archived/` included. If a revert removes a focus, its number may be used again; the sphere is a state machine, and undo or revert aimed at a focus only looks at commits since that focus opened. `f0` is always [main](#main-the-root-focus--decided-not-yet-exercised).
 - **A name** (`kitchen-renovation`): two or three words that match how the human would remember it. The AI proposes one when the node opens, and the human can change it.
 
 Together they make the reference: **`f21-kitchen-renovation`**. People use whichever comes to mind: *"attach to f21"*, *"resume the kitchen renovation"*, *"close focus"*. A partial or plain-words match (*"the kitchen one"*) shows candidates rather than guessing. This is the prefix-and-number scheme from [work](work.md#naming--decided-not-yet-exercised), with the number carrying identity, because focus moves around the tree and shifts over time.
@@ -179,7 +178,7 @@ opened: 2026-11-02
 
 ### `history.md`
 
-The node's memory, never rewritten. **Every ground adds an entry**, newest first — **proven** (shape):
+The node's memory, never rewritten. **Every ground adds an entry at the top**, newest first — **proven** (shape):
 
 ```markdown
 ## 2026-11-10 16:17 — grounded
@@ -188,12 +187,12 @@ The node's memory, never rewritten. **Every ground adds an entry**, newest first
 **Decided:** Skip the third big firm: their minimum call-out is over budget. Tried the
 city's licensed list first, but it doesn't show availability.
 **Next:** Chase the Thursday visit for a written quote.
-**Pointers:** work: home.kitchen.plumbing → progress.md · commit a1b2c3d
+**Pointers:** work: home.kitchen.plumbing → progress.md
 ```
 
 - **Did** is the story. **Decided** holds the judgment calls that are expensive to re-derive, including what was tried and ruled out. **Next** is the single most useful line for a cold start: a concrete first action, not a topic.
 - **Write it for a reader with no memory of this conversation.** Name things; no "as discussed".
-- **Pointers, not copies.** An entry points at the work's progress and the commit. It never repeats them.
+- **Pointers, not copies.** An entry points at the work's progress, never repeats it. The commit isn't named: it doesn't exist yet when the entry is written, and it's found by its `[f21-` subject.
 - **Many windows over many days write to the same history,** because they all attached to the same pursuit.
 - **Closing writes a last entry** saying how it ended: done, or dropped, and why.
 
@@ -213,7 +212,9 @@ A focus that touches three pieces of work writes three progress entries and one 
 
 **`holds:` is the node's scope: the nodes it's pursuing, never a list of files.** A node held covers everything in its folder. Name the most specific node that covers the work: `work:home.kitchen.plumbing`, not each file inside it, and not all of `work:home`. For something outside any node, name its folder.
 
-**Which files were actually touched is a fact, read from git at ground,** never stored. If ground finds a touched file outside what the node holds, it asks once: *"This also changed the budget sheet. Hold budget work in focus too?"*
+**Git can't tell which window changed a file,** so a ground goes by holds, never by guesses. It commits what the focus holds and lists, in one line, any other changed file no open focus holds: *"Also changed, not in any focus: budget.md (left for main)."* Nothing stops; main's next ground picks those files up. **The "hold it too?" question is the AI's,** asked only about a file its own window edited while in this focus: *"I also changed the budget sheet. Hold budget work in f21 too?"*
+
+**The most specific hold wins.** If f20 holds `work:home` and its child f21 holds `work:home.kitchen.plumbing`, plumbing's files are f21's. So a child rarely needs to edit its parent's holds.
 
 Scope does three jobs:
 
@@ -261,11 +262,11 @@ Knowledge can't follow the focus tree. It's arranged by how the world is (domain
 
 ### Where overlap really happens
 
-One sphere ran parallel sessions on branches daily for six months. Its merge history:
-- **About 1 in 6 merges** had two live sessions writing the same file.
+One sphere ran parallel lines of work, each on its own git branch, daily for six months. Its merge history:
+- **About 1 in 6 merges** had two live lines of work writing the same file.
 - **About 1 in 20** conflicted.
-- **Most of it was one pattern:** a shared task list, written by a parent session and several of its children at the same time.
-- **The session registry, one file per session, never conflicted.**
+- **Most of it was one pattern:** a shared task list, written by a parent and several of its children at the same time.
+- **The registry of open work, one file per line of work, never conflicted.**
 
 That pattern is two writers on one current-state file, a problem of which way writes flow, not of branching. Carving the hold removes it, and history appends never contend. Soft claims are left for the rare real overlap. _Expectation, not yet measured._
 
@@ -276,13 +277,14 @@ That pattern is two writers on one current-state file, a problem of which way wr
 - **Opening a child** narrows a focus: the human mid-conversation (*"let's go deep on the quotes"*), or a node delegating to an agent. **The child's `focus.md` is its starter,** and the child takes its carved part of the parent's hold. The parent is told: *"Opened f21-plumbing-quotes: get three quotes."*
 - **Opening a child is a ground of the parent.** The carve changes the parent's file (a checklist line becomes a link) and its holds, so it's committed under the parent's name (`ground [f20-kitchen-renovation] — opened f21; carved plumbing`), and can be reverted like any other ground.
 - **Nodes talk through their parent, never sideways.** — **proven** (as a lesson: direct messaging between siblings was tried, and they started taking over each other's work). A tree only has parent edges. Across one edge, three verbs: **inspect** (read the other node), **request** (an ask, never a command), **share** (offer a change to review, never overwrite).
-- **Reporting up** is a history entry in the child, plus **one line appended to the parent's `history.md`** at ground: *"f22: three cabinet options drafted; one fact pending your review."* Anyone can append to history, so this keeps the child out of the parent's current-state files. There's no merge.
+- **Reporting up** is a history entry in the child, plus **one short entry at the top of the parent's `history.md`** at ground, headed `## <date> — f22 reported`: *"f22: three cabinet options drafted; one fact pending your review."* Anyone can append to history, so this keeps the child out of the parent's current-state files. There's no merge.
 - **What's waiting is computed, not tracked.** Report lines and requests appended to a parent since its last ground are what's *waiting for you*. When the parent grounds, it rolls them into its Now, and they stop being new. Nothing marks them read.
-- **An offered change lives in the sender's history.** The sender appends an entry naming the node that holds the file and the change it offers, in words or as the new text. The holder sees it as *waiting for you* until it answers, by appending *accepted* or *declined* to its own history. Nothing is written into the holder's files until it accepts.
-- **Closing a child** ends it and returns its hold to the parent. Its history stays, and what it learned is already where it belongs: in work, in knowledge, in proposals to lenses.
+- **An offered change lives in the sender's history.** The sender adds an entry headed `## <date> — offer to f21`, naming the file and the change it offers, in words or as the new text. The heading is what lets the tooling count it as waiting. The holder sees it as *waiting for you* until it answers, by appending *accepted* or *declined* to its own history. Nothing is written into the holder's files until it accepts.
+- **Closing a child** ends it and asks, once, about what it held: *"f21 held plumbing. Give it back to f20, or release it?"* Giving it back is the default. The answer is written into the parent's `holds:` in the **close commit, which is the child's last ground**, so `undo` on the child reverses the whole close, holds included. The AI asks before closing and passes the answer to the tooling, which can't ask on its own. Nothing about holds is computed from archived children afterwards. Its history stays, and what it learned is already where it belongs: in work, in knowledge, in proposals to lenses.
+- **When children close with their parent,** the AI writes each child's real last entry first, then the parent's summary of the subtree; the tooling only adds a plain `closed with f20` entry where none was written. **Moving children up** edits each child's `parent:` inside the parent's close commit.
 - **Closing a focus that still has open children** follows [finishing a node](nodes.md#finishing-a-node--decided-not-yet-exercised): list each child's latest **Next** and whether it has unsaved work, and ask once: *"f20 has 2 open children: f21 (one quote left) and f22 (unsaved changes). Close them too, move them up, or keep f20 open?"* Closing them too goes deepest first, and f20's last entry sums up the subtree. A child with a window or run attached is never closed under it.
 
-**Depth is a dial.** A sphere that never opens a child has a focus tree one level deep: one focus per thread of work, side by side, which is exactly the simple sessions one sphere ran daily. The tree only gets deeper when someone opens a child. Nothing changes shape when it does.
+**Depth is a dial.** A sphere that never opens a child has a focus tree one level deep: one focus per thread of work, side by side, which is how one sphere has run daily. The tree only gets deeper when someone opens a child. Nothing changes shape when it does.
 
 **Subtrees are also the grain of sharing.** A focus node and its children can be exported together, as one pursuit. See [replication](replication.md).
 
@@ -296,13 +298,13 @@ That pattern is two writers on one current-state file, a problem of which way wr
 | **attach** | brings a focus to the foreground (*resume*, *continue*, *pick up* mean the same) | no |
 | **ground** | commits this focus's changes into the sphere. Can name the point | **yes** |
 | **detach** | grounds, then sends the focus to the background | yes |
-| **close focus** | grounds, writes the last history entry, ends the focus, returns its hold, moves it to `archived/` | yes |
+| **close focus** | grounds, writes the last history entry, ends the focus, gives its hold back to the parent or releases it (asked once), moves it to `archived/` | yes |
 | **peek** | what's changed and unsaved, by focus; recent history | no |
 | **undo** / **revert** | reverses this focus's last ground, or goes back to an earlier one | yes, as a new commit |
 
 The state contracts behind these verbs are in [state](state.md).
 
-- **Folded in from earlier vocabulary:** *start a session* is open focus; *park* is detach; *checkpoint* is a named ground; *history* is peek's longer form.
+- **Other words people use:** *start a session* means open focus; *park* means detach; *checkpoint* is a named ground; *history* is peek's longer form.
 - **The words belong to the build and the human,** as in [state](state.md#the-words-are-the-humans--decided-not-yet-exercised). People say focus references short: *"attach to f21"*, *"close focus"*.
 
 ### Attaching runs the whole briefing — **proven**
@@ -325,6 +327,16 @@ Not everything deserves a focus. *"Remind me how these projects fit together,"* 
 - **A window that writes grounds into main:** `ground [f0-main] — took in the design review notes`. No node is opened for it.
 - **Main holds nothing.** A ground in main covers the files it touched that **no open focus holds**. A file another focus holds becomes an offer to that holder, as anywhere else. Reference changes are proposed as usual.
 - **Quick windows never rewrite main's `focus.md`.** They only append to its `history.md`, so any number of them can use main at once with nothing to collide on beyond the short lock at ground. Main's history becomes the record of quick work. Its `focus.md` says what main is for and changes only when the human changes that.
+- **Main's `focus.md`** has the same shape as any focus, with no parent:
+  ```yaml
+  number: f0
+  name: main
+  aka: [sphere]
+  parent:
+  status: open
+  intention: Anything not in another focus; the sphere as a whole
+  holds: []
+  ```
 - **Main has no heartbeat.** It can't go stale. Unsaved work no focus holds already shows in `peek` as out of focus, which is main's.
 - **Real work gets offered a focus once.** When a window grounds into main a second time, it's probably not quick: *"This is turning into real work. Open f24-heat-pump-research for it?"* The human can accept, attach to an open focus, or keep going in main. The window knows it grounded before; nothing is stored. (A first ground that touches several pieces of work can be offered one too.)
 - **Opening a top-level focus** appends one line to main's history (*"opened f24-heat-pump-research"*). Top-level foci have `parent: f0`.
@@ -334,7 +346,7 @@ Not everything deserves a focus. *"Remind me how these projects fit together,"* 
 
 ### Focus talk is a command — **proven**
 
-**Focus phrasing is a command, not prose.** *"Open a focus for the kitchen"* means open one. It doesn't mean "I'm about to work on the kitchen." The same goes for the older words people will still use: *"start a session for…"*, *"continue that session"*. The sphere checks focus-shaped and session-shaped phrasing against its commands before reading it as conversation. Missing this once meant several turns of work done outside any record, unnoticed until the human asked where it went.
+**Focus phrasing is a command, not prose.** *"Open a focus for the kitchen"* means open one. It doesn't mean "I'm about to work on the kitchen." The same goes for session words people use: *"start a session for…"*, *"continue that session"*. The sphere checks focus-shaped and session-shaped phrasing against its commands before reading it as conversation. Missing this once meant several turns of work done outside any record, unnoticed until the human asked where it went.
 
 **Every change to a focus node reports back in one line** (*"f21-plumbing-quotes open · foreground"*), so a focus that was meant to open but didn't shows on the very next turn. A non-technical build says it plainly, or says nothing when nothing changed.
 
@@ -373,7 +385,7 @@ Three kinds of truth, each with exactly one home:
 
 | Question | About | Asked |
 |---|---|---|
-| *"This touched the budget sheet, which f21 doesn't hold. Hold it too?"* | this ground | at this focus's ground: the ground can't commit correctly without the answer |
+| *"I also changed the budget sheet. Hold it in f21 too?"* | this window's own edits | by the AI at this focus's ground, only for files its window edited. Other changed files are listed, never asked about |
 | *"f17 has unsaved changes and its window has gone quiet. Recover them?"* | another focus | in *"what's in focus?"*, when attaching to main, and once when a window starts |
 | *"f12-newsletter has been quiet for three weeks. Keep it in the background, or close it?"* | another focus | in *"what's in focus?"* and when attaching to main |
 
@@ -387,7 +399,7 @@ Three kinds of truth, each with exactly one home:
 
 ## How it runs
 
-- **One branch.** Every focus node commits to `main`. Git holds history, undo, and sync between devices. **Branches aren't how focus nodes are kept apart; holds are.** Per-session branches were tried in daily use; most of their sharp edges came from the branches themselves (silent fallback to the main line, a detached checkout, a startup file that conflicted on merge, worktree limits), not from parallel work. — _one branch decided; tree unexercised_
+- **One branch.** Every focus node commits to `main`. Git holds history, undo, and sync between devices. **Branches aren't how focus nodes are kept apart; holds are.** A branch per line of work was tried in daily use; most of its sharp edges came from the branches themselves (silent fallback to the main line, a detached checkout, a startup file that conflicted on merge, worktree limits), not from parallel work. — _one branch decided; tree unexercised_
 
   | Branches gave | Focus nodes use instead |
   |---|---|
@@ -398,19 +410,17 @@ Three kinds of truth, each with exactly one home:
 
 - **Ground holds a short lock** while it applies confirmed changes, rebuilds generated files and commits, so two nodes grounding at once take turns. The lock works within one device. Across devices, ordering comes from the merge.
 - **An unattended run grounds only under a standing approval,** given when it's delegated (*"ground your own work as you go"*), and **scoped to what it holds.** Its reference proposals still wait for the human, and anything it would offer to another node waits on that node.
-- **Commits name their node:** `ground [f21-plumbing-quotes] — summary`.
+- **Commits name their node:** `ground [f21-plumbing-quotes] — summary`, `undo [f21-plumbing-quotes] — …` and `revert [f21-plumbing-quotes] — …`. A reversal names what it reverses in a `Reverses:` line, so a second undo walks one step further back.
 - **Outside branches stay outside.** A code repo's branches, worktrees and pull requests belong to the code. A focus node only points at them (`points-at:`), and grounding the sphere never commits to the code repo. — **proven**
 - **Devices still merge.** Each device has its own copy. Ground pulls before committing and pushes after, and the [conflict rules](state.md#conflicts--decided-not-yet-exercised) apply. Holds keep current-state files apart, so they merge cleanly. **A node can be in the foreground on two devices;** its hold keeps their writes on the same files, so it's the one case where a device merge can still conflict.
-- **History merges by union.** When two devices both append to one history file, git would report a conflict. History files are marked for git's built-in union merge (one `.gitattributes` line), which keeps both sides. Every entry is timestamped, so ground re-sorts them afterwards.
+- **History merges by union.** When two devices both append to one history file, git would report a conflict. History files are marked for git's built-in union merge (one `.gitattributes` line), which keeps both sides. Entries are never re-sorted afterwards: that would rewrite an append-only file. Each is dated, so readers order them.
 - **Without git,** only one focus can be in the foreground at a time. See [state](state.md#without-git--fallback-only).
 
 ---
 
-## Settled for 1.0
+## Design notes
 
-_Answered 2026-11-12. Kept here so the reasoning travels with the chapter._
-
-1. **Do the rules remove the overlap in use?** Tested in the 1.0 build. The evidence so far is one sphere's merge history ([Where overlap really happens](#where-overlap-really-happens)): it shows where the sharp edge is, not how common it is. 1.0, and LifeSphere moving onto it, is where carved holds and append-only history are first used.
-2. **Changes that only make sense whole.** No branch of its own, not even opt-in. A branching model needs real machinery to get right, and nothing needs it yet. For a large restructure: checkpoint first, and revert by node if it goes wrong. When a real case needs more, a better model gets designed then.
-3. **Where offered changes wait.** In the sender's own `history.md`. See [What's waiting](#the-tree). If that ever gets hard to follow, a single `offers.md` listing what's still unsettled is the next step; not before.
+1. **Whether the rules remove overlap in use** is still to be seen. The evidence so far is one sphere's merge history ([Where overlap really happens](#where-overlap-really-happens)): it shows where the sharp edge is, not how common it is. Carved holds and append-only history are first used in 1.0.
+2. **Changes that only make sense whole get no branch of their own,** not even opt-in. A branching model needs real machinery to get right, and nothing needs it yet. For a large restructure: checkpoint first, and revert by node if it goes wrong. When a real case needs more, a better model can be designed then.
+3. **Offered changes wait in the sender's own `history.md`.** See [What's waiting](#the-tree). If that ever gets hard to follow, a single `offers.md` listing what's still unsettled is the next step; not before.
 4. **The liveness threshold** is 30 minutes.

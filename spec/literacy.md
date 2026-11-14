@@ -1,6 +1,6 @@
 # Literacy
 
-_Status: draft 1, for review._ How a sphere helps its human understand more: what it tracks about what they know, when it teaches, how it keeps what it has taught, and how it teaches its own workings.
+How a sphere helps its human understand more: what it tracks about what they know, when it teaches, how it keeps what it has taught, and how it teaches its own workings.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

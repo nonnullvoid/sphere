@@ -1,6 +1,6 @@
-# SPHERE-ARCH 1.0 (draft)
+# SPHERE-ARCH 1.0
 
-_Work in progress on the `next` branch, toward the first stable architecture. Start with the overview, [ARCHITECTURE.md](../ARCHITECTURE.md). Until release, `main` shows v0.1._
+_The first stable architecture. Start with the overview, [ARCHITECTURE.md](../ARCHITECTURE.md)._
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -10,7 +10,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 - [State](state.md): the state machine; operations and their contracts; ground; sharing one sphere; without git; commits and conflicts
 - [Nodes](nodes.md): the one shape (node, tree, map); current state plus history; where the tree lives; four kinds of file; designing with the shape
 - [Focus](focus.md): focus nodes; windows, sessions and agents; foreground and background; holds and the tree; open, attach, close
-- [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving, the idea queue, witness
+- [Work](work.md): work nodes (area / project / task), state and focus, plans (phases / steps), progress, the tree view, archiving, idea collections, witness
 - [Knowledge](knowledge.md): domains and topics with namespaced names; facts and reads; two grades; capture, compiling and freshness; facts about other people
 - [Registries](registries.md): conventions, swappable parts, how each registry is maintained, and how drift is caught
 - [Loading](loading.md): what loads when; the capability manifest; why a sphere stays fast as it grows

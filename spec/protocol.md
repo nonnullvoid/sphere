@@ -1,6 +1,6 @@
 # Protocol
 
-_Status: draft 4, for review._ How a sphere holds what it understands about its human, the mechanics it derives from that understanding, and the vocabulary that invokes them.
+How a sphere holds what it understands about its human, the mechanics it derives from that understanding, and the vocabulary that invokes them.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -278,5 +278,5 @@ The protocol is enough to understand *how* a sphere operates. What it operates *
 
 1. **The four frame kinds.** Check them against a sphere in real use: does every frame fit one kind, or is there a fifth?
 2. **Optional commands.** _Under trial, not part of this spec._ Abilities invoked purely by intent matching, with fixed commands proposed only after a phrase repeats. The human decides whether to add one. To be trialed before inclusion.
-3. **Names.** "Lens" may be renamed, along with the category sphere belongs to. Pending a dedicated naming session.
+3. **Names.** "Lens" may be renamed, along with the category sphere belongs to.
 4. **Lists in skill metadata.** The Agent Skills `metadata` map holds strings, so multi-lens procedure frames use comma-separated values. Confirm this reads well, or keep procedure frames single-lens.

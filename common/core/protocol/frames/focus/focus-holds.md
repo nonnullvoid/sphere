@@ -20,7 +20,8 @@ protocol: [I-never-overwrite-unseen, A-hold, A-offer-change, hold-claimed]
 ## Holds
 
 - **`holds:` is the focus's scope: the nodes it's pursuing, never a list of files.** A held node covers everything in its folder. Name the most specific node that covers the work: `work:home.kitchen.plumbing`, not each file inside it, and not all of `work:home`. For something outside any node, name its folder.
-- **Which files were actually touched is a fact,** read from git at ground, never stored. If ground finds a touched file outside the holds, ask once: *"This also changed the budget sheet. Hold budget work in focus too?"*
+- **Git can't tell which window changed a file,** so ground goes by holds. It commits what this focus holds and lists other changed files no focus holds (left for main); it never stops on them. **Ask "hold it too?" only about files this window edited:** *"I also changed the budget sheet. Hold budget work in f21 too?"*
+- **The most specific hold wins.** If f20 holds `work:home` and its child f21 holds `work:home.kitchen.plumbing`, plumbing's files are f21's. A child rarely needs to edit its parent's holds.
 - **Say "in focus", not "held".** To the human, something is *in focus* when an open focus holds it. "Hold" is the mechanism's word.
 
 **Holds do three jobs:**
@@ -51,7 +52,8 @@ Every file is one of [four kinds](../nodes/kinds-of-file.md): current state, his
 | About to write a file | Is it current state this focus holds, its own record, history to append, reference to propose, or generated? Act by kind |
 | About to write current state another focus holds | Don't. Offer the change to the holder, as an entry in your own history |
 | Opening a focus whose holds overlap an open one | Ask through the parent; never refuse. Fire `hold-claimed` |
-| Ground finds a touched file outside the holds | Ask once whether to hold it too |
+| Ground finds other changed files no focus holds | List them in one line, left for main. Don't stop |
+| This window edited a file outside the holds | Ask once whether to hold it too |
 | Two proposals disagree about one fact | Show them as one question |
 
 ## Works with

@@ -40,7 +40,7 @@ Every fact, decision and status should live in exactly one file. Everything else
 
 **The test:** could you delete this file and rebuild it from others? If yes, it's a view, and it must never be edited directly. If no, it's truth, and nothing else should duplicate it.
 
-_What goes wrong otherwise:_ a project index maintained by hand looked fine for weeks, while the projects it listed had moved on. Nobody edits two places reliably.
+_What goes wrong otherwise:_ an index kept by hand looks fine while the things it lists move on without it. Nobody edits two places reliably.
 
 ## 4. Update before you add
 
@@ -52,7 +52,7 @@ Before creating a new lens, frame, command or layer, ask whether an existing one
 
 Some registries are rebuilt by a script and some by the AI. Either way, **give every registry a check that runs in tooling.**
 
-_What goes wrong otherwise:_ a registry whose instructions said "rebuild at every ground" went five months without being rebuilt. Nothing was broken, so nothing noticed. A one-line freshness check would have caught it the first day.
+_What goes wrong otherwise:_ a registry whose instructions say "rebuild at every ground" can go months without a rebuild, and nothing notices, because nothing is visibly broken. A one-line freshness check catches it the first day.
 
 The same applies to anything a sphere promises to do every time: if it matters, put it in tooling, and let the AI rely on the check. See [registries](spec/registries.md).
 
@@ -60,11 +60,11 @@ The same applies to anything a sphere promises to do every time: if it matters, 
 
 When a frame's value is in getting operations exactly right (git, file moves, servers), write a script. When its value is understanding, write the lens or frame text.
 
-_What goes wrong otherwise:_ a session system described entirely in prose took many iterations to make git behave, and every window re-derived the same commands. The understanding was settled early. The mechanics kept breaking, because prose isn't a program.
+_What goes wrong otherwise:_ mechanics described only in prose get re-derived by every window, and each derivation can differ. Git operations written as instructions break in small ways that a script gets right every time. The understanding settles quickly; the mechanics don't, because prose isn't a program.
 
 **Don't build what the harness already does.** The AI tool your sphere runs in keeps gaining features: permissions, memory, scheduling, background agents. Before writing mechanics for something, check whether the harness handles it. When it starts to, retire your version.
 
-_What goes wrong otherwise:_ a sphere kept a frame for handling stalled permission prompts long after the harness handled them itself. It cost reading time in every window and did nothing.
+_What goes wrong otherwise:_ a frame for something the harness now does itself costs reading time in every window and does nothing.
 
 ---
 
@@ -105,7 +105,7 @@ Record what worked, too. When the AI makes a good non-obvious call and you say "
 
 When sharing your sphere's shape (publishing a build, or seeding a friend's sphere), **assemble the export from a list of what may go.** Never copy your sphere and delete what looks private.
 
-_What goes wrong otherwise:_ a personal project note, dropped into a template folder during a busy session, survived every cleanup and sat in a public repository's working copy until someone happened to look. An allowlist can't leak a file it never listed.
+_What goes wrong otherwise:_ a personal note dropped into a template folder survives every cleanup that scrubs what it expects to find. An allowlist can't leak a file it never listed.
 
 Then scan for your own private terms before anything leaves, and read what's staged before you approve it. Mark each lens's sharing level when you create it, and when unsure, private. See [replication](spec/replication.md).
 

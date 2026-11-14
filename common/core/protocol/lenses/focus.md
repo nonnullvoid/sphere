@@ -2,7 +2,7 @@
 lens: focus
 version: 1
 version_note: First draft. Focus nodes as the fourth tree; the full tree on one branch.
-derives_from: practice in spheres in daily use, and the focus design (spec/focus.md draft 8)
+derives_from: practice in spheres in daily use, and the focus design (spec/focus.md)
 status: drafting
 updated: 2026-11-11
 verified: false
@@ -79,4 +79,4 @@ Work is what's changing in the world. Focus is what's being attended to. Many fo
 
 ## Revision history
 
-- **v1 (2026-11-11):** First draft, from the focus design and the session practice of a sphere in daily use. The full tree, on one branch.
+- **v1:** First draft. Focus nodes as the fourth tree; the full tree, on one branch.

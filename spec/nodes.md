@@ -1,6 +1,6 @@
 # Nodes
 
-_Status: draft 1, for review._ The one shape a sphere is built from, and how to design with it. Every other chapter describes a tree made of this shape; this chapter describes the shape itself.
+The one shape a sphere is built from, and how to design with it. Every other chapter describes a tree made of this shape; this chapter describes the shape itself.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -8,9 +8,9 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 ## The idea
 
-Sphere began by borrowing from things that organize themselves well: nature, the cosmos, living organisms, systems, ant colonies. Building spheres in daily use, the same pattern kept turning up underneath. Work, knowledge, plans, sessions and the protocol each arrived at the same small unit, arranged the same way. **That shape captures reality well, and it works for both people and AI:** a person can read it in a folder, and a model can walk it without loading everything.
+Sphere began by borrowing from things that organize themselves well: nature, the cosmos, living organisms, systems, ant colonies. Building spheres in daily use, the same pattern kept turning up underneath. Work, knowledge, plans, focus and the protocol each arrived at the same small unit, arranged the same way. **That shape captures reality well, and it works for both people and AI:** a person can read it in a folder, and a model can walk it without loading everything.
 
-It's also a very old shape in computing: a **node**, joined to others in a **tree**, with links across trees making a **map**. A sphere names it once, here, so that every part follows it on purpose rather than by accident, and so that **new parts of a sphere are designed by asking how they fit the shape** before inventing anything new. — _the shape **proven** in work, knowledge and sessions; named as one model, decided, not yet exercised_
+It's also a very old shape in computing: a **node**, joined to others in a **tree**, with links across trees making a **map**. A sphere names it once, here, so that every part follows it on purpose rather than by accident, and so that **new parts of a sphere are designed by asking how they fit the shape** before inventing anything new. — _the shape **proven** in work, knowledge and focus; named as one model, decided, not yet exercised_
 
 | | Is | In a sphere |
 |---|---|---|
@@ -41,14 +41,15 @@ Every node has:
 | Tree | Node | Current state | History | Place in tree |
 |---|---|---|---|---|
 | [Work](work.md) | area → project → task | `work.md` | `progress.md` | `parent:` |
-| [Plans](work.md#plans--decided-not-yet-exercised) | plan → phase → step | `plan.md` | `history.md` | inside the plan |
+| [Plans](work.md#plans--decided-not-yet-exercised) | plan → phase → step | `plan.md` | `history.md` | `parent:` between plans; phases and steps inside the plan |
 | [Knowledge](knowledge.md) | domain → topic | a topic's facts and reads | its history section, or its own `history.md` once long | namespaced name |
 | [Literacy](literacy.md) | subject | the level and open questions, in `subject.md` | what showed the level, in the same file | namespaced name, as knowledge |
+| [Ideas](work.md#ideas-come-before-work--proven) | idea | the top of the idea's file: its current shape and findings | its capture and refinements, in the same file | none: grouped by `topics:` |
 | [Focus](focus.md) | sphere → pursuit → narrower pursuit | `focus.md` | `history.md` | `parent:` |
 | [Understanding](protocol.md) | lens → frame (a DAG) | the lens or frame | its revision history | a frame's `lens:` |
 | [Agents](agent-trust.md) | agent | `core/ai/agents/<agent>.md` | `core/records/agents/<agent>.md` | — |
 
-The variations are deliberate, and they're few: history can be a section of the same file while it stays short (a knowledge topic), or a separate file kept apart by placement when it must stay private (an agent's runs).
+The variations are deliberate, and they're few: history can be a section of the same file while it stays short (a knowledge topic) or for as long as the node lives (an idea, which never outgrows one file), or a separate file kept apart by placement when it must stay private (an agent's runs).
 
 **History that grows long gets its own file.** When a node keeps its history as a section and that section starts to outweigh what's true now, move it to a `history.md` beside the node's file. Current state stays short enough to read in one go; the history keeps every entry. A knowledge topic is where this happens first.
 
@@ -67,7 +68,7 @@ The tree is never in the folders. It's in one of two places:
 
 A flat list is a tree one level deep. A node grows children only when something needs to be broken down, and nothing changes shape when it does: the same files, the same frontmatter, one more `parent:`. A sphere that never nests anything still follows the shape. See [work](work.md#depth-is-a-dial--proven).
 
-**Not everything starts as a node.** A quick list is fine until an item in it earns a folder: an idea sits as a line in the [idea queue](work.md#ideas-come-before-work--proven) until it graduates, and a task sits as a checklist line until it needs its own memory. Promotion is the dial turning one step.
+**Not everything starts as a node.** A quick list is fine until an item in it earns a folder: a task sits as a checklist line until it needs its own memory. Promotion is the dial turning one step. An [idea](work.md#ideas-come-before-work--proven) is a node from the moment it's captured, but a small one, kept in a single file; if it graduates into work, it gets a folder then.
 
 ### Finishing a node — _decided, not yet exercised_
 
@@ -83,7 +84,7 @@ A finished node gets a final state, a last history entry saying how it ended, **
 - **Never end a child silently.** A child with unsaved work grounds first. A child in the foreground (a window or run attached) is moved up or left open, never ended under it.
 - **Finishing them too** gives each child its own last entry first. The parent's last entry then sums up the subtree, built from what's already in its history.
 - **Moving up** keeps the children going, unchanged but for one line.
-- **What a node held goes up a level** when it ends: a child's holds to its parent; a top-level node's are released.
+- **What a node held is settled when it ends:** asked once, give it back to the parent (the default) or release it, and written into the parent in the same commit. A top-level node's holds are released.
 - **In a DAG,** retiring a lens retires only the frames that have no other lens. A frame shared with another lens stays, with one parent fewer.
 - **Across-links are found at this moment, not kept.** Links are stored at the end that makes them, so finding who links here is a computed lookup, run once, when a node ends.
 
@@ -155,14 +156,4 @@ A sphere grows new parts: a new layer, a new kind of record, a new feature. **Be
 
 A small check confirms that every node has its parts: a name, a place in its tree, frontmatter in its tree's shape, current state, and history. It works like the [drift checks](registries.md#drift-checks--proven): it runs in the tooling, reports what's missing, and never fixes anything or blocks.
 
-**It evolves with the frontmatter.** Each tree's frontmatter shape (its keys, and the values fixed keys may take) is declared once, and the check reads that declaration rather than hard-coding it. When a tree's frontmatter changes, its declaration changes in the same commit, and the check follows.
-
----
-
-## Settled for 1.0
-
-_Answered 2026-11-12._
-
-1. **Knowledge's history** moves to its own `history.md` once it grows long, rather than cluttering the topic file. See [A node](#a-node).
-2. **Understanding as a DAG.** Listing a frame under each of its lenses is enough. See [Where the tree lives](#where-the-tree-lives).
-3. **A shape check** is worth having, as long as it evolves with each tree's frontmatter. See [The shape check](#the-shape-check--decided-not-yet-exercised).
+**It evolves with the frontmatter.** Each tree's frontmatter shape (its keys, and the values fixed keys may take) is declared once, in the sphere's `core/shapes`, and the check reads that declaration rather than hard-coding it. A sphere that adds a tree adds its shape there. When a tree's frontmatter changes, its declaration changes in the same commit, and the check follows.

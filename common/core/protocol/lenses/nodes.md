@@ -2,7 +2,7 @@
 lens: nodes
 version: 1
 version_note: First draft. The one shape, and designing with it.
-derives_from: the shape found across spheres in daily use; spec/nodes.md draft 1
+derives_from: the shape found across spheres in daily use; spec/nodes.md
 status: drafting
 updated: 2026-11-11
 verified: false
@@ -48,4 +48,4 @@ Expect new parts of a sphere to mirror it. That's not a constraint to work aroun
 
 ## Revision history
 
-- **v1 (2026-11-11):** First draft. Named as the sphere's meta lens; spec chapter [nodes](../../../../spec/nodes.md).
+- **v1:** First draft. Named as the sphere's meta lens; spec chapter [nodes](../../../../spec/nodes.md).

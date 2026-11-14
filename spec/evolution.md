@@ -1,6 +1,6 @@
 # Evolution
 
-_Status: draft 1, for review._ How a sphere grows, stays healthy, and restructures: new capabilities crystallizing from use, the sphere reflecting on itself, and changes of every size made without breaking the sphere along the way.
+How a sphere grows, stays healthy, and restructures: new capabilities crystallizing from use, the sphere reflecting on itself, and changes of every size made without breaking the sphere along the way.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -59,7 +59,8 @@ In order:
 3. The commands and abilities.
 4. Register everything in the protocol registry.
 5. Refresh whatever registries and loading indexes changed.
-6. Close the queued item, if it came from the [pending queue](#evolution-as-work--decided-not-yet-exercised).
+6. **Update the checks with the sphere.** A new tree, layer or kind of file, or a changed shape, updates `core/shapes` and the structure check in the same step, and the check stays cheap (see [structure-check](../common/core/protocol/frames/readable-substrate/structure-check.md)).
+7. Settle the idea, if it came from the [`sphere` topic](#evolution-as-work--decided-not-yet-exercised): set its outcome, and archive it.
 
 ### Announce it, and teach while doing so
 
@@ -84,7 +85,7 @@ Evolution adds. Reflection balances. Without it, a sphere accumulates capabiliti
 ### Two scales
 
 - **Targeted reflection:** one capability, one frame, one area. Is it serving its purpose? Is there friction? Is something adjacent missing? The output is a short diagnosis and one concrete proposal, not a treatise.
-- **Deep reflection:** the whole sphere. The output is a list of findings, each of which becomes an item in the [pending queue](#evolution-as-work--decided-not-yet-exercised).
+- **Deep reflection:** the whole sphere. The output is a list of findings, each of which becomes an idea in the [`sphere` collection](#evolution-as-work--decided-not-yet-exercised).
 
 ### Four findings
 
@@ -120,8 +121,8 @@ When the signal fires, it suggests a targeted or deep reflection at a good momen
 A sphere's own evolution is tracked like any other work, as [work nodes](work.md):
 
 - **An evolution stream:** an ongoing node that never finishes. Each substantial evolution effort becomes a bounded project under it.
-- **A pending queue** for items noticed but not yet acted on: findings, friction, ideas about the sphere. One line each: what kind of change (add / refactor / drop), the target, a line of context, and how soon (now / soon / someday).
-- Each time evolution comes up, the queue is triaged. Each item is done on the spot, promoted to a project, or dropped.
+- **The `sphere` idea collection** holds items noticed but not yet acted on: findings, friction, ideas about the sphere. It's every open [idea](work.md#ideas-come-before-work--proven) tagged with the `sphere` topic, so there's one place to catch things. An idea in it may add what kind of change (add / refactor / drop) and how soon (now / soon / someday); neither is required.
+- Each time evolution comes up, the collection is reviewed. Each idea is done on the spot, graduates to a project, or is parked, like any idea.
 
 ---
 
@@ -164,5 +165,4 @@ Two ways to fork:
 ## Open questions
 
 1. **The rhythm.** Is "every couple of weeks" right for most spheres, or should each sphere learn its own?
-2. **Where the pending queue lives:** in the evolution work node, or in a small file of its own?
-3. **Announcing for non-technical humans.** Is a plain-words announcement enough, or should some changes stay silent unless asked about?
+2. **Announcing for non-technical humans.** Is a plain-words announcement enough, or should some changes stay silent unless asked about?

@@ -1,6 +1,6 @@
 # Guardrails
 
-_Status: draft 2, for review._ How a sphere keeps its AI from repeating mistakes: rules that always apply, where they come from, where each one lives, and how they stay few enough to follow.
+How a sphere keeps its AI from repeating mistakes: rules that always apply, where they come from, where each one lives, and how they stay few enough to follow.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

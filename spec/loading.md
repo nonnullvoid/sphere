@@ -1,6 +1,6 @@
 # Loading
 
-_Status: draft 1, for review._ How a sphere decides what to read, and when, so that it stays fast and sharp as it grows: a small core that always loads, a manifest that says what else exists, and everything else read only when a task needs it.
+How a sphere decides what to read, and when, so that it stays fast and sharp as it grows: a small core that always loads, a manifest that says what else exists, and everything else read only when a task needs it.
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 

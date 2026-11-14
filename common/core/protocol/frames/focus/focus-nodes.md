@@ -4,7 +4,7 @@ kind: structural
 lens: [focus, continuity]
 derives_from: [focus@1, continuity@1]
 version: 1
-version_note: First draft. Replaces sessions-simple. The record, the verbs, liveness, the folder as registry.
+version_note: First draft. The record, the verbs, liveness, the folder as registry.
 status: drafting
 updated: 2026-11-11
 sharing: public
@@ -71,12 +71,12 @@ Every ground appends an entry, newest first, never rewritten:
 **Decided:** Skip the third big firm: their call-out minimum is over budget.
 Tried the city's licensed list first; it doesn't show availability.
 **Next:** Chase the Thursday visit for a written quote.
-**Pointers:** work: home.kitchen.plumbing → progress.md · commit a1b2c3d
+**Pointers:** work: home.kitchen.plumbing → progress.md
 ```
 
 - **Did** is the story. **Decided** holds the judgment calls that are expensive to re-derive, including what was tried and ruled out, so the next window doesn't try it again. **Next** is a concrete first action (*"Chase the Thursday visit"*), not a topic (*"plumbing"*).
 - **Write it for a reader with no memory of this conversation.** No "as discussed", no "the thing from earlier". Name things.
-- **Pointers, not copies.** Point at the work's progress and the commit; never repeat them.
+- **Pointers, not copies.** Point at the work's progress; never repeat it. Don't name the commit: it doesn't exist yet, and its `[fNN-` subject finds it.
 - **Closing writes a last entry:** how it ended (done, or dropped) and why.
 
 ### Two records, two questions
@@ -91,7 +91,7 @@ A focus that touches three pieces of work writes three progress entries and one 
 
 ## Names
 
-- **A number** (`f21`), stable for life and **never reused:** the next number is one more than the highest in `layers/focus/`, `archived/` included. *Why:* an old reference must never point at a new focus.
+- **A number** (`f21`), stable for life. The next number is one more than the highest in `layers/focus/`, `archived/` included. A number freed by a revert may be used again; undo and revert aimed at a focus look only at commits since it opened.
 - **A name** (`plumbing-quotes`), two or three words the human would remember it by. Propose one at open; the human can change it.
 - **The reference is both:** `f21-plumbing-quotes`. Match on number, name or `aka:`. A partial match (*"the kitchen one"*) shows candidates; never guess.
 - **Rename when the focus shifts a little:** *"rename f21 to kitchen-upgrades."* The number stays. Rename the folder, update links (they use the number, so few change), and add the old name to `aka:`.
@@ -103,7 +103,7 @@ A focus that touches three pieces of work writes three progress entries and one 
 | **open focus** | creates the folder and `focus.md`, with a proposed name and the holds it's for. Inside a focus, opens a child (see [focus-tree](focus-tree.md)) | **Yes** (a ground of the parent; for a top-level focus, one line in main's history) |
 | **attach** | brings a focus to the foreground and briefs (below). *Resume*, *continue*, *pick up* are the same verb | No |
 | **detach** | grounds, then sends the focus to the background | **Yes** |
-| **close focus** | grounds, writes the last history entry, sets `status: closed`, returns its hold, moves the folder to `layers/focus/archived/` | **Yes** |
+| **close focus** | grounds, writes the last history entry, sets `status: closed`, gives its hold back to the parent or releases it (asked once; back is the default), moves the folder to `layers/focus/archived/` | **Yes** |
 | **rename** | renames, keeping the number and `aka:` | **Yes** |
 | **what's in focus?** | lists open foci (below) | No |
 
@@ -166,7 +166,7 @@ Reconciliation runs in the tooling, never from memory. **But a ground asks only 
 
 | Question | Ask it |
 |---|---|
-| *"This touched the budget sheet, which f21 doesn't hold. Hold it too?"* | At this focus's ground. Never in main, which covers whatever isn't held |
+| *"I also changed the budget sheet. Hold it in f21 too?"* | At this focus's ground, only for files this window edited. Other changed files are listed and left for main, never asked about |
 | *"f17 has unsaved changes and its window has gone quiet. Recover them?"* | In *"what's in focus?"*, when attaching to main, and in one line when a window starts, only while it's true |
 | *"f12-newsletter has been quiet for three weeks. Keep it in the background, or close it?"* | In *"what's in focus?"* and when attaching to main. Never at another focus's ground |
 
@@ -181,7 +181,7 @@ Reconciliation runs in the tooling, never from memory. **But a ground asks only 
 | Any phrasing of resume or attach | The whole attach: find, read, brief. Fire `focus-attached` |
 | More than one focus matches | Show candidates; ask |
 | The human says they're stopping, or *park it* | Detach: ground, then background |
-| *"Close focus"*, *"we're done with this"* | Close: ground, last history entry, `status: closed`, return the hold, move to `archived/`. Fire `focus-closed` |
+| *"Close focus"*, *"we're done with this"* | Close: ground, last history entry, `status: closed`, ask whether the parent takes the hold back (default) or it's released, move to `archived/`. Fire `focus-closed` |
 | The intention has drifted a little | Suggest a rename |
 | It drifted out, old intention unfinished | Suggest a child ([focus-tree](focus-tree.md)) |
 | It drifted out, old intention finished | Suggest closing and opening a new focus |

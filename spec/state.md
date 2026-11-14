@@ -1,6 +1,6 @@
 # State
 
-_Status: draft 5, for review._ How a sphere stays consistent: what state it's in, what each operation does to that state, why windows end and the thread survives them, and how several foci and devices share one sphere. What a focus node is, and how it's opened, attached and closed, is in [focus](focus.md).
+How a sphere stays consistent: what state it's in, what each operation does to that state, why windows end and the thread survives them, and how several foci and devices share one sphere. What a focus node is, and how it's opened, attached and closed, is in [focus](focus.md).
 
 _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, proven but with sharp edges) · **unexercised** (designed, not yet used in practice)._
 
@@ -96,7 +96,7 @@ Commits from different foci interleave: f31, f32, f31. **Every commit names its 
 
 A revert treats each [kind of file](focus.md#several-writers-four-kinds-of-file) the way that kind is written:
 - **Current state:** reversed. The node held those files, so no other node's change is caught up in it.
-- **History:** never removed. A revert **appends** an entry saying what was reversed and why. That keeps the history true.
+- **History:** appended entries are never removed. A revert **appends** an entry saying what was reversed and why, which keeps the history true. A history file that was created, deleted or moved **whole** goes with its node: reverting past a focus's opening removes the focus, history file and all (git still has it).
 - **Reference:** a reverted fact or lens change becomes a **proposal to restore the old version**, confirmed like any other reference change.
 - **Generated:** rebuilt afterwards.
 
@@ -117,7 +117,7 @@ At a safe point, or before detaching or closing, the sphere:
 2. **Writes the focus node:** rewrites **Now** in `focus.md` and appends a history entry (Did, Decided, Next, Pointers; see [focus](focus.md#historymd)). A child also appends one line to its parent's history.
 3. **Applies confirmed reference changes,** one at a time, each after re-reading the file. — _unexercised_
 4. **Rebuilds generated files from what's committed** plus this ground's own changes, never from the working folder, which may hold other foci's unfinished work. — _unexercised_
-5. **Reconciles this focus:** a touched file outside its holds becomes one question. Questions about other foci are asked elsewhere (see [the focus folder is the registry](focus.md#the-focus-folder-is-the-registry)).
+5. **Reconciles this focus:** other changed files no focus holds are listed and left for main, never a stop; the AI asks *"hold it too?"* only about files its own window edited. Questions about other foci are asked elsewhere (see [the focus folder is the registry](focus.md#the-focus-folder-is-the-registry)).
 6. **Commits under a short lock:** pull, stage only what this focus touched, commit as `ground [f21-name] — summary`, push.
 7. **Reports in one line.**
 
@@ -157,17 +157,30 @@ Git is the default because it gives history, undo and merges. Without git, these
 | A bad ground | No history, so it can't be undone |
 | The human edits a file while a window is attached | The window's next write overwrites the edit |
 
-A gitless sphere is supported only as **one focus in the foreground at a time**. Ground writes the files and the history entry, with no commit. A lock file is written when a window attaches, and a second window opens read-only with a warning. Locks can go stale after a crash, and they reach other devices slowly through cloud sync. Undo and revert aren't available. That's why this is a documented fallback, not the default. — _unexercised_
+A gitless sphere is supported only as **one focus in the foreground at a time**. Ground writes the files and the history entry, with no commit. A lock file is written when a window attaches, and a second window opens read-only with a warning. Locks can go stale after a crash, and they reach other devices slowly through cloud sync. Undo and revert aren't available. Main takes part in the same one-at-a-time lock. With no commits, "unsaved" can only be approximated: a file changed after its focus's last history entry. That's why this is a documented fallback, not the default. — _unexercised_
 
 ---
 
 ## Commits
 
-- **Stage only what the focus touched.** Never stage everything in the folder. Unrelated changes may belong to another focus or to the human. — **proven**
+- **Stage only what the focus holds.** Never stage everything in the folder. Unrelated changes may belong to another focus or to the human. Git can't tell which window changed a file, so ownership is by holds alone; two foci that both hold a node (a soft claim answered "both") each stage it at their own ground. — **proven** (as "only what this window touched")
 - **One sphere repo, separate from code repos.** Sphere state has its own history; grounding the sphere never commits to the project being worked on. — **proven**
 - **Generated files never cause merge pain.** Machine-only caches (like the startup bundle) are rebuilt when needed and never committed. Human-facing views (like the work index) are committed so people can read them. See [registries](registries.md#committed-views-and-caches--decided-not-yet-exercised). — _decided, not yet exercised_
 - **Ground commits the source; views follow.** Ground commits the sphere's source files once. Surface views are refreshed from them, never committed as a second, coupled change.
 - **History files merge by union** (one `.gitattributes` line), so two devices appending to one history keep both sides. — _unexercised_
+- **Commit subjects are part of the contract,** because undo and revert find a focus's commits by them. — _decided, not yet exercised_
+
+  | Commit | Subject |
+  |---|---|
+  | A ground | `ground [f21-plumbing-quotes] — summary` |
+  | Opening a child (a ground of the parent) | `ground [f20-kitchen-renovation] — opened f21-plumbing-quotes; carved plumbing` |
+  | A close (the child's own last ground) | `ground [f21-plumbing-quotes] — closed (done): why` |
+  | Undo | `undo [f21-plumbing-quotes] — …`, with a `Reverses: <commit>` line |
+  | Revert of a focus | `revert [f21-plumbing-quotes] — back to <commit>` |
+  | Revert of the sphere | `revert [f0-main] — sphere back to <commit>` |
+
+  A focus's undo history starts at its `opened` commit, so a number reused after a revert never reaches an older focus's commits.
+- **A remote with no upstream branch** isn't pushed to, and ground says so in its one-line report each time (*"not pushed: no upstream"*), so a sphere never silently stops backing up.
 
 ## Conflicts — _decided, not yet exercised_
 
