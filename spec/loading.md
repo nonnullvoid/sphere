@@ -74,11 +74,11 @@ The manifest is the sphere's routing table: how it knows, at startup, everything
 <!-- Built 2026-10-27 at ground. Sources: core/protocol/lenses/**, core/protocol/frames/**.
      Hash: 3f9a1c… Do not edit by hand; change the lens or frame and it will be rebuilt. -->
 
-## work_tracking: how the human's work is held and moved forward
+## work-tracking: how the human's work is held and moved forward
 _Load when: adding, planning, reviewing or archiving work._
-- `work_breakdown`: splitting a node into children. Trigger: "break this down", a node too big to act on.
-- `work_progress`: measuring progress from what shipped. Trigger: "how's it going?", ground.
-- `work_registry`: the work index. Trigger: a node added, moved or archived.
+- `work-breakdown`: splitting a node into children. Trigger: "break this down", a node too big to act on.
+- `work-progress`: measuring progress from what shipped. Trigger: "how's it going?", ground.
+- `work-registry`: the work index. Trigger: a node added, moved or archived.
 ```
 
 - **One entry per lens:** its job, and when to load it. **Under it, each frame:** its scope and its trigger.

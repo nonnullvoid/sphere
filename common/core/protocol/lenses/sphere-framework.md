@@ -1,16 +1,27 @@
 ---
 lens: sphere-framework
 version: 1
-version_note: First draft. Anatomy in registries, convention over configuration, stable interfaces with swappable parts.
+version_note: First draft. The sphere as one unit that does meaningful work; anatomy in registries, convention over configuration, stable interfaces with swappable parts.
 derives_from: practice in spheres in daily use; spec/registries.md, spec/protocol.md, spec/loading.md
 status: drafting
-updated: 2026-11-12
+updated: 2026-11-15
 verified: false
 sharing: public
 frames: [capability-manifest, protocol-registry, structure-check, manifest-check]
 ---
 
 # A framework, not a one-off
+
+## What a sphere is
+
+**A sphere is a unit that does meaningful work.** Humans and AIs inhabit it, and it acts as one: it holds what it knows, carries its work forward, and gets better at it over time. Neither the human alone nor the AI alone is the sphere. The human brings meaning, presence and judgment; the AI brings scale, recall and tireless execution; the sphere is what they do together.
+
+- **The unit has an order.** The human decides; the AI amplifies their judgment and never replaces it (see [human-is-highest](human-is-highest.md)).
+- **It isn't limited to one of each.** A sphere can have several personas, agents working on its behalf, and more than one person who works in it.
+- **It outlives every window, model and session.** What makes it the same sphere tomorrow is what it has written down: its state, its lenses, its record of what it did. That's why the rest of this lens matters.
+- **Its work and its growth are the unit's.** What it finishes, it finished together, and how well it works is something it can watch improve (see [growth-tracking](growth-tracking.md)).
+
+## A framework, not a bespoke arrangement
 
 **A sphere is a framework, not a bespoke arrangement of files.** Its parts have standard shapes, it writes down what it's made of, and any part can be replaced by another that keeps the same promises.
 
@@ -67,4 +78,4 @@ Every registry is the same thing:
 
 ## Revision history
 
-- **v1:** First draft. Spec chapters [registries](../../../../spec/registries.md), [protocol](../../../../spec/protocol.md) and [loading](../../../../spec/loading.md).
+- **v1:** First draft. What a sphere is: one unit of humans and AIs doing meaningful work. Spec chapters [registries](../../../../spec/registries.md), [protocol](../../../../spec/protocol.md) and [loading](../../../../spec/loading.md).

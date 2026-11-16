@@ -28,6 +28,7 @@ A sphere is only as trustworthy as the picture it reads of itself. This check co
 | **Links** | Every `parent:` and every `tree:name` link points at a node that exists, live or archived |
 | **Views** | Every generated file says it's generated and what from, was rebuilt after its sources last changed, and matches what its sources would produce now |
 | **Finished things** | A node in a final state has moved to `archived/`; nothing live sits in `archived/` |
+| **Projections** | Every artifact on the surface has a definition (no orphans); a moved view's stylesheet and scripts still resolve; navigation and the index page list exactly the live registered views |
 
 **Shapes are declared, never hard-coded.** Each tree's frontmatter shape (its keys, and the values fixed keys may take) is written down once, in plain text beside the tree, and the check reads it. *Why:* a check that hard-codes the shape breaks the day the shape improves, and then it gets switched off.
 

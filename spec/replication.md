@@ -99,7 +99,7 @@ Every sphere has a stable identity, so provenance always names spheres the same 
 |---|---|---|
 | **id** | A UUID v7, created once at init and never changed. Practically unique, and sortable by when the sphere was born. | `01933b7e-8f2a-7c41-9d3e-5b6a2f0c1e88` |
 | **name** | A display name, chosen by the human. Unique where possible, but not guaranteed. | `ridgeline-worksphere` |
-| **version** | A tag for the sphere's shape, which changes when its protocol changes | `2026.10.3` |
+| **version** | A tag for the sphere's shape, which changes when its protocol changes. By default `YYYY.MM.N`, each one a git tag `sphere-<version>` | `2026.10.3` |
 
 Identity lives in its own small file, `core/identity.json`, so tooling can read it without parsing anything else, and so provenance copies it exactly:
 
@@ -118,9 +118,9 @@ Identity lives in its own small file, `core/identity.json`, so tooling can read 
 
 `core/identity.json` itself travels in every export, since provenance needs it. It names the sphere and nothing about its human.
 
-**A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a structural frame, `sphere_identity`. Spheres can choose differently by swapping that frame.
+**A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a structural frame, [`sphere-identity`](../common/core/protocol/frames/replication/sphere-identity.md). Spheres can choose differently by swapping that frame.
 
-**No signing, for now.** Nothing here proves a sphere is who it says it is. True uniqueness and authenticity need signing, with public and private keys, and that's more machinery than spheres need until there are many of them out in the world exchanging seeds. When that happens, signing arrives as a new version of the `sphere_identity` frame. Nothing else in the architecture has to change.
+**No signing, for now.** Nothing here proves a sphere is who it says it is. True uniqueness and authenticity need signing, with public and private keys, and that's more machinery than spheres need until there are many of them out in the world exchanging seeds. When that happens, signing arrives as a new version of the `sphere-identity` frame. Nothing else in the architecture has to change.
 
 ### Provenance
 
@@ -171,7 +171,7 @@ Init then **rebuilds every derived cache** (the manifest, the startup bundle, an
 
 - **De-noise on landing.** An absorbed item can carry traces of the sphere it came from that the sender didn't remove: names, dated decisions, links to things that don't exist here. The receiving sphere strips them and restates the pattern in its own terms, as part of the proposal. The sender's allowlist and leak scan are the first net; this is the second.
 - **A frame absorbed without its lens arrives unattached,** and is offered for co-authoring like an imported skill.
-- **Provenance is kept.** Each absorbed item records the source sphere's id, name and version, so a later compare can trace it.
+- **Provenance is kept.** Each absorbed item records the source sphere's id, name and version in `core/records/absorbed.md`, a history file, so a later compare can trace it.
 
 ## Compare — _unexercised_
 

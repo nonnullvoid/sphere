@@ -342,6 +342,7 @@ What changed, and why. Newest first.
 - `work-progress-measured`, `work-stalled`
 - `plan-versioned`, `plan-deviation`, `plan-assumption-stale`, `plan-archived`
 - `work-index-stale`
+- witness, when a build has it: `growth-recorded`, `record-exported`, `milestone-reached`, `theme-swapped`
 
 **Commands** (natural phrasing works too):
 - `add [task or project] [name] under [parent]`
@@ -367,11 +368,35 @@ A **mirror** keeps a node's status in step with an outside tool, such as a team'
 
 ## Witness (optional)
 
-Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back to the human over time, in a theme that resonates. **It's motivation, not a scoreboard:** making growth visible is worth doing deliberately, because seeing it is what keeps people going. — **proven**
+Finished work is also evidence of growth. A build can add a **witness** layer that records completed nodes and wins and shows them back over time, plainly or in a theme that resonates. **The sphere is the unit that grows:** humans and AIs do its work together, so what it shows can be the sphere's growth, not only the human's. **It's motivation, not a scoreboard:** making growth visible is worth doing deliberately, because seeing it is what keeps people going. — **proven**
 
 - **Quiet by default, loud on milestones.** Day to day, growth accrues without comment. A real milestone gets celebrated.
 - **Honest, auditable scoring.** Every point traces back to something that happened. Inflation kills the signal; stinginess kills the momentum.
 - **Several lanes of growth** (shipping, learning, health, relationships, whatever the human cares about), so something is moving even in a week when one lane is quiet.
+
+### Whose growth it tracks
+
+Each sphere says, in one line, what it tracks:
+
+| Tracks | Shows |
+|---|---|
+| **The unit** (the default) | what the sphere got done, human and AI together |
+| **Apart** | the human's wins and abilities, and the sphere's own effectiveness (agents trusted with more, mistakes not repeated, corrections getting rarer), each entry saying who |
+| **The human** | the human's achievements and milestones only |
+| **The world** | milestones in the world the sphere tends, with no credit given |
+
+The ledger is the same in every case; only which entries are kept, and whether each says who, changes.
+
+### The layer
+
+```
+layers/witness/
+├── ledger/<year>.md     the ledger: history, one file per year, newest first
+├── lanes.md             reference: what the sphere tracks, and its lanes
+└── <theme>/             a theme's own records, if there is one
+```
+
+There's no current-state file: everything shown is computed from the ledger. **Entries are pointers with evidence** (a finished node, a level reached, a trust change), or the human's word, which counts. Without a theme, a plain view of the ledger is the default. The [growth-ledger](../common/core/protocol/frames/growth-tracking/growth-ledger.md) and [growth-themes](../common/core/protocol/frames/growth-tracking/growth-themes.md) frames have the detail.
 
 ### The theme is the growth model
 
@@ -379,7 +404,7 @@ Finished work is also evidence of growth. A build can add a **witness** layer th
 
 ### The ledger is the fixed point
 
-Underneath any theme is a **plain ledger:** a non-thematic record of what got done, when, and the evidence for it. One act writes two records, an entry in the ledger and whatever the theme makes of it. The ledger survives every theme swap.
+Underneath any theme is a **plain ledger:** a non-thematic record of what got done, when, and the evidence for it. **The fact is kept once, in the ledger.** A theme's record holds only what the theme adds (a score with its working, a stage reached) and names the ledger entry it came from; standing is computed from those records. The ledger survives every theme swap, and a new theme can replay it; the old theme's records are archived, never deleted.
 
 **Exports are views of the ledger:** evidence for a review, a portfolio, a status report. They read the ledger, never the theme.
 
@@ -389,8 +414,8 @@ Three things that are easy to blur, each with its own owner:
 
 | | Says | Owned by |
 |---|---|---|
-| **Work** | what the human is doing | the work layer |
-| **Growth** | how they're growing | the witness layer |
+| **Work** | what the sphere is doing | the work layer |
+| **Growth** | how the sphere, or the human in it, is growing | the witness layer |
 | **Position** | where they stand: a role, a level, a reputation | the human's own record, if the build keeps one |
 
 A model that tries to be all three goes stale on all three.

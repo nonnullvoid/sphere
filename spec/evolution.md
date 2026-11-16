@@ -120,7 +120,7 @@ When the signal fires, it suggests a targeted or deep reflection at a good momen
 
 A sphere's own evolution is tracked like any other work, as [work nodes](work.md):
 
-- **An evolution stream:** an ongoing node that never finishes. Each substantial evolution effort becomes a bounded project under it.
+- **An evolution area:** an ongoing work node for the sphere itself, which never finishes. Each substantial evolution effort becomes a bounded project under it.
 - **The `sphere` idea collection** holds items noticed but not yet acted on: findings, friction, ideas about the sphere. It's every open [idea](work.md#ideas-come-before-work--proven) tagged with the `sphere` topic, so there's one place to catch things. An idea in it may add what kind of change (add / refactor / drop) and how soon (now / soon / someday); neither is required.
 - Each time evolution comes up, the collection is reviewed. Each idea is done on the spot, graduates to a project, or is parked, like any idea.
 
@@ -141,7 +141,7 @@ How big a structural change is decides how it's made.
 **When:** new structure has to be built over several sittings before the old one can retire. A new layer, a whole new area of lenses and frames, a change in how something is stored.
 
 **How:**
-1. Create a project under the evolution stream.
+1. Create a project under the evolution area.
 2. Build the new structure across sittings, as one focus. **The old structure keeps working the whole time.** The sphere is never left half-migrated between grounds.
 3. Each sitting grounds its partial work.
 4. **Declare a cutover** explicitly. One ground does the final switch: moves, reference updates, retiring the old.
@@ -156,7 +156,7 @@ How big a structural change is decides how it's made.
 Two ways to fork:
 
 - **A directory fork.** Build the new sphere in a new folder, from a clean start that absorbs what worked. The old sphere keeps running, untouched. Test the new one for a few days, then switch the door to point at it. Keep the old one read-only for a while before retiring it. Best when the new design differs so much that a diff would be noise.
-- **A branch fork.** First ground every open focus. Then build the new structure on a `fork/<name>` branch while `main` keeps running. Test it, then merge, tagging the old state (`sphere-v<N>`) and the new (`sphere-v<N+1>`). The old sphere stays recoverable from its tag. Best when the change is large but still reads as a coherent diff.
+- **A branch fork.** First ground every open focus. Then build the new structure on a `fork/<name>` branch while `main` keeps running. Test it, then merge, tagging the old state and the new with the sphere's version tags (`sphere-<version>`). **This is the one time a sphere has a second branch,** and only until the merge; everywhere else it lives on one. The old sphere stays recoverable from its tag. Best when the change is large but still reads as a coherent diff.
 
 **In both:** the old sphere isn't modified during the fork, and the switch is one deliberate act.
 

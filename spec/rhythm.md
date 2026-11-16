@@ -93,7 +93,7 @@ Work happens in every [collaboration mode](modes.md#collaboration-modes--decided
 When something needs the human, the sphere reaches for the **cheapest and most present channel first**:
 
 1. ask in the window the human is in, if there is one
-2. otherwise, pause the work, mark it waiting, and surface it at the next ground or anchor
+2. otherwise, ground, write a `## <date> — waiting on you` history entry saying what's needed, and wait; it surfaces at the next ground or anchor. **Waiting is that entry, nothing more:** a focus is waiting while it's the latest entry in its history. No flag, no list
 3. a projection, for a sphere that has one
 4. a notification, only for what can't wait for the next anchor
 

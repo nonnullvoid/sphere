@@ -44,19 +44,24 @@ A projection is a node, like a work node or a knowledge topic:
 
 ```
 layers/projections/
-├── <name>/
-│   ├── projection.md      the definition: sources, what it shows, layout, what to leave out
-│   └── template/          a custom template, if it doesn't use a shared one (optional)
-└── registry.md            one entry per projection
+├── <name>.md              the definition: sources, what it shows, layout, what to leave out; history below
+├── <name>/                when a definition needs more than one file
+│   ├── <name>.md          the main file, with the frontmatter, as above
+│   └── …                  whatever else it needs
+├── templates/             shared templates, and any one view's own
+├── archived/              retired definitions
+└── registry.md            generated from the definitions
 ```
+
+**One file is the usual case,** current shape on top and a short history below. A projection that needs more to define itself gets a folder with a main file of the same name; everything that reads definitions reads the main file only.
 
 It sits apart from the pieces it relies on, so each can change without breaking the others:
 
 | Part | What it holds | Where |
 |---|---|---|
 | **Frame** | The mechanics: when a projection is rendered, refreshed, published | `core/protocol/frames/projections/` |
-| **Definition** | What this projection shows and how | `layers/projections/<name>/projection.md` |
-| **Registry entry** | Its kind, freshness, sources, home, who can see it, template | `layers/projections/registry.md` |
+| **Definition** | What this projection shows and how, and the frontmatter the registry is built from | `layers/projections/<name>.md` (or `<name>/<name>.md`) |
+| **Registry entry** | Its kind, freshness, sources, home, who can see it, template: generated from the definition | `layers/projections/registry.md` |
 | **Artifact** | The rendered thing itself, and its derived data | `surface/projections/<name>/` |
 
 A new look is a template change. A new data source is a definition change. A new audience is a registry change.
@@ -119,11 +124,13 @@ Live projections are served. Snapshots are static. A refreshed projection can be
 
 ### Serving
 
-Serving is its own frame (`projection_serving`, under the projections lens), so every projection doesn't reinvent it. The sphere:
+Serving is its own frame ([`projection-serving`](../common/core/protocol/frames/projections/projection-serving.md), under the projections lens), so every projection doesn't reinvent it. The sphere:
 
 - **starts a local server when a served projection is opened,** reuses it if one is already running, and stops it when it's no longer needed;
 - **listens on this machine only,** never on the network, so a private projection stays private;
-- **lets a served projection write only to its declared source files.** This is how input reaches the source (see [Views that accept input](#views-that-accept-input--decided-not-yet-exercised)): the server is the path back, and nothing else is writable through it.
+- **serves sources as of the latest commit,** so a served view shows grounded truth like any other;
+- **lets a served projection write only to the files its definition lists in `writes:`.** This is how input reaches the source (see [Views that accept input](#views-that-accept-input--decided-not-yet-exercised)): the server is the path back, and nothing else is writable through it. Input follows the [kinds of file](nodes.md): history is appended to, current state is written unless a focus holds it (then it's offered to that focus), and generated files are never written;
+- **grounds each accepted input as its own small change,** so a click in a view never sits unsaved.
 
 A non-technical human never sees any of this. They open "my things" and it works.
 
@@ -212,6 +219,7 @@ Views built before a sphere adopted this structure, by hand and unregistered, ar
 
 ```
 surface/
+├── projections.html     the index: every live projection, built from the registry
 ├── projections/
 │   ├── assets/          shared stylesheet, components, navigation, theme tokens
 │   ├── _scratch/        ephemeral renders and focus previews, not registered, safe to clear
@@ -234,7 +242,7 @@ surface/
 
 Projections show the human's **matter**: their work, their world, their growth. They don't show the sphere's **machinery**: lenses, frames, registries, focus nodes, git.
 
-- **For a non-technical human** this is absolute. Their projections are a home page, "my things," and a witness view of how they're growing. Nothing else.
+- **For a non-technical human** this is absolute. Their projections are the index page ("my things") and a witness view of how they're growing. Nothing else.
 - **For people building their own sphere,** machinery views are allowed as an option: a map of layers, a view of the protocol. They're never the default front door.
 
 **Witness views deserve care.** Seeing your own progress, wins and growth over time is one of the warmest things a sphere offers, and especially for people who'd never read a file. It's worth building well, in every build.
@@ -253,14 +261,14 @@ Each projection has a registry entry:
   lifespan: long-lived          # long-lived | time-bound
   freshness: on-open            # on-open | stale after 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
-  definition: layers/projections/work-dashboard/
+  writes: []                    # what input from the view may change; almost always empty
   home: surface/projections/work/work-dashboard/
   sharing: private              # private | protected | public
   template: dashboard
   legacy: false                 # refactor debt, not health
 ```
 
-The registry is a generated view over the projection nodes. The **definition** (`projection.md`) holds what the registry only points at: the sources and how they're composed, the layout and visual language, what to leave out, and the **engine** (a live-fetch page, a render script, or a one-shot synthesis).
+The registry is a generated view over the projection nodes, built from each definition's frontmatter. The **definition**'s body holds what the registry only points at: the sources and how they're composed, the layout and visual language, what to leave out, and the **engine** (a live-fetch page, a render script, or a one-shot synthesis).
 
 ---
 
@@ -270,7 +278,7 @@ Each comes from a real failure:
 
 - **Orphans:** an artifact under `surface/projections/` with no registry entry is surfaced, then registered or removed. No untraceable pages.
 - **Broken links after a move:** when a projection or its assets move, the check verifies its stylesheet and scripts still resolve. _The lesson:_ a folder reorganization left two dashboards rendering unstyled, and nobody noticed for days.
-- **Navigation:** the shared navigation lists exactly the registered, non-retired projections.
+- **Navigation and the index page:** the shared navigation and `surface/projections.html` list exactly the registered, non-retired projections.
 - **Shape contracts:** a live view's sources still match the shape their layer contract promises.
 
 ## Senses and commands — _decided, not yet exercised_

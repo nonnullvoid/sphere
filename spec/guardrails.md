@@ -81,7 +81,7 @@ A rule can be firm without being enforced (the AI holds to it), and enforced wit
 
 Guardrails accumulate. Without care, a sphere ends up with a hundred rules, some overlapping, some contradicting each other, most never consulted. So:
 
-- **Each guardrail records its origin and when it last applied.** One that hasn't applied in months is a candidate for review.
+- **Each guardrail records its origin and when it last applied,** in a history file of its own, `core/records/rules/<rule>.md`: one line appended each time it's applied or overridden. *Last applied* is read from the latest line, never stored. One that hasn't applied in months is a candidate for review (see [rule-capture](../common/core/protocol/frames/evolution/rule-capture.md)).
 - **Merge before adding.** A new rule that's a special case of an existing one extends that one instead. (The usual [governance](protocol.md#governance--proven) rule: prefer updating to adding.)
 - **Contradictions surface immediately.** When a new rule conflicts with an existing one, the sphere says so and asks which wins, instead of holding both.
 - **Scope is explicit.** A rule about pull requests only loads when pull requests are in play, so a hundred narrow rules don't all compete for attention in every window.
@@ -99,7 +99,7 @@ The exception is a guardrail the human has marked **firm**, such as never sharin
 
 **Changing a guardrail is different from overriding it.** An override lets one request through. A change rewrites the rule itself, and that happens only in [sphere authoring](modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised), with the human confirming each edit.
 
-**Independence doesn't loosen them.** As agents earn more independence for specific kinds of work, they're trusted to do more on their own. The guardrails hold the same at every level. **The dial moves execution, never authority.** (How independence is earned is its own chapter, still to come.)
+**Independence doesn't loosen them.** As agents earn more independence for specific kinds of work, they're trusted to do more on their own. The guardrails hold the same at every level. **The dial moves execution, never authority.** (How independence is earned is in [agent trust](agent-trust.md).)
 
 ---
 
@@ -137,5 +137,5 @@ The human never hears the word guardrail. When they say *"don't ever do that aga
 ## Open questions
 
 1. **Firm by default.** Should builds ship any guardrails as firm, for example around other people's private data, or should only the human ever mark one firm?
-2. **Last applied.** Tracking when each guardrail last mattered needs the AI to notice when it applied one. Is that reliable enough to drive retirement, or should review be purely periodic?
+2. **Last applied.** It's read from the rule's record, so it's only as good as the AI's noticing when it applied one. Is that reliable enough to drive retirement, or should review be purely periodic?
 3. **Importing harness memory.** Is a one-time import enough, or should the sphere keep watching the harness's memory files and offer new entries as they appear?

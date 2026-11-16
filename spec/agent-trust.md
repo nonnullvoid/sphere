@@ -47,7 +47,7 @@ Two things decide how a particular run proceeds:
 
 ## Earning trust — **proven**
 
-- **Clean runs are the evidence.** A run is clean when it finished what was asked without the human having to correct it partway through. A few clean runs in a row (two or three is a reasonable start) make the agent a **candidate** for the next rung.
+- **Clean runs are the evidence.** A run is clean when it finished what was asked without the human having to correct it partway through. A few clean runs in a row (two or three is a reasonable start) make the agent a **candidate** for the next rung. **The streak is computed, never stored:** it's read from the agent's history, counting since its last trust change.
 - **Promotion is explicit.** The sphere can say an agent is a candidate: *"The notes agent has tidied five weeks of notes cleanly. Want it to run unattended?"* **The human promotes; the sphere never does.**
 - **One rung at a time.** Trust moves from *together* to *supervised* before it reaches *unattended*.
 - **Trust doesn't decay on a timer.** Whether it still holds depends on the kind of work and what has changed around it: a new tech stack, a different environment. The architecture builds nothing for this. When something has changed, the human moves the agent back down.
@@ -75,6 +75,10 @@ Some things demote an agent **at once,** to *together*, whatever it had earned:
 - **Escalating again and again** on the same thing, which means it doesn't understand the work
 
 A circuit breaker stops the run and tells the human on the most direct channel they've set up (see [rhythm](rhythm.md#escalation-order)). Climbing back up takes clean runs, like the first time.
+
+### A demotion is a chance to refit
+
+**When an agent is moved down, by a breaker or by the human, it doesn't fit the work yet.** Something is mismatched: its definition (unclear, missing a gate, the wrong kind of work), what the sphere gives it (knowledge, a frame or a rule it needed), or the tools and skills it can reach. So a demotion is followed by a refit: the sphere names the likely cause and proposes the change, and the human decides. It's recorded in the agent's history with the answer. *Why:* counting a demotion as a miss and moving on leaves the same mismatch waiting for the next run.
 
 ---
 
@@ -106,7 +110,7 @@ There are two ways:
 
 - **Where an agent is defined follows what it's for:** an agent about the human's life is defined in their sphere; an agent about one codebase is defined with that code. **Anywhere else, it's referenced, not copied** (see [registries](registries.md)).
 - **Every agent has a home in the sphere,** at least a reference, wherever its definition lives: its own file in `core/ai/agents/`, beside the personas. A generated `index.md` there lists them all (see [registries](registries.md#where-a-registry-lives--decided-not-yet-exercised)).
-- **Its trust lives in that file:** the rung it has earned for each kind of work. Rungs change only on the human's say. Trust is the human's judgment of the agent, so it stays with the human even when the definition lives elsewhere.
+- **Its trust lives in that file:** the rung it has earned for each kind of work. The file's frontmatter is `agent`, `does`, `source` (empty when it's defined here), `trust` (kind of work → rung) and `tier` (light, standard or deep: a hint the build maps to models, never a model name); its body says what it may touch and where its gates are. See [agent-definitions](../common/core/protocol/frames/agent-trust/agent-definitions.md). Rungs change only on the human's say. Trust is the human's judgment of the agent, so it stays with the human even when the definition lives elsewhere.
 - **Its history lives in `core/records/agents/<agent>.md`:** every run's outcome, and why each promotion or demotion happened, appended and never rewritten. It's the same pattern as a work node's `work.md` and `progress.md`: a current-state file plus a history file. Placement keeps the history private: `core/records/` never travels (see [replication](replication.md)), so an agent's file can be shared without its run history.
 - **An agent's definition and its runs are different things.** The file in `core/ai/agents/` is *who* the agent is and how far it's trusted. Each run works a [focus node](focus.md), usually a child of the focus that delegated it, and its memory of that work is the node's history. The agent's own history records only outcomes and trust changes.
 - **Teams are registered as they're used.** When agents work together (a pipeline, a panel, a lead with specialists), the team gets an entry once it has actually run. Shapes that haven't run yet are noted as slots, not specified in advance.

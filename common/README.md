@@ -28,5 +28,13 @@ common/core/protocol/
 | [readable-substrate](core/protocol/lenses/readable-substrate.md) | structure-check · manifest-check | v1 |
 | [work-tracking](core/protocol/lenses/work-tracking.md) | work-breakdown · work-progress · work-registry · plans | v1 |
 | [idea-capture](core/protocol/lenses/idea-capture.md) | idea-nodes | v1 |
+| [knowledge](core/protocol/lenses/knowledge.md) | knowledge-capture · knowledge-compile · say-how-sure | v1 |
+| [literacy-tracking](core/protocol/lenses/literacy-tracking.md) | skill-progress · adapt-to-level · teaching · library | v1 |
+| [growth-tracking](core/protocol/lenses/growth-tracking.md) | growth-ledger · growth-themes | v1 |
+| [human-rhythm](core/protocol/lenses/human-rhythm.md) | daily-cadence · reaching-the-human | v1 |
+| [agent-trust](core/protocol/lenses/agent-trust.md) | trust-ladder · circuit-breakers · agent-definitions | v1 |
+| [modes](core/protocol/lenses/modes.md) | operating-modes · collaboration-modes · persona · sphere-authoring | v1 |
+| [projections](core/protocol/lenses/projections.md) | projection-registry · projection-freshness · projection-templates · projection-serving | v1 |
+| [evolution](core/protocol/lenses/evolution.md) | crystallization · reflection · rule-capture | v1 |
+| [replication](core/protocol/lenses/replication.md) | export-contract · sphere-identity | v1 |
 
-_More lenses follow, one at a time._

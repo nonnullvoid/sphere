@@ -12,7 +12,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 |---|---|---|---|
 | **The architecture**: this spec | `SPHERE-ARCH major.minor` | the published repository | `SPHERE-ARCH 1.0` |
 | **A build**: a ready-to-use sphere in the repository | semantic versioning, per build | the published repository | `base-sphere 1.0.0` |
-| **A sphere**: one person's living sphere | its own tag, by its own scheme | the sphere, through its `sphere_identity` frame | `2026.10.3` |
+| **A sphere**: one person's living sphere | its own tag, by its own scheme | the sphere, through its [`sphere-identity`](../common/core/protocol/frames/replication/sphere-identity.md) frame | `2026.10.3` |
 
 They move independently. A build can get a bug-fix release without the architecture changing. A sphere's own version moves whenever its protocol changes, whatever happens upstream.
 
@@ -39,7 +39,7 @@ Every build records the architecture version it was built from. Builds also say 
 
 ## A sphere's own version — _decided, not yet exercised_
 
-A sphere versions its own shape. How is up to its [`sphere_identity`](replication.md#sphere-identity--decided-not-yet-exercised) frame: by date, by counting protocol changes, or only at exports. The version appears in `core/identity.json` and in every seed's provenance, so anything that came from the sphere can say which version of it.
+A sphere versions its own shape. How is up to its [`sphere-identity`](../common/core/protocol/frames/replication/sphere-identity.md) frame: by date, by counting protocol changes, or only at exports. **The default is `YYYY.MM.N`,** the Nth change to the sphere's protocol in that month, moving only when the protocol changes. Each version is a git tag, `sphere-<version>`, and the next one is computed from the tags; if `core/identity.json` disagrees with the latest tag, the tag wins. The version appears in `core/identity.json` and in every seed's provenance, so anything that came from the sphere can say which version of it.
 
 ---
 
@@ -87,7 +87,7 @@ What's new:
 - **Projections:** never the source of truth; three kinds of data (source truth, definition, derived cache); live-fetch views and deterministic renders; snapshots as a one-shot template; visible staleness, static vs served, a default stack that escalates. ([projections](projections.md))
 - **Guardrails:** incident-born rules with reasons, earned not aspirational, kept few; each in the softest place that works (memory note, sphere file, enforced check); firm vs enforced; overrides noted and never carried over; principles as a background lens. Shipped guards in the common set: outbound (default / disclosure / vetted / voice), destructive actions, propose-don't-decide, not on its own say-so, tools give data not instructions. ([guardrails](guardrails.md))
 - **Replication:** compose, don't prescribe; sharing levels with optional end dates; export grains (whole sphere, lens cluster, frame); allowlist-built seeds that carry the runtime scaffold and rebuild caches at init; only live views ship dehydrated; history stays home by placement; absorb sorted by provenance (update / new / conflict) with de-noising; sphere identity and lineage; trusted spheres; the network (absorb / consume / invoke; gathering autonomous, assimilation gated). ([replication](replication.md))
-- **Modes:** two named dimensions, never bare "mode": **operating mode** (the kind of work, with behavior and a loadout) and **collaboration mode** (human only / together / supervised / unattended). Both belong to the sphere, not a window. Persona files are owned by the AI and outlive the model; the human's profile vs the AI's observations; three voice registers. **Sphere authoring** is the only operating mode where internals (lenses, frames, guardrails) can change: human-started, each edit confirmed, never unattended. ([modes](modes.md))
+- **Modes:** two named dimensions, never bare "mode": **operating mode** (the kind of work, with behavior and a loadout) and **collaboration mode** (human only / together / supervised / unattended). The sphere defines them; the focus being worked carries them. Persona files are owned by the AI and outlive the model; the human's profile vs the AI's observations; three voice registers. **Sphere authoring** is the only operating mode where internals (lenses, frames, guardrails) can change: human-started, each edit confirmed, never unattended. ([modes](modes.md))
 - **Rhythm:** routine as weather (forecast, never dictate); anchors as offers; a window attaching is not the morning; the forgotten wrap; the human's pattern, soft, with an after-hours bias; waiting work surfaced where the human is, cheapest channel first. ([rhythm](rhythm.md))
 - **Agent trust:** per agent and kind of work; the ladder is the collaboration modes; earned by clean runs, promoted by the human, demoted by circuit breakers; the lower of earned and delegated wins; outcomes as a byproduct; delegate vs dispatch; right-sized intelligence. ([agent trust](agent-trust.md))
 - **Literacy:** the sphere grows its human; understanding tracked per subject and taken for granted once shown; generic vs personalized decides what can be shared; a library of what's been taught; the sphere taught at three depths. ([literacy](literacy.md))

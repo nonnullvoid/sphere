@@ -27,7 +27,9 @@ For the subjects it's tracking, the sphere keeps a light record of what its huma
 Each subject can also hold **open questions** the human still has.
 
 - **"Understood" means taken for granted.** Once the human has shown, consistently, that they can use something, the sphere stops re-explaining it. **Never on one instance:** a single good answer isn't understanding yet.
-- **Understanding goes stale.** When the source of what was learned changes (a fact in the [knowledge](knowledge.md) layer is updated, a tool changes how it works), the record is marked stale, and the sphere checks again the next time it comes up.
+- **Levels come from evidence,** and only from what the human does. *Taught* isn't evidence of a level: it records that an explanation was given. The human's own word overrides the evidence either way.
+- **Levels go down only on the human's say.** A long gap or a stumble makes the sphere check gently; it never demotes on its own.
+- **Understanding goes stale.** When the source of what was learned changes, the record is suspected stale and the sphere checks again the next time it comes up. A change to a [knowledge](knowledge.md) topic the subject `rests_on` is found by comparing dates, so nobody marks it. An outside change (a tool redesigned its menus) is written as a short `stale:` reason.
 - **This is the human's side of knowledge.** The knowledge layer holds what's true about the world. This holds what the human has made their own. It's a read about the human, so it's visible to them and corrected whenever they disagree, like the AI's other [observations](modes.md#two-views-of-the-human).
 
 ### Its own layer
@@ -37,17 +39,24 @@ Literacy is a layer of its own, shaped like [knowledge](knowledge.md#structure--
 ```
 layers/literacy/
 ├── <subject>/
-│   └── subject.md      the level, open questions, and what showed it
+│   └── subject.md      the level, open questions, and the evidence for it
 ├── library/
-│   └── <artifact>.md   walkthroughs, cheat sheets, references
+│   ├── <artifact>.md   walkthroughs, cheat sheets, references
+│   ├── <group>/        related artifacts, named by namespace (math.infinite-series)
+│   └── archived/
+├── archived/           subjects no longer tracked
 └── index.md            generated: every subject and artifact, and what's stale
 ```
+
+**A subject file** has frontmatter (`subject`, `title`, `summary`, `level`, an optional `rests_on` and `stale`, `tracked`, `updated`), then *Now* and *Open questions* as current state, then *Evidence* as history: dated entries, newest first, each one of **used**, **explained**, **asked**, **taught**, **stated** or **level**. The [skill-progress](../common/core/protocol/frames/literacy-tracking/skill-progress.md) frame has the full shape.
+
+**Stopping tracking finishes the subject:** a last evidence entry, then it moves to `archived/`. Tracked again, it moves back with its record intact.
 
 ### What gets tracked
 
 **Tracking starts explicit.** A subject is tracked because the human asked, or agreed when the sphere offered. The sphere doesn't keep a record of everything they touch.
 
-**Records update at set moments, not ambiently.** In a sphere in daily use, a learning record the sphere was meant to keep up on its own never did; it moved only when someone triggered it by hand. So, like [work](work.md#the-boundary-contract--proven), a tracked subject is updated at defined moments: at ground, for each tracked subject the focus touched, and when the human says so (*"I've got this now"*). Between those moments the sphere may update it, but doesn't promise to.
+**Records update at set moments, not ambiently.** Evidence is appended freely; a change to a level or an open question is offered at ground, one line per subject. In a sphere in daily use, a learning record the sphere was meant to keep up on its own never did; it moved only when someone triggered it by hand. So, like [work](work.md#the-boundary-contract--proven), a tracked subject is updated at defined moments: at ground, for each tracked subject the focus touched, and when the human says so (*"I've got this now"*). Between those moments the sphere may update it, but doesn't promise to.
 
 **The sphere notices new territory, and asks.** A code build sees its human jump into an unfamiliar tech stack. A life build sees them take on a problem they haven't faced before. Either way, the human probably needs more support here than usual, so the `new-territory` sense fires and the sphere asks: *"This looks new to you. Want me to keep track of how it's going?"* If yes, it's tracked. If no, it isn't, and the sphere doesn't ask again about that subject.
 
@@ -86,7 +95,8 @@ The sphere picks the perspective that fits the human and the moment, and often u
 Explanations worth keeping become **durable artifacts:** a walkthrough, a cheat sheet, a reference card. Together they form the human's **library**.
 
 - **Each artifact is tagged** by type, topic, perspective, date, and the context it was made for.
-- **Drafts start local.** An explanation made while working is a draft until it's tagged. Once tagged, it's part of the library.
+- **Drafts live in the library from the start.** An explanation made while working is a draft until it's tagged: an artifact missing its type, subjects or perspective. No separate place is kept.
+- **Related artifacts can share a folder,** one level, named by namespace like subjects.
 - **The library is a [projection](projections.md):** a view the human can browse, built from the artifacts and their tags.
 - **Stale artifacts are flagged** the same way understanding is, when what they explain changes.
 - **Libraries can be shared between spheres.** It's a feature of [trusted spheres](replication.md#trusted-spheres--decided-not-yet-exercised) and the [network](replication.md#the-network--unexercised): a sphere can read what another has made available to it. Each artifact's visibility still applies, and personalized artifacts never travel.
@@ -116,8 +126,8 @@ At three depths, chosen by what the human wants:
 
 **Senses:**
 - `understanding-changed`, `understanding-stale`
-- `new-territory`, `gap-detected`
-- `artifact-added` (to the library)
+- `new-territory`, `gap-detected`, `taught`
+- `artifact-added` (to the library), `artifact-stale`
 
 **Commands** (natural phrasing works too):
 - `explain [subject]`

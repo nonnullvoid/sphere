@@ -28,9 +28,7 @@ Knowledge has to be the most trustworthy thing in a sphere, because everything e
 
 ```
 layers/knowledge/
-├── <domain>/                     a domain: an area of the world (money, health, home, people…)
-│   └── …                         domains can nest (money.taxes, money.investing)
-├── <topic>/                      a topic: one thing worth knowing about
+├── <topic>/                      a topic: one thing worth knowing about, named by its full namespace (money.taxes.2025-return)
 │   ├── topic.md                  its facts, reads and history
 │   ├── history.md                its history, once it grows too long for topic.md
 │   └── sources/                  research, documents, analyses it was built from (optional)
@@ -48,7 +46,7 @@ layers/knowledge/
 
 **Every knowledge node has a namespaced name**, so any piece of knowledge can be referred to from anywhere, as `knowledge:money.taxes.2025-return.filing-status`. Its whole place in the tree is right there in the name. Knowledge rarely moves, so this scheme suits it (work nodes, which do move, can also use number-based names; see [work](work.md#naming--decided-not-yet-exercised)).
 
-- **Folders stay flat.** Each domain or topic is a folder named by its full namespace (`layers/knowledge/money.taxes.2025-return/`). The tree lives in the names, and the index groups by them.
+- **Folders stay flat.** Each topic is a folder named by its full namespace (`layers/knowledge/money.taxes.2025-return/`). **A domain is a name prefix, not a folder:** `money.taxes` exists because topics are named under it. The tree lives in the names, and the index groups by them.
 - **Domains nest as deep as they need**, and the namespace keeps it all queryable ("everything under `money`"). **A topic is the unit:** one file. Detail below a fact stays as fields on the fact, never as new files.
 - **Builds ship starting domains.** A life build might start with health, money, home, people, travel; a work build with domain, engineering and org. A sphere grows its own.
 - **Spheres can add their own facets.** A topic's frontmatter can carry fields a sphere cares about, like a life sphere tagging topics with the part of life they serve.
@@ -58,12 +56,15 @@ layers/knowledge/
 ```yaml
 ---
 name: money.taxes.2025-return
+title: The 2025 tax return
+summary: Filing jointly; two of four estimated payments made
 related: [money.investing, work:TAX-20]
+fresh_for: 1y                     # optional: how long its facts stay fresh (<n>d|w|m|y, or never)
 updated: 2026-10-25
 ---
 ```
 
-Then three parts.
+`title` and `summary` are enough to show the topic in one line, which is all the index needs. Then three parts.
 
 **Facts:** the firm end, kept structured so they can be relied on and queried:
 
@@ -115,7 +116,7 @@ It's a spectrum, so the point is to **declare where a piece sits.** A soft read 
 
 **A read is still knowledge, not a lens.** *"My manager tends to favor revenue work"* is a low-certainty fact about the world, not the human's meaning. This is the boundary most often confused.
 
-**Facts go stale at different speeds.** A share price is stale in a day, a tax rule in a year, a birthday never. Each domain can declare how long its facts stay fresh. **Staleness is a visible state:** a fact past its window, or whose source is known to have changed, is marked *suspected stale* until it's refreshed. When the sphere is about to rely on a stale fact for a decision, it refreshes it first or says plainly that it's stale.
+**Facts go stale at different speeds.** A share price is stale in a day, a tax rule in a year, a birthday never. A topic can declare how long its facts stay fresh, in `fresh_for`; without one, the sphere judges by the fact's nature. **Staleness is computed, and visible:** a fact past its *as of* plus the window is *suspected stale* until it's refreshed. A source known to have changed is offered as a refresh, and marked only on the human's yes. When the sphere is about to rely on a stale fact for a decision, it refreshes it first or says plainly that it's stale.
 
 **Saying the grade.** When the sphere tells the human something that isn't verified, it says so: *"reported, not checked against the source,"* or *"that's my read."* A confident answer that turns out wrong costs more than an honest "I'm not sure."
 
@@ -139,7 +140,7 @@ As the human talks, the sphere notices facts worth keeping. **It fires only on d
 | Stable facts about people: their role, how to reach them, what they care about | Anything already captured |
 | A new person, when they come with real context (a decision, a view, a reason they matter) | A bare first mention of a name |
 
-Candidates go into a **proposal list** for the domain they belong to, each with the fact in the human's own words, where it came up, and where it would land. At ground, the sphere offers them as one batch:
+Candidates wait in the **focus's Now** until its next ground, each with the fact in the human's own words, where it came up, and where it would land. No separate list is kept. At ground, the sphere offers them as one batch:
 
 > I picked up 3 facts since the last ground:
 > - Estimated tax payments: 2 of 4 made (stated)
@@ -212,7 +213,7 @@ Knowledge is the sphere's model of *its human's* world, and it's private. It nev
 
 ## Open questions
 
-1. **Freshness windows.** Should domains declare them, or should the sphere learn them? And what's the default for a domain that declares nothing?
+1. **Freshness windows.** A topic declares one in `fresh_for`, or the sphere judges by the fact's nature. Should the sphere also learn windows from how often the human refreshes?
 2. **Batch size at ground.** When one ground has many candidates, should the sphere offer them all, or only the most useful few?
 3. **Finished work into history.** When a work node is archived, does any of its `progress.md` belong in the knowledge layer's history, or does history stay narrative only?
 4. **Domain overview files.** Should a domain folder hold a short overview of itself, or is the generated index enough?

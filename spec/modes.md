@@ -19,7 +19,7 @@ They combine freely. Coding can happen together at the desk, or unattended overn
 
 **The word "mode" is never used alone.** It's always *operating mode* or *collaboration mode*. Other things that vary by case get their own names: an outbound message's *send mode*, a registry's *maintenance*, a frame's *variants*. Bare "mode" would collide with whatever comes next.
 
-**Modes belong to the sphere, not to a window.** A mode is a configuration the sphere runs in. A [focus node](focus.md) records the modes it's worked in, whether a window works it with the human, an agent runs it, or a scheduled job does, so a later reader knows how the work was done.
+**The sphere defines modes; the focus carries them.** A mode is a configuration the sphere runs in, defined once for the whole sphere. The modes in use are recorded on the [focus node](focus.md) being worked, whether a window works it with the human, an agent runs it, or a scheduled job does, so a later reader knows how the work was done. Nothing about a mode lives only in a window.
 
 ---
 
@@ -46,12 +46,14 @@ The human's **profile** is theirs: what they say about themselves. The AI's **ob
 | Section | Holds |
 |---|---|
 | **Who I am here** | name and character |
-| **How I show up** | its **default operating mode** and its texture: pace, register |
+| **How I show up** | its texture: pace, register. Its **default operating mode** is in the frontmatter (`operating-mode:`), so a new focus can start in it |
 | **What I bring** | what this AI adds to this human's life or work |
 | **What I hold back** | the guardrails, restated in the persona's voice. The [guard frames](guardrails.md) remain the source; this section never adds or removes one |
 | **What I've learned** | its observations of the human (above) |
 | **Our working agreement** | how this AI and this human work together, revised when something shifts. For example: *hold a view with confidence grounded in the evidence; push back when the evidence supports it, and move fully when better evidence arrives* |
 | **Reflections** | an append-only log of moments that changed something |
+
+**A persona also keeps a journal:** its own thoughts, insights and self-analysis, written in the first person and appended as they come, beside its file. It's the persona's to write, in the open, and part of the readable substrate like everything else. **It's how a persona grows a perspective,** and what lets the sphere reflect on a persona, or later think a question through from several. A lasting claim about the human still goes to *what I've learned*, as a proposal.
 
 **The persona outlives the model.** The model running it will change. What makes the persona recognizable is these files: its character, what it's learned, the agreement it keeps. When a new model reads them, the same persona is there. The identity is held lightly. It serves the work, not the other way around.
 
@@ -61,8 +63,12 @@ A sphere can hold several personas, for example a steady everyday companion and 
 
 ```
 core/ai/personas/
-├── sage.md          default: true
-└── forge.md
+├── sage/            default: true
+│   ├── sage.md      the persona file
+│   └── journal.md   its own notes
+└── forge/
+    ├── forge.md
+    └── journal.md
 ```
 
 - **Personas share the sphere's memory.** They read the same work, knowledge and lenses. A persona is a character, not a separate mind. If something needs its own separate memory, it's a separate sphere.
@@ -87,7 +93,7 @@ An operating mode is **a kind of work the sphere knows how to do.** It has two s
 operating-mode: brainstorming
 persona: any                     # or the one persona it belongs to
 signals: ["let's brainstorm", "I have an idea", open-ended questions]
-loadout: [idea-capture, knowledge-capture, evolution]
+loadout: [idea-nodes, knowledge-capture, crystallization]
 adds-guardrails: []
 sharing: public
 ---
@@ -101,7 +107,7 @@ is for before shaping it. Don't start building.
 
 It's a structural frame: it **composes** lenses and frames, it doesn't hold understanding of its own.
 
-**Builds ship starter operating modes,** for example coding, brainstorming, planning, reviewing, research, reflecting, and sphere authoring (below). **The sphere refines them through use.** It notices what a mode actually reaches for and offers to adjust its loadout. A loadout that keeps missing is a [reflection](evolution.md) finding.
+**Builds ship starter operating modes,** for example coding, brainstorming, planning, reviewing, research, reflecting, non-technical, and sphere authoring (below). **The sphere refines them through use.** It notices what a mode actually reaches for and offers to adjust its loadout. A loadout that keeps missing is a [reflection](evolution.md) finding.
 
 ### What an operating mode can change
 
@@ -136,7 +142,7 @@ One operating mode is different from the rest. **Sphere authoring is the only op
 It doesn't give the AI more authority. Nothing does. It widens what can be changed and adds checks to how each change is made.
 
 - **Outside it, internals are read-only.** The sphere can still notice that a lens or a guardrail should change. It records that as a proposal for the next [reflection](evolution.md) and leaves the file alone. The sphere's notes and records aren't internals: it keeps those current without asking, as always.
-- **Only the human starts it.** The sphere never infers it, and never suggests switching into it. It ends when the window detaches, and never carries over to the next one.
+- **Only the human starts it.** The sphere never infers it, and never suggests switching into it. Like any operating mode, it's recorded in the focus's `operating-mode:`. It ends when the window detaches or the human says so: the ground on the way out sets `operating-mode:` back to the one it came from, so it never carries over to the next window.
 - **Every change is shown and confirmed.** Each edit to a guardrail, lens or frame is shown as a change (what was there, what will be) and waits for the human's yes. The AI never approves its own change (see [evaluator-not-self](../common/core/protocol/frames/human-is-highest/evaluator-not-self.md)). Each change is recorded with its reason.
 - **Never unattended.** Sphere authoring runs only *together* or *supervised*. An unattended run can queue a proposed change for the human to review, the same way agents queue drafts and never send, but it can't apply one.
 
