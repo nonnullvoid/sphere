@@ -5,7 +5,10 @@
 #   tree <name>
 #   nodes folder <dir>          each subfolder of <dir> is a node (and each subfolder of <dir>/archived)
 #   nodes file <dir> [deep]     each .md file in <dir> is a node; deep: at any depth
-#   current <file>              folder nodes: the current-state file, which carries the frontmatter
+#   nodes file <dir> grouped    each .md file in <dir>, or one level down in a group folder
+#   nodes either <dir>          each .md file in <dir> is a node, and so is each subfolder (its current file below)
+#   current <file>              folder nodes: the current-state file, which carries the frontmatter;
+#                               {name}.md is a file named like the folder (core/ai/personas/sage/sage.md)
 #   history <file>              folder nodes: the history file
 #   keys <key>...               keys every node has, even when empty, in this order; <key>? marks one it may leave out
 #   optional <key>...           more keys a node may leave out (anywhere)
@@ -19,8 +22,12 @@
 # structure-check reads frontmatter and folder listings only, never bodies, and skips <dir>/archived
 # unless asked (--archive). Rules beyond these lines (idea, plan, focus) live in sphere_shapes.py.
 #
-#   kind history <file>...      history files by name: append-only, merged by union, never reversed
-#   kind reference <prefix>...  reference files: changed only on the human's yes; a revert proposes, never writes
+#   kind history <entry>...     history files: append-only, merged by union, never reversed. An entry is a
+#                               file name (anywhere), a folder/ (everything under it), or a path pattern (* ?).
+#                               `sphere init` writes a merge=union line for each into .gitattributes
+#                               (folder/ becomes folder/**), and structure-check expects them.
+#   kind reference <prefix>...  reference files: changed only on the human's yes; a revert proposes, never writes.
+#                               A history file under a reference prefix is history.
 
 tree focus
 nodes folder layers/focus
@@ -31,17 +38,19 @@ values status open closed
 
 tree lens
 nodes file core/protocol/lenses
-keys lens version version_note derives_from status updated verified sharing frames
+keys lens version version_note derives_from status updated verified sharing until? frames
 values status active drafting deprecated
 values verified true false
 values sharing public protected private
+format until date
 
 tree frame
 nodes file core/protocol/frames deep
-keys frame kind lens derives_from version version_note status updated sharing reads writes protocol
+keys frame kind lens derives_from version version_note status updated sharing until? reads writes protocol
 values kind guard instinct structural
 values status active drafting deprecated
 values sharing public protected private
+format until date
 skip SKILL.md README.md
 
 tree idea
@@ -72,5 +81,79 @@ format created date
 format updated date
 values state active done dropped
 
-kind history history.md progress.md
-kind reference layers/knowledge/ core/protocol/ core/user/
+tree agent
+nodes file core/ai/agents
+keys agent does source trust tier
+format agent name
+values tier light standard deep
+skip index.md teams
+
+tree operating-mode
+nodes file core/operating-modes
+keys operating-mode persona signals loadout adds-guardrails sharing until?
+format operating-mode name
+format loadout list
+format adds-guardrails list
+values sharing public protected private
+format until date
+
+tree persona
+nodes folder core/ai/personas
+current {name}.md
+history journal.md
+keys persona default operating-mode
+format persona name
+values default true false
+
+tree projection
+nodes either layers/projections
+current {name}.md
+keys projection title namespace kind opens lifespan freshness sources writes home sharing until? template legacy
+archived retired
+format projection name
+format sources list
+format writes list
+values kind live refreshed snapshot external
+values opens static served
+values lifespan long-lived time-bound
+values freshness on-open stale frozen
+values sharing public protected private
+format until date
+values legacy true false
+skip registry.md templates
+
+tree knowledge
+nodes folder layers/knowledge
+current topic.md
+keys name title summary related? fresh_for? updated
+format name name
+format related list
+format fresh_for pattern ^(\d+[dwmy]|never)$
+format updated date
+skip history
+
+tree literacy
+nodes folder layers/literacy
+current subject.md
+keys subject title summary level rests_on? stale? tracked updated
+format subject name
+format rests_on list
+format tracked date
+format updated date
+values level skimmed can-use can-teach
+skip library
+
+tree library
+nodes file layers/literacy/library grouped
+keys artifact title type? subjects? perspective? made_for rests_on? sharing until? created updated
+format artifact name
+format subjects list
+format rests_on list
+format created date
+format updated date
+values perspective generic personalized
+values sharing public protected private
+format until date
+
+kind history history.md progress.md core/records/ core/ai/personas/*/journal.md
+kind reference layers/knowledge/ core/protocol/ core/user/ core/ai/

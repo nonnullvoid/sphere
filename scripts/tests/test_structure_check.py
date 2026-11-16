@@ -68,6 +68,17 @@ class StructureCheckTest(SphereCase):
         self.assertIn("no union merge for history.md", out)
         self.assertIn("surface/state/ isn't ignored", out)
 
+    def test_union_merge_lines_follow_kind_history(self):
+        self.write(
+            ".gitattributes", self.read(".gitattributes").replace("core/ai/personas/*/journal.md merge=union\n", "")
+        )
+        out = self.check().out
+        self.assertIn(
+            "no union merge for core/ai/personas/*/journal.md (add: core/ai/personas/*/journal.md merge=union)", out
+        )
+        self.append("core/shapes", "\nkind history notes/log.md\n")
+        self.assertIn("no union merge for notes/log.md", self.check().out)
+
     def test_only_named_nodes(self):
         self.bend("status: open", "status: maybe")
         result = self.check("layers/focus/f1-kitchen")

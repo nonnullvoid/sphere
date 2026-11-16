@@ -33,9 +33,11 @@ from sphere_shapes import (  # noqa: E402
     Shapes,
     Tree,
     check_node,
+    default_persona,
     format_list,
     frontmatter_value,
     parse_list,
+    persona_operating_mode,
     read_shapes,
     set_frontmatter_value,
 )
@@ -724,8 +726,8 @@ def cmd_init(args: argparse.Namespace) -> None:
     if not os.path.exists(SHAPES_IN_SPHERE):
         shutil.copyfile(SHAPES_TEMPLATE, SHAPES_IN_SPHERE)
     SHAPES = read_shapes(SHAPES_IN_SPHERE)  # pyright: ignore[reportConstantRedefinition]  # set once, at start
-    append_line_once(".gitattributes", "history.md merge=union")
-    append_line_once(".gitattributes", "progress.md merge=union")
+    for line in SHAPES.union_merge_lines():  # from `kind history` in core/shapes
+        append_line_once(".gitattributes", line)
     append_line_once(".gitignore", "surface/state/")
     if not shape_ok(main_dir):
         fail("f0-main/focus.md is out of shape (above)")
@@ -810,6 +812,8 @@ def cmd_open(args: argparse.Namespace) -> None:
             carved = []
 
         os.makedirs(folder)
+        args.persona = args.persona or default_persona()  # a new focus starts as the default persona,
+        args.operating_mode = args.operating_mode or persona_operating_mode(args.persona)  # in its default mode
         write_text(f"{folder}/focus.md", new_focus_md(number, name, parent_number, args, holds))
         add_entry(f"{folder}/history.md", "opened", f"**Did:** Opened under {parent}.\n**Next:** {args.intention}")
         if not shape_ok(folder):

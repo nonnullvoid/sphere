@@ -16,8 +16,14 @@ class InitTest(SphereCase):
         self.assertIn("— opened", self.read("layers/focus/f0-main/history.md"))
         with open(SHAPES_TEMPLATE, encoding="utf-8") as template:
             self.assertEqual(self.read("core/shapes"), template.read())
-        self.assertIn("history.md merge=union", self.read(".gitattributes"))
-        self.assertIn("progress.md merge=union", self.read(".gitattributes"))
+        attributes = self.read(".gitattributes").split("\n")
+        for line in (
+            "history.md merge=union",
+            "progress.md merge=union",
+            "core/records/** merge=union",
+            "core/ai/personas/*/journal.md merge=union",
+        ):
+            self.assertIn(line, attributes)
         self.assertIn("surface/state/", self.read(".gitignore"))
         self.assertEqual(self.subjects(), ["ground [f0-main] — sphere created"])
         self.assertIn("core/shapes", self.files_in())

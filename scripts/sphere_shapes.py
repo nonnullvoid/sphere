@@ -6,6 +6,7 @@ Standard library only; runs on Python 3.9.
 """
 
 import datetime
+import fnmatch
 import os
 import re
 import subprocess
@@ -14,6 +15,8 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 FOCUS = "layers/focus"
+PERSONAS = "core/ai/personas"
+OPERATING_MODES = "core/operating-modes"
 ARCHIVE = "layers/focus/archived"
 FOCUS_FOLDER_NAME = re.compile(r"^(f[0-9]+)-([a-z0-9]+(?:-[a-z0-9]+)*)$")
 KEY_LINE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):")
@@ -28,10 +31,11 @@ class Tree:
     """One tree's shape, as declared in the shapes file."""
 
     name: str
-    node_kind: str = ""  # "folder": each subfolder is a node; "file": each .md file is
+    node_kind: str = ""  # "folder": each subfolder is a node; "file": each .md file is; "either": both
     folder: str = ""
     deep: bool = False  # file nodes at any depth, not only directly in the folder
-    current_file: str = ""  # folder nodes: the file that carries the frontmatter
+    grouped: bool = False  # file nodes directly in the folder, or one level down in a group folder
+    current_file: str = ""  # folder nodes: the file that carries the frontmatter; {name} is the folder's name
     history_file: str = ""  # folder nodes: the history file
     keys: list[str] = field(default_factory=list)
     optional_keys: list[str] = field(default_factory=list)
@@ -49,13 +53,22 @@ class Tree:
     def is_archived(self, node: str) -> bool:
         return node.startswith(self.archive + "/")
 
+    def is_folder_node(self, node: str) -> bool:
+        return self.node_kind == "folder" or (self.node_kind == "either" and os.path.isdir(node))
+
+    def current_path(self, node: str) -> str:
+        """The file that carries a node's frontmatter: the node itself, or its current file."""
+        if not self.is_folder_node(node):
+            return node
+        return f"{node}/{self.current_file.replace('{name}', os.path.basename(node.rstrip('/')))}"
+
 
 @dataclass
 class Shapes:
     """The whole declaration: the trees, plus which files are history and which are reference."""
 
     trees: list[Tree]
-    history_files: list[str]  # file names: append-only, merged by union, never reversed
+    history_files: list[str]  # append-only, merged by union, never reversed: a file name, a folder/ or a pattern
     reference_prefixes: list[str]  # path prefixes: changed only on the human's yes
 
     def tree(self, name: str) -> Optional[Tree]:
@@ -70,10 +83,27 @@ class Shapes:
         return max(holding, key=lambda tree: len(tree.folder), default=None)
 
     def is_history(self, path: str) -> bool:
-        return os.path.basename(path) in self.history_files
+        """A bare name matches the file's name anywhere; `dir/` everything under it; else a pattern (* ?)."""
+        for entry in self.history_files:
+            if entry.endswith("/"):
+                if path.startswith(entry):
+                    return True
+            elif "/" in entry:
+                if fnmatch.fnmatchcase(path, entry):
+                    return True
+            elif os.path.basename(path) == entry:
+                return True
+        return False
+
+    def union_merge_lines(self) -> list[str]:
+        """The .gitattributes lines for the history kinds, derived from `kind history` so the two can't drift."""
+        return [
+            f"{entry}** merge=union" if entry.endswith("/") else f"{entry} merge=union" for entry in self.history_files
+        ]
 
     def is_reference(self, path: str) -> bool:
-        return any(path.startswith(prefix) for prefix in self.reference_prefixes)
+        """History wins: a history file inside a reference folder (a persona's journal) is history."""
+        return not self.is_history(path) and any(path.startswith(prefix) for prefix in self.reference_prefixes)
 
 
 def read_shapes(path: str) -> Shapes:
@@ -101,7 +131,8 @@ def read_shapes(path: str) -> Shapes:
 def apply_tree_line(tree: Tree, word: str, rest: list[str]) -> None:
     if word == "nodes":
         tree.node_kind, tree.folder = rest[0], rest[1]
-        tree.deep = rest[2:3] == ["deep"]
+        tree.deep = "deep" in rest[2:]
+        tree.grouped = "grouped" in rest[2:]
     elif word == "current":
         tree.current_file = rest[0]
     elif word == "history":
@@ -149,7 +180,7 @@ def frontmatter_value(path: str, key: str) -> str:
     for line in lines:
         if line.startswith(key + ":"):
             value = line[len(key) + 1 :].strip()
-            return re.sub(r"\s+#.*$", "", value).strip()
+            return "" if value.startswith("#") else re.sub(r"\s+#.*$", "", value).strip()
     return ""
 
 
@@ -194,14 +225,12 @@ class Finding:
 def check_node(tree: Tree, node: str) -> list[Finding]:
     """One node against its tree's shape: its files exist and its frontmatter has exactly the tree's keys."""
     findings: list[Finding] = []
-    if tree.node_kind == "folder":
-        path = f"{node}/{tree.current_file}"
+    path = tree.current_path(node)
+    if tree.is_folder_node(node):
         if not os.path.isfile(path):
-            return [Finding(node, f"missing {tree.current_file} (current state)")]
+            return [Finding(node, f"missing {os.path.basename(path)} (current state)")]
         if tree.history_file and not os.path.isfile(f"{node}/{tree.history_file}"):
             findings.append(Finding(node, f"missing {tree.history_file} (history)"))
-    else:
-        path = node
     lines, problem = read_frontmatter(path)
     if problem:
         return findings + [Finding(path, problem)]
@@ -215,7 +244,7 @@ def check_node(tree: Tree, node: str) -> list[Finding]:
         if key in seen:
             findings.append(Finding(path, f"key '{key}' appears twice"))
         seen.append(key)
-        if key not in tree.keys and key not in tree.optional_keys:
+        if key not in tree.keys and key not in tree.optional_keys and key not in tree.archived_keys:
             findings.append(Finding(path, f"key '{key}' isn't in the {tree.name} shape"))
     for key in tree.keys:
         if key not in seen:
@@ -246,22 +275,29 @@ def check_node(tree: Tree, node: str) -> list[Finding]:
             problem = format_problem(value, rule, name)
             if problem:
                 findings.append(Finding(path, f"{key} {problem}"))
+    if "until" in seen:  # an end date to how open it is; private has nothing to end
+        sharing = frontmatter_value(path, "sharing")
+        if frontmatter_value(path, "until") and sharing not in ("protected", "public"):
+            findings.append(
+                Finding(path, f"until only goes with sharing protected or public (sharing is {sharing or 'empty'})")
+            )
     tree_rules = TREE_RULES.get(tree.name)
     if tree_rules:
         values = {key: frontmatter_value(path, key) for key in seen}
-        findings += [Finding(path, problem) for problem in tree_rules(tree, node, values)]
+        facts = NodeFacts(tree, node, name, tree.is_archived(node), values, lines)
+        findings += [Finding(path, problem) for problem in tree_rules(facts)]
     return findings
 
 
 def node_name(tree: Tree, node: str) -> str:
     name = os.path.basename(node.rstrip("/"))
-    return name[:-3] if tree.node_kind == "file" and name.endswith(".md") else name
+    return name[:-3] if not tree.is_folder_node(node) and name.endswith(".md") else name
 
 
 def format_problem(value: str, rule: list[str], name: str) -> str:
     """What's wrong with a value under a `format` rule ("" when nothing). Kinds:
     name (the node's own name), date (YYYY-MM-DD), int (0 or more), version (<major>.<minor>),
-    list [item-pattern], list+ [item-pattern] (at least one item)."""
+    list [item-pattern], list+ [item-pattern] (at least one item), pattern <regex>."""
     kind, argument = rule[0], (rule[1] if len(rule) > 1 else "")
     if kind == "name" and value != name:
         return f"is '{value}', but the node is named '{name}'"
@@ -271,6 +307,8 @@ def format_problem(value: str, rule: list[str], name: str) -> str:
         return f"is '{value}', expected a whole number (0 or more)"
     if kind == "version" and not re.match(r"^\d+\.\d+$", value):
         return f"is '{value}', expected <major>.<minor>"
+    if kind == "pattern" and not re.match(argument, value):
+        return f"is '{value}', expected to match {argument}"
     if kind in ("list", "list+"):
         items = parse_list(value)
         if kind == "list+" and not items:
@@ -295,20 +333,32 @@ def is_date(value: str) -> bool:
 # Frontmatter only: these never read a node's body, so the check stays cheap.
 
 
-def idea_rules(tree: Tree, node: str, values: dict[str, str]) -> list[str]:
+@dataclass
+class NodeFacts:
+    """What a tree's own rules get to look at: one node's place and its frontmatter, never its body."""
+
+    tree: Tree
+    node: str
+    name: str
+    archived: bool
+    values: dict[str, str]  # key → value, as frontmatter_value reads it
+    lines: list[str]  # the raw frontmatter lines, for nested maps like an agent's trust
+
+
+def idea_rules(facts: NodeFacts) -> list[str]:
     problems: list[str] = []
-    name = node_name(tree, node)
-    captured = values.get("captured", "")
+    name = facts.name
+    captured = facts.values.get("captured", "")
     if re.match(r"^\d{8}", name) and captured and captured.replace("-", "") != name[:8]:
         problems.append(f"captured is '{captured}', but the name starts with {name[:8]}")
-    stage, refinements = values.get("stage", ""), values.get("refinements", "")
+    stage, refinements = facts.values.get("stage", ""), facts.values.get("refinements", "")
     if stage == "raw" and refinements not in ("0", ""):
         problems.append(f"stage is raw, so refinements should be 0 (it's {refinements})")
     if refinements == "0" and stage not in ("raw", ""):
         problems.append(f"refinements is 0, so stage should be raw (it's {stage})")
-    if refinements.isdigit() and int(refinements) > 0 and not values.get("refined"):
+    if refinements.isdigit() and int(refinements) > 0 and not facts.values.get("refined"):
         problems.append("refined once or more, so it needs 'refined' (the date of the last refinement)")
-    outcome = values.get("outcome", "").split(" ", 1)
+    outcome = facts.values.get("outcome", "").split(" ", 1)
     if outcome[0] == "graduated" and not re.match(r"^[a-z]+:\S+$", outcome[-1] if len(outcome) > 1 else ""):
         problems.append("outcome 'graduated' needs where it went: graduated <tree:name>")
     if outcome[0] == "parked" and len(outcome) < 2:
@@ -316,27 +366,103 @@ def idea_rules(tree: Tree, node: str, values: dict[str, str]) -> list[str]:
     return problems
 
 
-def plan_rules(tree: Tree, node: str, values: dict[str, str]) -> list[str]:
+def plan_rules(facts: NodeFacts) -> list[str]:
     problems: list[str] = []
-    state = values.get("state", "")
-    if tree.is_archived(node) and state not in ("done", "dropped", ""):
+    state = facts.values.get("state", "")
+    if facts.archived and state not in ("done", "dropped", ""):
         problems.append(f"archived, so state should be done or dropped (it's {state})")
-    if not tree.is_archived(node) and state not in ("active", ""):
-        problems.append(f"state is {state}, so it belongs in {tree.archive}/")
-    created, updated = values.get("created", ""), values.get("updated", "")
+    if not facts.archived and state not in ("active", ""):
+        problems.append(f"state is {state}, so it belongs in {facts.tree.archive}/")
+    created, updated = facts.values.get("created", ""), facts.values.get("updated", "")
     if is_date(created) and is_date(updated) and updated < created:
         problems.append(f"updated ({updated}) is before created ({created})")
-    parent = values.get("parent", "")
-    if parent == node_name(tree, node):
+    parent = facts.values.get("parent", "")
+    if parent == facts.name:
         problems.append("a plan isn't its own parent")
-    elif parent and not any(os.path.isdir(f"{place}/{parent}") for place in (tree.folder, tree.archive)):
+    elif parent and not any(os.path.isdir(f"{place}/{parent}") for place in (facts.tree.folder, facts.tree.archive)):
         problems.append(f"parent plan '{parent}' doesn't exist")
     return problems
 
 
-TREE_RULES: dict[str, Callable[[Tree, str, dict[str, str]], list[str]]] = {
+TRUST_RUNGS = ("together", "supervised", "unattended")
+
+
+def agent_rules(facts: NodeFacts) -> list[str]:
+    """`trust:` is a map, one `  <kind of work>: <rung>` line each; an empty map is fine (everything at together)."""
+    problems: list[str] = []
+    if facts.values.get("trust", "") not in ("", "{}"):
+        problems.append("trust is a map: one indented '<kind of work>: <rung>' line each")
+    inside = False
+    for line in facts.lines:
+        if KEY_LINE.match(line):
+            inside = line.startswith("trust:")
+        elif inside and line.strip() and not line.strip().startswith("#"):
+            kind, _, rung = line.strip().partition(":")
+            rung = re.sub(r"\s+#.*$", "", rung).strip()
+            if rung not in TRUST_RUNGS:
+                problems.append(f"trust for '{kind}' is '{rung}', expected one of: {' '.join(TRUST_RUNGS)}")
+    return problems
+
+
+def operating_mode_rules(facts: NodeFacts) -> list[str]:
+    persona = facts.values.get("persona", "")
+    if persona and persona != "any" and not os.path.isdir(f"{PERSONAS}/{persona}"):
+        return [f"persona '{persona}' doesn't exist (any, or a folder in {PERSONAS}/)"]
+    return []
+
+
+def persona_rules(facts: NodeFacts) -> list[str]:
+    mode = facts.values.get("operating-mode", "")
+    if mode and not os.path.isfile(f"{OPERATING_MODES}/{mode}.md"):
+        return [f"operating-mode '{mode}' isn't a file in {OPERATING_MODES}/"]
+    return []
+
+
+def library_rules(facts: NodeFacts) -> list[str]:
+    sharing, perspective = facts.values.get("sharing", ""), facts.values.get("perspective", "")
+    if sharing in ("public", "protected") and perspective != "generic":
+        perspective = perspective or "none"
+        return [f"sharing is {sharing}, but only a generic artifact can be opened up (perspective: {perspective})"]
+    return []
+
+
+TREE_RULES: dict[str, Callable[[NodeFacts], list[str]]] = {
     "idea": idea_rules,
     "plan": plan_rules,
+    "agent": agent_rules,
+    "operating-mode": operating_mode_rules,
+    "persona": persona_rules,
+    "library": library_rules,
+}
+
+
+# ---------------------------------------------------------------- rules across a tree's nodes (frontmatter only)
+
+
+def one_default_persona(tree: Tree, nodes: list[str]) -> list[Finding]:
+    defaults = [node for node in nodes if frontmatter_value(tree.current_path(node), "default") == "true"]
+    if nodes and len(defaults) != 1:
+        found = " ".join(node_name(tree, node) for node in defaults) or "none"
+        return [Finding(tree.folder, f"exactly one persona has default: true (found: {found})")]
+    return []
+
+
+def unique_names(tree: Tree, nodes: list[str]) -> list[Finding]:
+    """Names are unique across the tree, group folders included."""
+    findings: list[Finding] = []
+    first: dict[str, str] = {}
+    for node in nodes:
+        name = node_name(tree, node)
+        if name in first:
+            findings.append(Finding(node, f"name '{name}' is already used by {first[name]}"))
+        else:
+            first[name] = node
+    return findings
+
+
+TREE_SET_RULES: dict[str, Callable[[Tree, list[str]], list[Finding]]] = {
+    "persona": one_default_persona,
+    "library": unique_names,
 }
 
 
@@ -345,21 +471,24 @@ def node_paths(tree: Tree, include_archive: bool = False) -> list[str]:
     if not os.path.isdir(tree.folder):
         return []
     places = [tree.folder] + ([tree.archive] if include_archive else [])
-    if tree.node_kind == "folder":
+    if tree.node_kind in ("folder", "either"):
         nodes: list[str] = []
         for parent in places:
             if not os.path.isdir(parent):
                 continue
             for name in sorted(os.listdir(parent)):
                 path = f"{parent}/{name}"
-                if os.path.isdir(path) and path != tree.archive and name not in tree.skip:
+                if path == tree.archive or name in tree.skip:
+                    continue
+                if os.path.isdir(path) or (tree.node_kind == "either" and name.endswith(".md")):
                     nodes.append(path)
         return nodes
     files: list[str] = []
     for place in places:
         for folder, subfolders, names in os.walk(place):
-            if not tree.deep:
-                subfolders.clear()
+            if not tree.deep and not (tree.grouped and folder == place):
+                subfolders.clear()  # grouped: one level of group folders, no deeper
+            subfolders[:] = [name for name in subfolders if name not in tree.skip]
             if folder == tree.folder and "archived" in subfolders:
                 subfolders.remove("archived")  # walked on its own, when asked
             for name in names:
@@ -414,6 +543,21 @@ def check_focus_tree(include_archive: bool = False) -> list[Finding]:
     return findings
 
 
+def default_persona() -> str:
+    """The persona with default: true ("" when there are none): one listing, one frontmatter each."""
+    if not os.path.isdir(PERSONAS):
+        return ""
+    for name in sorted(os.listdir(PERSONAS)):
+        if frontmatter_value(f"{PERSONAS}/{name}/{name}.md", "default") == "true":
+            return name
+    return ""
+
+
+def persona_operating_mode(persona: str) -> str:
+    """The operating mode a new focus starts in under this persona ("" when it names none)."""
+    return frontmatter_value(f"{PERSONAS}/{persona}/{persona}.md", "operating-mode") if persona else ""
+
+
 def archived_focus_exists(number: str) -> bool:
     """Whether archived/ has a folder for this number: one folder listing, no files read."""
     return os.path.isdir(ARCHIVE) and any(name.startswith(number + "-") for name in os.listdir(ARCHIVE))
@@ -430,15 +574,15 @@ def focus_folders(include_archive: bool = False) -> list[str]:
     return folders
 
 
-def check_sphere_files() -> list[Finding]:
-    """A sphere's repository lines: history merges by union, and heartbeats are never committed."""
+def check_sphere_files(shapes: Shapes) -> list[Finding]:
+    """A sphere's repository lines: every history kind merges by union, and heartbeats are never committed."""
     if not os.path.isdir(FOCUS) or not is_git_top_level():
         return []
     findings: list[Finding] = []
-    attributes = read_lines(".gitattributes")
-    for name in ("history.md", "progress.md"):
-        if not any(re.match(rf"^{re.escape(name)}\s+merge=union", line) for line in attributes):
-            findings.append(Finding(".gitattributes", f"no union merge for {name}"))
+    attributes = [" ".join(line.split()) for line in read_lines(".gitattributes")]
+    for line in shapes.union_merge_lines():
+        if line not in attributes:
+            findings.append(Finding(".gitattributes", f"no union merge for {line.split()[0]} (add: {line})"))
     ignored = subprocess.run(["git", "check-ignore", "-q", "surface/state/focus/x.json"], capture_output=True)
     if ignored.returncode != 0:
         findings.append(Finding(".gitignore", "surface/state/ isn't ignored (heartbeats must never be committed)"))
@@ -449,9 +593,13 @@ def check_everything(shapes: Shapes, include_archive: bool = False) -> list[Find
     """Every live node of every tree (archived ones too, when asked), the focus tree, and the repository lines."""
     findings: list[Finding] = []
     for tree in shapes.trees:
-        for node in node_paths(tree, include_archive):
+        nodes = node_paths(tree, include_archive)
+        for node in nodes:
             findings += check_node(tree, node)
-    return findings + check_focus_tree(include_archive) + check_sphere_files()
+        set_rules = TREE_SET_RULES.get(tree.name)
+        if set_rules:
+            findings += set_rules(tree, [node for node in nodes if os.path.isfile(tree.current_path(node))])
+    return findings + check_focus_tree(include_archive) + check_sphere_files(shapes)
 
 
 # ---------------------------------------------------------------- small helpers
