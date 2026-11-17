@@ -1,6 +1,6 @@
 ---
 frame: check-shared-state
-kind: guard
+always: true
 lens: [continuity]
 derives_from: [continuity@1]
 version: 1

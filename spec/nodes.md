@@ -27,7 +27,7 @@ Every node has:
 
 | Part | What it is |
 |---|---|
-| **A name** | Stable, and unique within its tree, so anything can refer to it from anywhere |
+| **A name** | Stable, and unique within its tree, archive included, so anything can refer to it from anywhere |
 | **A place in its tree** | a `parent:` field, or a namespaced name (below) |
 | **A flat folder** | named after the node. Folders never nest, whatever the depth |
 | **One-line frontmatter** | enough to show the node in one line of a list or a tree view: name, title, state, a one-line summary |
@@ -61,6 +61,8 @@ The tree is never in the folders. It's in one of two places:
 - **In the name, for things that rarely move.** Knowledge is arranged by how the world is, so its place is its name: `money.taxes.2025-return`. Everything under `money` is one query.
 
 **Names that carry identity** use a number, when a node shifts over time and its name will change: `f21-plumbing-quotes`. The number stays; the words can be renamed. See [work](work.md#naming--decided-not-yet-exercised) and [focus](focus.md#names-a-number-and-a-memorable-name).
+
+**Names use one set of characters** (lowercase letters, digits and hyphens, dots between namespace levels) **and one of a few named schemes:** `plain`, `namespace`, `prefix-number`, `number-name`, `dated`. Each tree uses one, and a new scheme is defined in the naming frame before any tree uses it. **A name is never reused,** even after its node is archived, because links resolve by name. See [node-names](../common/core/protocol/frames/nodes/node-names.md).
 
 **Understanding is a DAG, not a tree.** A frame can derive from several lenses, so it can have more than one parent. Nothing loops back: lenses are never children of frames. It's the one exception, and it's kept, because a frame that serves two understandings is better than two copies of it. **A view lists the frame under each of its lenses;** nothing more is needed.
 
@@ -100,7 +102,7 @@ How each tree applies it: [work](work.md#archiving--decided-not-yet-exercised) (
 
 ```yaml
 holds: [work:home.kitchen.plumbing, knowledge:home.kitchen]   # a focus node
-related: [money.investing, work:TAX-20]                        # a knowledge topic
+related: [money.investing, work:tax-20]                        # a knowledge topic
 through: [money-risk]                                          # lenses a focus works through
 ```
 

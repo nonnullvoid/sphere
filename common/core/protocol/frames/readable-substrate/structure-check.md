@@ -1,6 +1,5 @@
 ---
 frame: structure-check
-kind: instinct
 lens: [readable-substrate, sphere-framework]
 derives_from: [readable-substrate@1, sphere-framework@1]
 version: 1

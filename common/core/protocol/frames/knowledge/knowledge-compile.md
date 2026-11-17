@@ -1,6 +1,5 @@
 ---
 frame: knowledge-compile
-kind: structural
 lens: [knowledge]
 derives_from: [knowledge@1]
 version: 1

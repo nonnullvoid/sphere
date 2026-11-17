@@ -1,6 +1,5 @@
 ---
 frame: without-git
-kind: structural
 lens: [continuity]
 derives_from: [continuity@1]
 version: 1

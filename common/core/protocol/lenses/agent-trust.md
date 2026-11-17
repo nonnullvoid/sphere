@@ -59,11 +59,11 @@ Until an agent has shown it does a kind of work well, **the human is the one who
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [trust-ladder](../frames/agent-trust/trust-ladder.md) | structural | The rungs, the lower of earned and delegated, clean runs, candidates, promotion, reject reasons |
-| [circuit-breakers](../frames/agent-trust/circuit-breakers.md) | guard | What stops a run at once and sends the agent back to *together* |
-| [agent-definitions](../frames/agent-trust/agent-definitions.md) | structural | An agent's file and its history, definition apart from runs, delegating and dispatching, teams, right-sized intelligence |
+| Frame | In short |
+|---|---|
+| [trust-ladder](../frames/agent-trust/trust-ladder.md) | The rungs, the lower of earned and delegated, clean runs, candidates, promotion, reject reasons |
+| [circuit-breakers](../frames/agent-trust/circuit-breakers.md) | Always on. What stops a run at once and sends the agent back to *together* |
+| [agent-definitions](../frames/agent-trust/agent-definitions.md) | An agent's file and its history, definition apart from runs, delegating and dispatching, teams, right-sized intelligence |
 
 ## Revision history
 

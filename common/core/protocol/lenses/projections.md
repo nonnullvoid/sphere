@@ -84,12 +84,12 @@ A new look is a template change. A new source is a definition change. A new audi
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [projection-registry](../frames/projections/projection-registry.md) | structural | A projection is a node: its definition, the generated registry, where artifacts live, retiring and orphans |
-| [projection-freshness](../frames/projections/projection-freshness.md) | structural | Live, refreshed and snapshot; staleness on the page; provenance; rendering only what's grounded |
-| [projection-templates](../frames/projections/projection-templates.md) | structural | Extracting and filling templates, shared chrome, the one-shot template for snapshots, what views are built with |
-| [projection-serving](../frames/projections/projection-serving.md) | structural | Static or served; the local server; input written only to declared sources |
+| Frame | In short |
+|---|---|
+| [projection-registry](../frames/projections/projection-registry.md) | A projection is a node: its definition, the generated registry, where artifacts live, retiring and orphans |
+| [projection-freshness](../frames/projections/projection-freshness.md) | Live, refreshed and snapshot; staleness on the page; provenance; rendering only what's grounded |
+| [projection-templates](../frames/projections/projection-templates.md) | Extracting and filling templates, shared chrome, the one-shot template for snapshots, what views are built with |
+| [projection-serving](../frames/projections/projection-serving.md) | Static or served; the local server; input written only to declared sources |
 
 ## Revision history
 

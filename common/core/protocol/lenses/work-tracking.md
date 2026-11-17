@@ -58,12 +58,12 @@ frames: [work-breakdown, work-progress, work-registry, plans]
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [work-breakdown](../frames/work-tracking/work-breakdown.md) | structural | The work node: labels, names, the two files, depth, promotion, templates |
-| [work-progress](../frames/work-tracking/work-progress.md) | structural | States, paused and ongoing, progress from evidence, stalls, the edges |
-| [work-registry](../frames/work-tracking/work-registry.md) | structural | The generated index and tree view, what's in focus, archiving |
-| [plans](../frames/work-tracking/plans.md) | structural | Plans beside the work: what they hold, frontmatter, versions, following and finishing one, fitting the model |
+| Frame | In short |
+|---|---|
+| [work-breakdown](../frames/work-tracking/work-breakdown.md) | The work node: labels, names, the two files, depth, promotion, templates |
+| [work-progress](../frames/work-tracking/work-progress.md) | States, paused and ongoing, progress from evidence, stalls, the edges |
+| [work-registry](../frames/work-tracking/work-registry.md) | The generated index and tree view, what's in focus, archiving |
+| [plans](../frames/work-tracking/plans.md) | Plans beside the work: what they hold, frontmatter, versions, following and finishing one, fitting the model |
 
 ## Revision history
 

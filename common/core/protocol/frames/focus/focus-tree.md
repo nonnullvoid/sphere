@@ -1,6 +1,5 @@
 ---
 frame: focus-tree
-kind: structural
 lens: [focus]
 derives_from: [focus@1]
 version: 1

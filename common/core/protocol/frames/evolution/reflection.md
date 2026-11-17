@@ -1,6 +1,5 @@
 ---
 frame: reflection
-kind: instinct
 lens: [evolution]
 derives_from: [evolution@1]
 version: 1
@@ -49,7 +48,7 @@ Fire `reflection-triggered` whenever a reflection starts, targeted or deep.
 
 ## A rhythm, not a schedule
 
-**A sphere tends to need evolution every couple of weeks.** That's a rhythm, not an appointment, and the sphere recognizes the signal itself:
+**A sphere tends to need evolution every few weeks.** A build starts at three to four weeks, and the sphere adjusts with experience. That's a rhythm, not an appointment, and the sphere recognizes the signal itself:
 
 - a concept keeps coming up with nowhere to live;
 - a frame feels stretched or misnamed;

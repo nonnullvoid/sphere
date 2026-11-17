@@ -7,7 +7,7 @@ status: drafting
 updated: 2026-11-11
 verified: false
 sharing: public
-frames: [node-shape, kinds-of-file]
+frames: [node-shape, node-names, kinds-of-file]
 ---
 
 # One shape, all the way down
@@ -41,10 +41,11 @@ Expect new parts of a sphere to mirror it. That's not a constraint to work aroun
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [node-shape](../frames/nodes/node-shape.md) | structural | A node's parts, where the tree lives, links, depth, archiving, and the design questions |
-| [kinds-of-file](../frames/nodes/kinds-of-file.md) | guard | Know a file's kind before writing it; write only what you hold |
+| Frame | In short |
+|---|---|
+| [node-shape](../frames/nodes/node-shape.md) | A node's parts, where the tree lives, links, depth, archiving, and the design questions |
+| [node-names](../frames/nodes/node-names.md) | The named naming schemes and when each fits; names never reused; links |
+| [kinds-of-file](../frames/nodes/kinds-of-file.md) | Always on. Know a file's kind before writing it; write only what you hold |
 
 ## Revision history
 

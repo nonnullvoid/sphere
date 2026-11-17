@@ -1,6 +1,5 @@
 ---
 frame: crystallization
-kind: structural
 lens: [evolution]
 derives_from: [evolution@1]
 version: 1
@@ -71,7 +70,8 @@ Commands: what you can say to use it
 
 - **This is how the sphere teaches its own vocabulary.** The human learns how lens, frame and command relate by seeing them in their own sphere.
 - **A small addition gets one line:** *"Added 'weekly summary' to your planning frame."*
-- **A non-technical human gets plain words, no labels:** *"Done. Just say 'how was my week' any time."*
+- **A non-technical human gets plain words, no labels:** *"Done. Just say 'how was my week' any time."* Told as something the sphere saved for them, never as a decision to weigh.
+- **Every change is announced.** None is kept silent: announcements are how the human learns how the sphere handles things.
 - **One announcement per capability.** Fire `sphere-evolved`; a witness view can show it as the sphere growing too.
 
 ## Sized by how much it touches

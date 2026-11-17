@@ -17,6 +17,8 @@
 #   format <key> <kind> [arg]   name (= the node's name), date (YYYY-MM-DD), int (0 or more),
 #                               version (<major>.<minor>), list [item-pattern], list+ [item-pattern] (one or more)
 #   name <pattern>              node names (file name without .md, or folder name) match this pattern
+#                               (most trees use the common one from the node-names frame)
+#   Names are unique across each tree, archive included; that one rule is checked for every tree.
 #   skip <name>...              folders or files under <dir> that aren't nodes of this tree
 #
 # structure-check reads frontmatter and folder listings only, never bodies, and skips <dir>/archived
@@ -38,6 +40,7 @@ values status open closed
 
 tree lens
 nodes file core/protocol/lenses
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 keys lens version version_note derives_from status updated verified sharing until? frames
 values status active drafting deprecated
 values verified true false
@@ -46,8 +49,9 @@ format until date
 
 tree frame
 nodes file core/protocol/frames deep
-keys frame kind lens derives_from version version_note status updated sharing until? reads writes protocol
-values kind guard instinct structural
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+keys frame always? lens derives_from version version_note status updated sharing until? reads writes protocol
+values always true
 values status active drafting deprecated
 values sharing public protected private
 format until date
@@ -63,7 +67,7 @@ format captured date
 format topics list ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 format refinements int
 format refined date
-format related list
+format related list ^([a-z]+:)?[a-z0-9-]+(\.[a-z0-9-]+)*$
 values stage raw shaping ready
 values outcome graduated parked
 values change add refactor drop
@@ -71,6 +75,7 @@ values horizon now soon someday
 
 tree plan
 nodes folder layers/work/plans
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 current plan.md
 history history.md
 keys plan title parent? for state version summary created updated
@@ -83,6 +88,7 @@ values state active done dropped
 
 tree agent
 nodes file core/ai/agents
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 keys agent does source trust tier
 format agent name
 values tier light standard deep
@@ -90,6 +96,7 @@ skip index.md teams
 
 tree operating-mode
 nodes file core/operating-modes
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 keys operating-mode persona signals loadout adds-guardrails sharing until?
 format operating-mode name
 format loadout list
@@ -99,6 +106,7 @@ format until date
 
 tree persona
 nodes folder core/ai/personas
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 current {name}.md
 history journal.md
 keys persona default operating-mode
@@ -107,14 +115,16 @@ values default true false
 
 tree projection
 nodes either layers/projections
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 current {name}.md
 keys projection title namespace kind opens lifespan freshness sources writes home sharing until? template legacy
 archived retired
+format retired pattern ^\d{4}-\d{2}-\d{2} .+
 format projection name
 format sources list
 format writes list
 values kind live refreshed snapshot external
-values opens static served
+values opens static served markdown
 values lifespan long-lived time-bound
 values freshness on-open stale frozen
 values sharing public protected private
@@ -124,16 +134,18 @@ skip registry.md templates
 
 tree knowledge
 nodes folder layers/knowledge
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 current topic.md
 keys name title summary related? fresh_for? updated
 format name name
-format related list
+format related list ^([a-z]+:)?[a-z0-9-]+(\.[a-z0-9-]+)*$
 format fresh_for pattern ^(\d+[dwmy]|never)$
 format updated date
 skip history
 
 tree literacy
 nodes folder layers/literacy
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 current subject.md
 keys subject title summary level rests_on? stale? tracked updated
 format subject name
@@ -145,6 +157,7 @@ skip library
 
 tree library
 nodes file layers/literacy/library grouped
+name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
 keys artifact title type? subjects? perspective? made_for rests_on? sharing until? created updated
 format artifact name
 format subjects list

@@ -74,11 +74,11 @@ Frames consult it, plans rest on it, the human asks about it. **But correcting a
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [knowledge-capture](../frames/knowledge/knowledge-capture.md) | instinct | The topic, its facts, reads and history; grades; what gets caught; offering facts at ground; where they land |
-| [knowledge-compile](../frames/knowledge/knowledge-compile.md) | structural | Building a topic from sources, refreshing it, correcting a fact, freshness and staleness |
-| [say-how-sure](../frames/knowledge/say-how-sure.md) | guard | Every claim about the world carries its grade and its age, when either matters |
+| Frame | In short |
+|---|---|
+| [knowledge-capture](../frames/knowledge/knowledge-capture.md) | The topic, its facts, reads and history; grades; what gets caught; offering facts at ground; where they land |
+| [knowledge-compile](../frames/knowledge/knowledge-compile.md) | Building a topic from sources, refreshing it, correcting a fact, freshness and staleness |
+| [say-how-sure](../frames/knowledge/say-how-sure.md) | Always on. Every claim about the world carries its grade and its age, when either matters |
 
 ## Revision history
 

@@ -69,12 +69,12 @@ Every registry is the same thing:
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [capability-manifest](../frames/sphere-framework/capability-manifest.md) | structural | The routing table of every lens and frame: its entries, how it's rebuilt, and how it's used |
-| [protocol-registry](../frames/sphere-framework/protocol-registry.md) | structural | The one registry of intents, abilities, commands and senses, each tied to the frame that defines it |
-| [structure-check](../frames/readable-substrate/structure-check.md) | instinct | Shared with [readable-substrate](readable-substrate.md): the anatomy registries, node shapes, links and views, checked at ground |
-| [manifest-check](../frames/readable-substrate/manifest-check.md) | instinct | Shared with [readable-substrate](readable-substrate.md): the manifest and protocol registry, checked against lenses and frames |
+| Frame | In short |
+|---|---|
+| [capability-manifest](../frames/sphere-framework/capability-manifest.md) | The routing table of every lens and frame: its entries, how it's rebuilt, and how it's used |
+| [protocol-registry](../frames/sphere-framework/protocol-registry.md) | The one registry of intents, abilities, commands and senses, each tied to the frame that defines it |
+| [structure-check](../frames/readable-substrate/structure-check.md) | Shared with [readable-substrate](readable-substrate.md): the anatomy registries, node shapes, links and views, checked at ground |
+| [manifest-check](../frames/readable-substrate/manifest-check.md) | Shared with [readable-substrate](readable-substrate.md): the manifest and protocol registry, checked against lenses and frames |
 
 ## Revision history
 

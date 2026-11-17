@@ -52,10 +52,10 @@ A file the human can read but can't trust is worse than no file. So a sphere kee
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [structure-check](../frames/readable-substrate/structure-check.md) | instinct | At ground: the anatomy matches its registries, every node has its shape, links resolve, views match their sources |
-| [manifest-check](../frames/readable-substrate/manifest-check.md) | instinct | At ground: the capability manifest and the protocol registry match the lenses and frames on disk |
+| Frame | In short |
+|---|---|
+| [structure-check](../frames/readable-substrate/structure-check.md) | At ground: the anatomy matches its registries, every node has its shape, links resolve, views match their sources |
+| [manifest-check](../frames/readable-substrate/manifest-check.md) | At ground: the capability manifest and the protocol registry match the lenses and frames on disk |
 
 ## Revision history
 

@@ -1,6 +1,5 @@
 ---
 frame: work-progress
-kind: structural
 lens: [work-tracking]
 derives_from: [work-tracking@1]
 version: 1

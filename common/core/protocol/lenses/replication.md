@@ -60,10 +60,10 @@ As spheres connect to each other, more can happen without the human watching: fi
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [export-contract](../frames/replication/export-contract.md) | structural | What may leave and what never does; grains; building a seed from an allowlist; provenance; taking things in; comparing |
-| [sphere-identity](../frames/replication/sphere-identity.md) | structural | The sphere's id, name and version; where it began; how versions advance; signing as a swappable part |
+| Frame | In short |
+|---|---|
+| [export-contract](../frames/replication/export-contract.md) | What may leave and what never does; grains; building a seed from an allowlist; provenance; taking things in; comparing |
+| [sphere-identity](../frames/replication/sphere-identity.md) | The sphere's id, name and version; where it began; how versions advance; signing as a swappable part |
 
 ## Revision history
 

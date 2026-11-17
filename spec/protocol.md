@@ -48,10 +48,10 @@ A frame is the **operating mechanics derived from one or more lenses**: when it 
 
 - **A frame names the lens or lenses it derives from,** once one has been co-authored. A frame without a lens still works, but it can't be re-derived when understanding changes.
 - **A frame can derive from several lenses.** This is how two understandings get reconciled into one set of mechanics. For example, how far an agent may act on its own draws on what the human holds authority over *and* on how the work is structured.
-- **One lens usually yields several frames,** often of different kinds.
+- **One lens usually yields several frames,** each doing a different job.
 - **Frames compose; they don't inherit.** Several frames are active at once during any piece of work. There's no frame hierarchy. Intents, abilities and frames relate many-to-many, by reference.
 - **A frame is self-sufficient to run.** Executing a frame never requires reading its lens. If it does, the frame is underspecified. The lens is consulted when the *why* is in question: judgment calls, changes, evolution. That's also what lets a sphere load frames often and lenses rarely. See [loading](loading.md).
-- **A frame composes the gates it uses; it isn't their child.** A procedure that passes through approval steps (a review runbook, say) names the guard frames it uses. Filing it under one of their lenses would flatten it into a detail of that lens.
+- **A frame composes the gates it uses; it isn't their child.** A skill that passes through approval steps (a review runbook, say) names the guards it uses. Filing it under one of their lenses would flatten it into a detail of that lens.
 - **Variants live inside one frame.** Different ways of running the same activity (outbound messages sent normally, sent with a "drafted by AI" disclosure, or pre-approved for one narrow case) are sections of one frame, not sibling frames.
 
 ### Components — **proven**
@@ -67,28 +67,31 @@ A frame declares both in its frontmatter (below). That's what lets a sphere shar
 
 ### Every skill is a frame; not every frame is a skill
 
-A **skill** is portable: it has to work on its own, in any agent that loads skills. Many frames only make sense inside a sphere. Frames come in four kinds: — _taxonomy to be checked against real spheres_
-
-| Kind | Example | A skill? | Why |
-|---|---|---|---|
-| **Procedure:** invoked to do a task | plan my day; draft a PR description | **Yes** | Self-contained and used on request, so portable as a skill |
-| **Guard:** always applies | outbound messages are drafted, never sent without approval | No | A skill loads only when relevant; a guard must apply to every action |
-| **Instinct:** triggered by a sphere event | on ground, propose new facts for the knowledge layer | No | Fires on something the sphere notices, which needs the sphere's [senses](#the-registry--proven) |
-| **Structural:** mechanics of the sphere itself | how ground reconciles the focus registry | No | Meaningless outside a sphere |
+A **skill** is portable: it has to work on its own, in any agent that loads skills. Many frames only make sense inside a sphere: a rule that must hold on every action, a reaction to something the sphere notices, the mechanics of a registry.
 
 **The test:** if it still works with the sphere taken away, it's a skill. Otherwise it's a frame that lives only inside the sphere.
 
-_Example (generic):_ one lens on outbound communication (*anything that leaves under my name is me speaking; I'd rather be slow than wrong*) yields a **guard** (nothing is sent without approval), a **procedure** (how to draft a message the way I write) and an **instinct** (at ground, flag drafts left unsent). One understanding drives three kinds of mechanics, a link skills alone can't express.
+**Frames aren't sorted into kinds.** One frame often does several jobs: a rule, a way of doing something, a reaction to an event. Splitting it to fit a category would help no one. A frame declares only what changes how it's used:
+
+| What it declares | How | What follows |
+|---|---|---|
+| It must apply in every window | `always: true` | It loads in the [kernel](loading.md), before any action. Frames like this are called **guards** |
+| It reacts to something the sphere notices | senses in its `protocol:` list | The sphere wires it to those [senses](#the-registry--proven) |
+| It works without the sphere | written as a skill, a `SKILL.md` | It can travel as a plain skill |
+
+Everything else loads when a focus needs it.
+
+_Example (generic):_ one lens on outbound communication (*anything that leaves under my name is me speaking; I'd rather be slow than wrong*) yields a **guard** (nothing is sent without approval), a **skill** (how to draft a message the way I write) and a frame that **reacts at ground** (flag drafts left unsent). One understanding drives all three, a link skills alone can't express.
 
 ### Framing a skill
 
 **Framing** a skill makes it part of the sphere's protocol. A human can say *"frame this skill,"* or just *"learn this skill"* or *"import this skill."* Nobody needs to know the word frame. The sphere then:
 
-1. **Copies the skill in unchanged** as a procedure frame. It keeps working as a skill everywhere.
+1. **Copies the skill in unchanged** as a skill frame. It keeps working as a skill everywhere.
 2. **Registers what it can do:** its abilities, and its commands if the human uses any, in the registry.
 3. **Offers to attach a lens,** co-authored as always: *"This skill assumes you always want to review a draft first. Want to capture why?"* The human can say no. An unattached skill is a complete frame.
 
-Going the other way, a procedure frame **exports as a plain skill** with no translation. Other agents ignore the lens link. The other three kinds travel only through sphere [replication](replication.md). — _unexercised_
+Going the other way, a skill frame **exports as a plain skill** with no translation. Other agents ignore the lens link. Every other frame travels only through sphere [replication](replication.md). — _unexercised_
 
 ---
 
@@ -119,9 +122,9 @@ core/protocol/
 └── frames/
     ├── <frame>.md                 a frame that doesn't belong to a cluster yet
     ├── <lens-family>/
-    │   ├── <frame>.md             guard, instinct or structural frame
+    │   ├── <frame>.md             a frame
     │   └── <skill-name>/
-    │       └── SKILL.md           procedure frame, in the open Agent Skills format
+    │       └── SKILL.md           a skill frame, in the open Agent Skills format
     └── _unattached/               skills imported before any lens exists
 ```
 
@@ -133,7 +136,7 @@ core/protocol/
 4. **Lenses rarely group.** There's roughly one lens per concept. Keep them flat until a real family forms.
 5. **Grouping is organization only.** It never changes a frame's lens, its cascade, or what it exports.
 
-Procedure frames use the [Agent Skills format](https://agentskills.io/specification) as-is: a folder named after the skill (lowercase letters, numbers and hyphens), holding a `SKILL.md`. — _decided, not yet exercised_
+Skill frames use the [Agent Skills format](https://agentskills.io/specification) as-is: a folder named after the skill (lowercase letters, numbers and hyphens), holding a `SKILL.md`. — _decided, not yet exercised_
 
 For a **non-technical human**, this structure is present but never shown. They never see the words lens or frame. They see the sphere behave the way they asked. How plainly a sphere talks about itself is set by its [persona and modes](modes.md).
 
@@ -155,11 +158,11 @@ sharing: public              # public | protected | private; optional until: <da
 frames: [comms-guard, draft-message, unsent-drafts]
 ```
 
-Guard, instinct or structural frame:
+Any other frame:
 
 ```yaml
 frame: comms-guard
-kind: guard                  # guard | instinct | structural
+always: true                 # optional: applies in every window (a guard)
 lens: [outbound-comms]       # one or more
 derives_from: [outbound-comms@3]
 version: 2
@@ -176,7 +179,7 @@ protocol: [I-trust-what-leaves, A-review-outbound, draft-left-unsent]   # intent
 - **Protocol entries** (`protocol`) travel. Intents are `I-…`, abilities `A-…`, and senses go by their own event names (`focus-grounded`). Each entry is defined in the registry, `protocol.md`.
 - **Empty is explicit.** A guard that reads and writes nothing says `reads: []`, so "touches no data" is a statement, not an omission.
 
-Procedure frame. This is standard Agent Skills frontmatter. The same fields go inside `metadata`, prefixed `sphere-`, which the standard provides for exactly this, so the file stays a valid skill everywhere. Its values are strings, so lists are comma-separated:
+Skill frame. This is standard Agent Skills frontmatter. The same fields go inside `metadata`, prefixed `sphere-`, which the standard provides for exactly this, so the file stays a valid skill everywhere. Its values are strings, so lists are comma-separated:
 
 ```yaml
 name: draft-message
@@ -276,7 +279,5 @@ The protocol is enough to understand *how* a sphere operates. What it operates *
 
 ## Open questions
 
-1. **The four frame kinds.** Check them against a sphere in real use: does every frame fit one kind, or is there a fifth?
-2. **Optional commands.** _Under trial, not part of this spec._ Abilities invoked purely by intent matching, with fixed commands proposed only after a phrase repeats. The human decides whether to add one. To be trialed before inclusion.
-3. **Names.** "Lens" may be renamed, along with the category sphere belongs to.
-4. **Lists in skill metadata.** The Agent Skills `metadata` map holds strings, so multi-lens procedure frames use comma-separated values. Confirm this reads well, or keep procedure frames single-lens.
+1. **Optional commands.** _Under trial, not part of this spec._ Abilities invoked purely by intent matching, with fixed commands proposed only after a phrase repeats. The human decides whether to add one. To be trialed before inclusion.
+2. **Names.** "Lens" and "frame" stay for now. The category sphere belongs to is still open.

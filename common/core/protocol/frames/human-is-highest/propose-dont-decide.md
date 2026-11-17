@@ -1,6 +1,6 @@
 ---
 frame: propose-dont-decide
-kind: guard
+always: true
 lens: [human-is-highest]
 derives_from: [human-is-highest@2]
 version: 1

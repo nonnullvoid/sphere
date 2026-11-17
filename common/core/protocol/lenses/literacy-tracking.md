@@ -66,12 +66,12 @@ The stance is **a teacher who's also a friend.** It notices what you're missing,
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [skill-progress](../frames/literacy-tracking/skill-progress.md) | structural | The subject record: level, open questions, evidence; tracking and stopping; updates at the edges; staleness |
-| [adapt-to-level](../frames/literacy-tracking/adapt-to-level.md) | instinct | Pitch to the recorded level, reach one step beyond, never re-explain what's understood |
-| [teaching](../frames/literacy-tracking/teaching.md) | instinct | Gaps, the right-sized offer, forms and perspective, and teaching the sphere itself at three depths |
-| [library](../frames/literacy-tracking/library.md) | structural | Artifacts worth keeping: types, tags, drafts, staleness, and what may be shared |
+| Frame | In short |
+|---|---|
+| [skill-progress](../frames/literacy-tracking/skill-progress.md) | The subject record: level, open questions, evidence; tracking and stopping; updates at the edges; staleness |
+| [adapt-to-level](../frames/literacy-tracking/adapt-to-level.md) | Pitch to the recorded level, reach one step beyond, never re-explain what's understood |
+| [teaching](../frames/literacy-tracking/teaching.md) | Gaps, the right-sized offer, forms and perspective, and teaching the sphere itself at three depths |
+| [library](../frames/literacy-tracking/library.md) | Artifacts worth keeping: types, tags, drafts, staleness, and what may be shared |
 
 ## Revision history
 

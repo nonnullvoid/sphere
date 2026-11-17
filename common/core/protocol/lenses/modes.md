@@ -61,12 +61,12 @@ Outside it, the sphere can still notice that a lens or a guardrail should change
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [operating-modes](../frames/modes/operating-modes.md) | structural | The operating-mode file, behavior and loadout, what one can and can't change, switching |
-| [collaboration-modes](../frames/modes/collaboration-modes.md) | structural | The four collaboration modes, setting and recording one, changing it without changing the focus |
-| [persona](../frames/modes/persona.md) | structural | The persona file, the two views of the human, several personas, voice and tone |
-| [sphere-authoring](../frames/modes/sphere-authoring.md) | guard | Internals change only here: human-started, each edit confirmed, never unattended |
+| Frame | In short |
+|---|---|
+| [operating-modes](../frames/modes/operating-modes.md) | The operating-mode file, behavior and loadout, what one can and can't change, switching |
+| [collaboration-modes](../frames/modes/collaboration-modes.md) | The four collaboration modes, setting and recording one, changing it without changing the focus |
+| [persona](../frames/modes/persona.md) | The persona file, the two views of the human, several personas, voice and tone |
+| [sphere-authoring](../frames/modes/sphere-authoring.md) | Always on. Internals change only here: human-started, each edit confirmed, never unattended |
 
 ## Revision history
 

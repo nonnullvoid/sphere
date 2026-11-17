@@ -1,6 +1,5 @@
 ---
 frame: daily-cadence
-kind: instinct
 lens: [human-rhythm]
 derives_from: [human-rhythm@1]
 version: 1

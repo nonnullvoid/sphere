@@ -1,6 +1,5 @@
 ---
 frame: idea-nodes
-kind: structural
 lens: [idea-capture]
 derives_from: [idea-capture@1]
 version: 1

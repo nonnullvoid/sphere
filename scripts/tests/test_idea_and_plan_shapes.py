@@ -1,6 +1,7 @@
 """Tests for the idea and plan trees in the shapes template, and for the archive being opt-in."""
 
 import os
+import shutil
 import unittest
 
 from sphere_testing import SphereCase
@@ -163,6 +164,8 @@ class PlanShapeTest(SphereCase):
         self.write(f"{self.folder}/plan.md", PLAN)
         out = self.plan(folder=archived)
         self.assertIn("archived, so state should be done or dropped (it's active)", out)
+        self.assertIn("is already used by", out)  # a copy left behind: an archived plan moves, never repeats
+        shutil.rmtree(os.path.join(self.root, self.folder))
         self.assertIn("structure-check: clean", self.plan("state: active", "state: dropped", folder=archived))
 
     def test_parent_plan(self):

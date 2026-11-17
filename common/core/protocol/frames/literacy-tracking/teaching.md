@@ -1,6 +1,5 @@
 ---
 frame: teaching
-kind: instinct
 lens: [literacy-tracking]
 derives_from: [literacy-tracking@1]
 version: 1

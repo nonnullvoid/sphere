@@ -1,6 +1,5 @@
 ---
 frame: trust-ladder
-kind: structural
 lens: [agent-trust]
 derives_from: [agent-trust@1]
 version: 1

@@ -52,7 +52,7 @@ use → notice → propose → (the human decides) → crystallize → announce 
 
 - **Asked, never assumed.** The AI may notice a repeated pattern and ask whether to capture it. It never writes a lens, a frame or a rule because it seemed like a good idea.
 - **Outside sphere authoring, the sphere's internals are read-only.** A change it notices is captured as a `sphere` idea and left for the next reflection. See [sphere authoring](../../../../spec/modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised).
-- **A rhythm, not a schedule.** A sphere tends to need evolution every couple of weeks. The sphere recognizes the signal itself (a concept with nowhere to live, a frame that feels stretched, friction with something that used to work) and suggests a reflection at a good moment.
+- **A rhythm, not a schedule.** A sphere tends to need evolution every few weeks, starting at three to four and adjusted with experience. The sphere recognizes the signal itself (a concept with nowhere to live, a frame that feels stretched, friction with something that used to work) and suggests a reflection at a good moment.
 - **Plain words for a non-technical human.** They never hear *lens* or *frame*. *"Done. Just say 'how was my week' any time."*
 - **The story stays home.** A lens or frame keeps a short changelog of what changed. Why it changed (the incident, the people, the dates) lives in the sphere's private records, so what's learned can travel without the story behind it.
 
@@ -65,11 +65,11 @@ use → notice → propose → (the human decides) → crystallize → announce 
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [crystallization](../frames/evolution/crystallization.md) | structural | Sizing a change, proposing it, making it in order with the checks, announcing it, and changes sized by how much they touch |
-| [reflection](../frames/evolution/reflection.md) | instinct | Targeted and deep reflection, the four findings, the friction instinct, the rhythm, and reviewing the `sphere` ideas |
-| [rule-capture](../frames/evolution/rule-capture.md) | instinct | A rule from a real moment, with its why; where it lives; the memory loop; keeping rules few |
+| Frame | In short |
+|---|---|
+| [crystallization](../frames/evolution/crystallization.md) | Sizing a change, proposing it, making it in order with the checks, announcing it, and changes sized by how much they touch |
+| [reflection](../frames/evolution/reflection.md) | Targeted and deep reflection, the four findings, the friction instinct, the rhythm, and reviewing the `sphere` ideas |
+| [rule-capture](../frames/evolution/rule-capture.md) | A rule from a real moment, with its why; where it lives; the memory loop; keeping rules few |
 
 ## Revision history
 

@@ -165,6 +165,7 @@ A gitless sphere is supported only as **one focus in the foreground at a time**.
 
 - **Stage only what the focus holds.** Never stage everything in the folder. Unrelated changes may belong to another focus or to the human. Git can't tell which window changed a file, so ownership is by holds alone; two foci that both hold a node (a soft claim answered "both") each stage it at their own ground. — **proven** (as "only what this window touched")
 - **One sphere repo, separate from code repos.** Sphere state has its own history; grounding the sphere never commits to the project being worked on. — **proven**
+- **A sphere in a cloud-synced folder works, with a warning.** A sync service can damage a git repository by rewriting files under `.git/` while git is using them. Builds don't move git data out of the folder; the startup check notices a known sync folder and says so once, plainly, so the human can choose. One sphere has run this way for months with no damage. — _decided_
 - **Generated files never cause merge pain.** Machine-only caches (like the startup bundle) are rebuilt when needed and never committed. Human-facing views (like the work index) are committed so people can read them. See [registries](registries.md#committed-views-and-caches--decided-not-yet-exercised). — _decided, not yet exercised_
 - **Ground commits the source; views follow.** Ground commits the sphere's source files once. Surface views are refreshed from them, never committed as a second, coupled change.
 - **History files merge by union** (one `.gitattributes` line), so two devices appending to one history keep both sides. — _unexercised_
@@ -194,4 +195,4 @@ Three kinds, handled differently:
 
 ## Open questions
 
-1. **Git inside cloud-synced folders.** A git repository inside a cloud-synced folder can be damaged when the sync service rewrites files under `.git/`. Decide whether builds warn about this or keep git data outside the synced folder.
+_None open._

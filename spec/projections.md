@@ -122,6 +122,8 @@ Separately from freshness, each projection declares how it opens. That depends o
 
 Live projections are served. Snapshots are static. A refreshed projection can be either: static with its data rendered in, or served if it's interactive.
 
+**Markdown is a first-class format.** A projection can be a plain markdown file instead of a page (`opens: markdown`). It reads as-is inside a harness or an editor, and the [index page](#surface-where-artifacts-live--proven) shows it through a default markdown viewer that ships with every sphere. Spheres that live only inside a harness need nothing more; HTML is for views that need layout, charts or interaction.
+
 ### Serving
 
 Serving is its own frame ([`projection-serving`](../common/core/protocol/frames/projections/projection-serving.md), under the projections lens), so every projection doesn't reinvent it. The sphere:
@@ -132,7 +134,7 @@ Serving is its own frame ([`projection-serving`](../common/core/protocol/frames/
 - **lets a served projection write only to the files its definition lists in `writes:`.** This is how input reaches the source (see [Views that accept input](#views-that-accept-input--decided-not-yet-exercised)): the server is the path back, and nothing else is writable through it. Input follows the [kinds of file](nodes.md): history is appended to, current state is written unless a focus holds it (then it's offered to that focus), and generated files are never written;
 - **grounds each accepted input as its own small change,** so a click in a view never sits unsaved.
 
-A non-technical human never sees any of this. They open "my things" and it works.
+A non-technical human never sees any of this. They ask the sphere (*"show my things"*), and it starts the server and gives them a link to bookmark. No terminal, no launcher.
 
 ## Stack — _decided, not yet exercised_
 
@@ -143,6 +145,8 @@ A sphere defines a default stack for projections, so templates and shared stylin
 | **1. Default** | Plain HTML, CSS and JavaScript. **No build step.** Type hints, if wanted, go in comments that editors read without compiling. | Almost every projection | `surface/projections/` |
 | **2. With a library** | Tier 1, plus a library saved into `surface/projections/assets/` (for example, a charting library). Still no build step. | When the default can't render a chart or an interaction well | `surface/projections/` |
 | **3. An app that reads the sphere** | Any web or mobile stack. **TypeScript** is the default language at this tier. | When it needs a database, logins, background jobs, a build step, or a phone app | **Outside the sphere**, as its own project |
+
+**Projections stay on the computer in 1.0.** Seeing them on a phone means hosting them somewhere other than this machine, with its own answer to privacy. That's tier-3 work and isn't planned yet.
 
 **Why plain web is the default:** static files open with a double-click, and served ones need only the local server from the [serving](#serving) frame. Models generate it reliably. It's readable and diffable like the rest of the sphere. And it will still open in ten years.
 
@@ -203,6 +207,8 @@ Its implementations share that shape and differ in what they read and how they c
 
 Not every render is worth keeping. A walkthrough generated to explain one change, or a one-time comparison, is **ephemeral until kept**. It's rendered static into a scratch area of the surface, opened, and not registered. If the human wants to keep it, it gets a registry entry and a home like any other projection. Otherwise the registry would fill up with one-time explainers.
 
+**Scratch is cleared only when the human asks.** Extra files cost little, and a render often turns out to be needed longer than expected.
+
 ## Legacy views
 
 Views built before a sphere adopted this structure, by hand and unregistered, are **registered as legacy** rather than rewritten or ignored. Each gets a registry entry with `legacy: true` and an honest freshness declaration. They don't have to be rebuilt to be known.
@@ -221,8 +227,8 @@ Views built before a sphere adopted this structure, by hand and unregistered, ar
 surface/
 ├── projections.html     the index: every live projection, built from the registry
 ├── projections/
-│   ├── assets/          shared stylesheet, components, navigation, theme tokens
-│   ├── _scratch/        ephemeral renders and focus previews, not registered, safe to clear
+│   ├── assets/          shared stylesheet, components, navigation, theme tokens, the markdown viewer
+│   ├── _scratch/        ephemeral renders and focus previews, not registered, cleared on request
 │   └── <namespace>/     one level by content type, chosen by the build (e.g. me/, work/)
 │       ├── <name>/      one projection: the artifact and its derived data
 │       └── _legacy/     retired views in this namespace, kept as reference
@@ -257,7 +263,7 @@ Each projection has a registry entry:
 - name: work-dashboard
   namespace: work
   kind: live                    # live | refreshed | snapshot | external
-  opens: served                 # static | served
+  opens: served                 # static | served | markdown
   lifespan: long-lived          # long-lived | time-bound
   freshness: on-open            # on-open | stale after 1 day | frozen
   sources: [layers/work/index.md, layers/work/*/work.md]
@@ -298,7 +304,4 @@ Each comes from a real failure:
 
 ## Open questions
 
-1. **How a non-technical human starts a served projection** without a terminal: a command to the sphere ("show my things"), a launcher file they double-click, or both?
-2. **Projections on a phone.** Should builds ship a way to see projections away from the computer, and if so, what keeps that private?
-3. **Clearing scratch.** When are ephemeral renders cleared: after a time, at ground, or only when the human asks?
-4. **Formats.** HTML is the default for rich views. Should a plain markdown projection be a first-class kind for spheres that only ever live inside a harness?
+_None open._

@@ -1,6 +1,5 @@
 ---
 frame: projection-serving
-kind: structural
 lens: [projections]
 derives_from: [projections@1]
 version: 1
@@ -34,7 +33,7 @@ Live views are served. Snapshots are static. A refreshed view can be either: sta
 - **It listens on this machine only, never on the network.** *Why:* a private projection stays private only if nothing outside the machine can reach it.
 - **It serves what's been grounded.** Sources are read as of the sphere's latest commit, so a view never shows a focus's unsaved work (see [projection-freshness](projection-freshness.md#what-a-view-shows-whats-been-grounded)).
 - **It serves only what a view declares:** the projection's own artifact, the shared assets, and the files in its `sources`. Nothing else in the sphere is reachable through it.
-- **A non-technical human never sees any of this.** They say *"show my things"*, or open the launcher, and it works.
+- **A non-technical human never sees any of this.** They say *"show my things"*; the sphere starts the server and gives them a link to bookmark.
 
 ## Input goes back to the source
 

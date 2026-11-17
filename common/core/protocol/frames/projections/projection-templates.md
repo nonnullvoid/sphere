@@ -1,6 +1,5 @@
 ---
 frame: projection-templates
-kind: structural
 lens: [projections]
 derives_from: [projections@1]
 version: 1

@@ -448,7 +448,7 @@ def one_default_persona(tree: Tree, nodes: list[str]) -> list[Finding]:
 
 
 def unique_names(tree: Tree, nodes: list[str]) -> list[Finding]:
-    """Names are unique across the tree, group folders included."""
+    """Names are unique across the tree: group folders and the archive included (node-names)."""
     findings: list[Finding] = []
     first: dict[str, str] = {}
     for node in nodes:
@@ -462,7 +462,6 @@ def unique_names(tree: Tree, nodes: list[str]) -> list[Finding]:
 
 TREE_SET_RULES: dict[str, Callable[[Tree, list[str]], list[Finding]]] = {
     "persona": one_default_persona,
-    "library": unique_names,
 }
 
 
@@ -599,6 +598,8 @@ def check_everything(shapes: Shapes, include_archive: bool = False) -> list[Find
         set_rules = TREE_SET_RULES.get(tree.name)
         if set_rules:
             findings += set_rules(tree, [node for node in nodes if os.path.isfile(tree.current_path(node))])
+        # Names are never reused, so the archive is always listed for this one (folder listings only, still cheap).
+        findings += unique_names(tree, node_paths(tree, include_archive=True))
     return findings + check_focus_tree(include_archive) + check_sphere_files(shapes)
 
 

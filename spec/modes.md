@@ -105,7 +105,9 @@ something to judge, capture ideas as they come. Ask what the idea
 is for before shaping it. Don't start building.
 ```
 
-It's a structural frame: it **composes** lenses and frames, it doesn't hold understanding of its own.
+It's a frame that **composes** lenses and frames; it doesn't hold understanding of its own.
+
+**A mode has nothing to do with sharing.** It shapes how the sphere behaves, never what it may share. If a mode travels to another sphere, the lenses and frames it points to travel or stay home at their own sharing levels, as always.
 
 **Builds ship starter operating modes,** for example coding, brainstorming, planning, reviewing, research, reflecting, non-technical, and sphere authoring (below). **The sphere refines them through use.** It notices what a mode actually reaches for and offers to adjust its loadout. A loadout that keeps missing is a [reflection](evolution.md) finding.
 
@@ -187,4 +189,4 @@ Three registers that are easy to blur, kept apart:
 
 ## Open questions
 
-1. **Sharing operating modes:** a well-made operating mode could be shared as a public seed. How does that interact with the sharing levels of the lenses and frames in its loadout? (Likely: a mode can't be more open than what it points to, as with [frames and lenses](protocol.md#sharing--decided-not-yet-exercised).)
+_None open._

@@ -1,6 +1,5 @@
 ---
 frame: persona
-kind: structural
 lens: [modes]
 derives_from: [modes@1]
 version: 1

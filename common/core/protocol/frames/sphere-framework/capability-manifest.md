@@ -1,6 +1,5 @@
 ---
 frame: capability-manifest
-kind: structural
 lens: [sphere-framework]
 derives_from: [sphere-framework@1]
 version: 1

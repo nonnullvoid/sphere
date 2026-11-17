@@ -55,10 +55,10 @@ Some work runs while the human is away: an agent working a focus supervised or u
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [daily-cadence](../frames/human-rhythm/daily-cadence.md) | instinct | The anchors, the morning signal, the forgotten wrap, the real clock, the human's pattern, optional scheduling |
-| [reaching-the-human](../frames/human-rhythm/reaching-the-human.md) | instinct | What's waiting, the ground line, the escalation order, the after-hours lean |
+| Frame | In short |
+|---|---|
+| [daily-cadence](../frames/human-rhythm/daily-cadence.md) | The anchors, the morning signal, the forgotten wrap, the real clock, the human's pattern, optional scheduling |
+| [reaching-the-human](../frames/human-rhythm/reaching-the-human.md) | What's waiting, the ground line, the escalation order, the after-hours lean |
 
 ## Revision history
 

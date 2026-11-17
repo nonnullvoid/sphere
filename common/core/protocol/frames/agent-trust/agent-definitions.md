@@ -1,6 +1,5 @@
 ---
 frame: agent-definitions
-kind: structural
 lens: [agent-trust, focus]
 derives_from: [agent-trust@1, focus@1]
 version: 1

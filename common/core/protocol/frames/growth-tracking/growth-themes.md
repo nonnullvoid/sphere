@@ -1,6 +1,5 @@
 ---
 frame: growth-themes
-kind: structural
 lens: [growth-tracking]
 derives_from: [growth-tracking@1]
 version: 1

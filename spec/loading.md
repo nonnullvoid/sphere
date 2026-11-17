@@ -23,6 +23,24 @@ So loading is about quality first and cost second. — **proven**
 
 _The evidence so far:_ one sphere cut its always-loaded engine from about 19 KB to about 5.5 KB by splitting it this way, with no loss in what it could do. The invariant hasn't yet been tested on a very large sphere.
 
+### Measured for every build — _decided, not yet exercised_
+
+What matters is the **cold-start context**: what a fresh window has read before it gives its first answer. Every build is measured on it:
+
+1. Take the build's sample sphere at three sizes: as shipped, about ten times larger and about fifty times larger (filled with generated nodes).
+2. Run the same set of narrow tasks on each, every one in a fresh window: *"when does the lease end?"*, *"capture an idea about X"*, *"resume the move focus"*.
+3. Count what each window read before its first answer: startup files plus every read.
+
+The build passes when the largest sphere costs about the same as the smallest, within a fifth more. A build that fails has let something grow onto the floor or into startup.
+
+### An index, once a layer is big — _decided, not yet exercised_
+
+Plain text search over files is fast; reading is what costs. So a layer that grows large gets an **index**: one generated file, one line per node (name, title, summary, path, last updated), built from frontmatter the nodes already carry. Search reads the index first and opens only what matches. A very large index splits by name prefix.
+
+- **It arrives when it's needed,** not from the start: when a layer passes a few hundred nodes, or a search starts opening too many files. Because it's built entirely from frontmatter, adding it later costs nothing.
+- **It's the one generated file that follows the nodes.** Ground updates only the lines for the nodes it touched (see [registries](registries.md)).
+- **A faster cache is a swappable part.** At very large sizes a build may add a database, such as an SQLite file with full-text search, for ranked and structured queries. It's only ever a **cache**: kept out of git, rebuilt from the files at any time, never the source. Delete it and nothing is lost; search falls back to the files.
+
 ---
 
 ## Four tiers — _decided, partly exercised_
@@ -40,7 +58,7 @@ This works because **a frame is self-sufficient to run** (see [protocol](protoco
 
 ### The kernel split — _decided, partly exercised_
 
-The core is split too. A small **kernel** loads in every window: the state machine, the guards, the instincts that must always be on. The **deeper engine mechanics** (how evolution runs, how replication works, how the registries rebuild) load only when the sphere is being worked on, not when it's being used.
+The core is split too. A small **kernel** loads in every window: the state machine and every frame marked `always: true` (the guards). The **deeper engine mechanics** (how evolution runs, how replication works, how the registries rebuild) load only when the sphere is being worked on, not when it's being used.
 
 ### The floor is governed — _decided, not yet exercised_
 
@@ -49,6 +67,7 @@ What loads in every window is the **floor**, and floor creep is the one real per
 - **Admission to the floor is rare.** A thing earns its place by being needed in nearly every window, not by being important.
 - **Admission is reversible.** Anything on the floor can be moved back to on-demand. Evolution's reflection looks at the floor's size and asks whether each item still earns its place.
 - **The floor's size is visible.** The startup check reports it, so growth is noticed.
+- **No size budget.** A sphere's files are small text. What matters is the cold-start context, and that's [measured for every build](#measured-for-every-build--decided-not-yet-exercised).
 
 ---
 
@@ -115,7 +134,9 @@ _An example already in the spec:_ the [work tree view](work.md) is built from no
 
 Every [operating mode](modes.md#operating-modes--decided-not-yet-exercised) (coding, brainstorming, planning, research…) carries a **loadout**: the frames worth warming up front for that kind of work. The floor always loads. The loadout is the only part that varies. It's **a hint, never a gate**: everything stays reachable, and if a coding focus suddenly needs the meeting frames, they load on demand at the cost of one extra read.
 
-The operating mode is declared by the human (preferred), inferred from how the work opens, and changeable at any time. Which frames each loadout warms is learned from use.
+The operating mode is declared by the human (preferred), inferred from how the work opens, and changeable at any time.
+
+**Which frames a loadout warms is learned from use.** A build starts each operating mode with a best guess. When a focus closes, the frames it read are noted in its history, along with its operating mode. Over time that shows how often each frame is needed in each mode. A frame read in most focuses of a mode (a build sets the share, say seven in ten) is offered for that mode's loadout; one that sits unused is offered for removal. This is low priority: any frame can load on demand anyway, so a missing warm-up costs one extra read.
 
 ---
 
@@ -136,7 +157,4 @@ None of this is visible. They notice only that the sphere is quick, stays on top
 
 ## Open questions
 
-1. **Measuring the invariant.** What's the test that shows a window's cost tracks the task, not the sphere? Probably a fixed set of narrow tasks, run against the same sphere at different sizes.
-2. **Search at scale.** When discovery shifts to searching, is plain text search enough, or does a large sphere need an index built for it?
-3. **Floor budget.** Should a build ship a size budget for the floor, or only report its size?
-4. **Learned warm-up.** How does a sphere learn which frames an operating mode's loadout should warm up, without loading them all to find out?
+_None open._

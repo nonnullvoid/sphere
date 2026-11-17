@@ -80,10 +80,10 @@ The wrap is a natural moment to notice a win; the weekly look back is a natural 
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [growth-ledger](../frames/growth-tracking/growth-ledger.md) | structural | The ledger: what it tracks, entries, lanes, what writes them, the plain view, exports |
-| [growth-themes](../frames/growth-tracking/growth-themes.md) | structural | What a theme owns, where its records live, honest scoring, computed standing, milestones, swapping |
+| Frame | In short |
+|---|---|
+| [growth-ledger](../frames/growth-tracking/growth-ledger.md) | The ledger: what it tracks, entries, lanes, what writes them, the plain view, exports |
+| [growth-themes](../frames/growth-tracking/growth-themes.md) | What a theme owns, where its records live, honest scoring, computed standing, milestones, swapping |
 
 ## Revision history
 

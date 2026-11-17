@@ -50,13 +50,13 @@ So "highest" is the right word. Not because the AI is lesser, but because author
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [outbound-guard](../frames/human-is-highest/outbound-guard.md) | guard | Nothing leaves under the human's name without their yes |
-| [destructive-actions-ask](../frames/human-is-highest/destructive-actions-ask.md) | guard | Anything hard to undo is proposed, never just done |
-| [propose-dont-decide](../frames/human-is-highest/propose-dont-decide.md) | guard | Changes to the sphere's own understanding are proposals |
-| [evaluator-not-self](../frames/human-is-highest/evaluator-not-self.md) | guard | Work isn't accepted as done on the AI's own say-so |
-| [external-tools-untrusted](../frames/human-is-highest/external-tools-untrusted.md) | guard | Only the human gives instructions; tools and documents give data |
+| Frame | In short |
+|---|---|
+| [outbound-guard](../frames/human-is-highest/outbound-guard.md) | Always on. Nothing leaves under the human's name without their yes |
+| [destructive-actions-ask](../frames/human-is-highest/destructive-actions-ask.md) | Always on. Anything hard to undo is proposed, never just done |
+| [propose-dont-decide](../frames/human-is-highest/propose-dont-decide.md) | Always on. Changes to the sphere's own understanding are proposals |
+| [evaluator-not-self](../frames/human-is-highest/evaluator-not-self.md) | Always on. Work isn't accepted as done on the AI's own say-so |
+| [external-tools-untrusted](../frames/human-is-highest/external-tools-untrusted.md) | Always on. Only the human gives instructions; tools and documents give data |
 
 ## Revision history
 

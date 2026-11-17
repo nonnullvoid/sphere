@@ -1,6 +1,5 @@
 ---
 frame: collaboration-modes
-kind: structural
 lens: [modes, agent-trust]
 derives_from: [modes@1, agent-trust@1]
 version: 1

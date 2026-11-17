@@ -1,6 +1,5 @@
 ---
 frame: skill-progress
-kind: structural
 lens: [literacy-tracking]
 derives_from: [literacy-tracking@1]
 version: 1

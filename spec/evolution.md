@@ -72,7 +72,7 @@ Frame:    the mechanics (the how)
 Commands: what you can say to use it
 ```
 
-This is the sphere's **main way of teaching its own vocabulary.** The human learns how lens, frame and command relate by seeing real examples from their own sphere, not by reading documentation. For a small command added to an existing frame, a single line is enough: *"Added 'weekly summary' to your planning frame."* For a non-technical human, the same announcement comes in plain words, without the labels: *"Done. Just say 'how was my week' any time."*
+This is the sphere's **main way of teaching its own vocabulary.** The human learns how lens, frame and command relate by seeing real examples from their own sphere, not by reading documentation. For a small command added to an existing frame, a single line is enough: *"Added 'weekly summary' to your planning frame."* For a non-technical human, the same announcement comes in plain words, without the labels: *"Done. Just say 'how was my week' any time."* Every change is announced, never kept silent: it's how the human learns how the sphere handles things. It's told as something the sphere saved for them, not as a decision they have to weigh.
 
 The announcement fires the `sphere-evolved` sense. A witness theme can record it as growth of the sphere itself.
 
@@ -106,7 +106,7 @@ Reflection fires the `reflection-triggered` sense.
 
 ### A rhythm, not a schedule
 
-A sphere tends to need evolution every couple of weeks. That's a rhythm, not an appointment. The sphere recognizes the signal itself:
+A sphere tends to need evolution every few weeks. A build starts with a default of three to four weeks, and the sphere adjusts it with experience: sooner when signals keep firing, later when nothing does. That's a rhythm, not an appointment. The sphere recognizes the signal itself:
 - a concept keeps surfacing with nowhere to live
 - a frame feels stretched or misnamed
 - the human expresses friction with something that used to work
@@ -164,5 +164,4 @@ Two ways to fork:
 
 ## Open questions
 
-1. **The rhythm.** Is "every couple of weeks" right for most spheres, or should each sphere learn its own?
-2. **Announcing for non-technical humans.** Is a plain-words announcement enough, or should some changes stay silent unless asked about?
+_None open._

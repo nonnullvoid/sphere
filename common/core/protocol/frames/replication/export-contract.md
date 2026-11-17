@@ -1,6 +1,5 @@
 ---
 frame: export-contract
-kind: structural
 lens: [replication]
 derives_from: [replication@1]
 version: 1
@@ -41,7 +40,7 @@ No export, seed or published view includes these, unless the human names a speci
 - **The scaffold:** the door and startup files, the engine, and the scripts that build and check the sphere (`core/shapes` and the checks among them). *Why:* a new sphere comes up already fast and already checked, instead of working all that out again.
 - **Each layer's contract,** and the files it names in `requires:`, without the layer's data.
 - **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
-- **Procedure frames, as plain skills.** They need no translation.
+- **Skill frames, as plain skills.** They need no translation.
 - **The sphere's identity,** `core/identity.json`, which names the sphere and nothing about its human (see [sphere-identity](sphere-identity.md)).
 
 **Generated files never travel.** The capability manifest, the startup bundle, every index and view: the receiving sphere rebuilds them from its own files. They describe the sphere that built them. A seeded view that shows nothing until that rebuild runs is the boundary working.

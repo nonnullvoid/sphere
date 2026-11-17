@@ -268,6 +268,8 @@ class ProjectionShapeTest(LensShapeCase):
         self.assertIn("archived, so it needs 'retired'", self.check("--archive").out)
         self.write(archived, text.replace("legacy: false\n", "legacy: false\nretired: 2026-11-01 the launch is done\n"))
         self.assertIn(CLEAN, self.check("--archive").out)
+        self.write(archived, text.replace("legacy: false\n", "legacy: false\nretired: the launch is done\n"))
+        self.assertIn("retired", self.check("--archive").out)  # one line: the date, then why
 
 
 class KnowledgeShapeTest(LensShapeCase):
@@ -291,6 +293,19 @@ class KnowledgeShapeTest(LensShapeCase):
         self.assertIn("updated is 'Nov 4'", self.put(self.file, TOPIC, "updated: 2026-11-04", "updated: Nov 4"))
         self.assertIn("missing key 'summary'", self.put(self.file, TOPIC, "summary: ends in August\n", ""))
         self.assertIn("missing topic.md", self.put("layers/knowledge/money.budget/notes.md", "loose\n"))
+
+    def test_related_items_are_names_or_links(self):
+        self.assertIn(CLEAN, self.put(self.file, TOPIC, "work:home.move", "work:tax-20"))
+        self.assertIn("related", self.put(self.file, TOPIC, "work:home.move", "Home Move"))
+
+    def test_names_follow_the_common_pattern(self):
+        self.assertIn("Home.Lease", self.put("layers/knowledge/Home.Lease/topic.md", TOPIC.replace("home.lease", "Home.Lease")))
+
+    def test_a_name_is_never_reused_even_after_archiving(self):
+        self.write(self.file, TOPIC)
+        self.write("layers/knowledge/archived/home.lease/topic.md", TOPIC)
+        out = self.check().out  # the archive's names are always listed, without --archive
+        self.assertIn("name 'home.lease' is already used by layers/knowledge/home.lease", out)
 
 
 class LiteracyShapeTest(LensShapeCase):
@@ -371,7 +386,6 @@ frames: [node-shape]
 FRAME = """\
 ---
 frame: node-shape
-kind: structural
 lens: nodes
 derives_from: [nodes@1]
 version: 1

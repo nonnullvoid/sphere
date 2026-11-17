@@ -25,7 +25,7 @@ A published architecture version is a **reference point**: something a sphere ca
 - **Major** (`1.0` → `2.0`): a structural change, where something an older sphere relies on works differently. Examples: files move, a core concept is redefined, a layout changes.
 - **Minor** (`1.0` → `1.1`): additive. New chapters, new optional mechanics, new frames. Nothing an existing sphere relies on changes meaning.
 - **Status tags move without a version change.** When something marked *unexercised* gets proven in real use, its tag is updated. That's a correction to the description, not a change to the architecture.
-- **Deprecation is announced a version ahead.** — _decided_ Anything that will change in the next major version is marked deprecated in the current one, with what replaces it.
+- **Deprecation is announced a version ahead.** — _decided_ Anything that will change in the next major version is marked deprecated in the current one, with what replaces it. A deprecated thing lives for one major version, following common practice, and is removed in the next.
 
 ## Build versions — _decided, not yet exercised_
 
@@ -75,7 +75,7 @@ The first public release (v0.1, April 2026) was an early sketch. It described a 
 
 What's new:
 
-- **Protocol:** lenses and frames. Frames derive from one or more lenses and declare the data they touch; every skill is a frame; frames come in four kinds; skills can be framed into a sphere. ([protocol](protocol.md))
+- **Protocol:** lenses and frames. Frames derive from one or more lenses and declare the data they touch; every skill is a frame; frames aren't sorted into kinds, and a guard is one marked `always: true`; skills can be framed into a sphere. ([protocol](protocol.md))
 - **State:** the sphere as a state machine on one branch, with two levels (the sphere, always its latest commit; each focus node, working ↔ grounded). Operations as contracts, no separate sync (ground pulls and pushes); the words belong to the build (*ground* technical, *save* non-technical) and the human; peek shows what's unsaved; reverts aimed by node and by kind of file; a short lock at ground; a gitless fallback with one focus in the foreground. ([state](state.md))
 - **Nodes:** one shape for everything a sphere holds: a node (name, place, flat folder, one-line frontmatter, current state plus history), in a tree, linked across trees into a map; four kinds of file with one rule for several writers; new parts designed by fitting the shape before adding machinery. ([nodes](nodes.md))
 - **Focus:** what the human is focusing on with the model, as a fourth tree of nodes (intention plus memory). Sessions and agents are two ways of working a focus node, told apart by who chooses each step. Foreground and background; holds instead of branches; four kinds of file with one rule for several writers; a tree where children carve the parent's hold and report up by appending; *open focus*, *attach*, *close focus*. The focus folder is the registry: three kinds of truth, three homes. ([focus](focus.md))
@@ -96,4 +96,4 @@ What's new:
 
 ## Open questions
 
-1. **How long deprecated things live.** One major version ahead, or a fixed time?
+_None open._

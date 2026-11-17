@@ -12,8 +12,8 @@ Every lens starts `verified: false`. A lens is in force only once a human has re
 common/core/protocol/
 ├── README.md                  the vocabulary, in plain words
 ├── lenses/<lens>.md
-└── frames/<lens>/<frame>.md   guard, instinct or structural frames
-    frames/<lens>/<skill>/SKILL.md   procedure frames, in the Agent Skills format
+└── frames/<lens>/<frame>.md   frames that live only in the sphere
+    frames/<lens>/<skill>/SKILL.md   skill frames, in the Agent Skills format
 ```
 
 ## Contents

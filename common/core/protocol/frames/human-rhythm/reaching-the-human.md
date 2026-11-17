@@ -1,6 +1,5 @@
 ---
 frame: reaching-the-human
-kind: instinct
 lens: [human-rhythm]
 derives_from: [human-rhythm@1]
 version: 1

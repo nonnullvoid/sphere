@@ -42,7 +42,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 - **Registry structures** without their entries, **templates**, **shared assets**.
 - **The runtime scaffold:** the startup files, the engine kernel, and the scripts that build and check the sphere. This is how a new sphere comes up already fast and already checked: it inherits the efficiency work (see [loading](loading.md)) instead of re-deriving it.
 - **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
-- **Procedure frames as plain skills.** These export with no translation. See [framing a skill](protocol.md#framing-a-skill).
+- **Skill frames as plain skills.** These export with no translation. See [framing a skill](protocol.md#framing-a-skill).
 
 **Derived caches never travel.** The capability manifest, the startup bundle and every other generated file are rebuilt by the receiving sphere at init. They describe the sphere that built them, not the one receiving them. A seeded dashboard shows zeros until that rebuild runs, which is the boundary working as intended.
 
@@ -118,7 +118,7 @@ Identity lives in its own small file, `core/identity.json`, so tooling can read 
 
 `core/identity.json` itself travels in every export, since provenance needs it. It names the sphere and nothing about its human.
 
-**A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a structural frame, [`sphere-identity`](../common/core/protocol/frames/replication/sphere-identity.md). Spheres can choose differently by swapping that frame.
+**A frame decides the scheme.** How names are suggested and how versions advance (by date, by count, at every protocol change or only at exports) is set by a frame, [`sphere-identity`](../common/core/protocol/frames/replication/sphere-identity.md). Spheres can choose differently by swapping that frame.
 
 **No signing, for now.** Nothing here proves a sphere is who it says it is. True uniqueness and authenticity need signing, with public and private keys, and that's more machinery than spheres need until there are many of them out in the world exchanging seeds. When that happens, signing arrives as a new version of the `sphere-identity` frame. Nothing else in the architecture has to change.
 

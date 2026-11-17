@@ -71,11 +71,11 @@ Work is what's changing in the world. Focus is what's being attended to. Many fo
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [focus-nodes](../frames/focus/focus-nodes.md) | structural | The record, opening, attaching, closing, foreground and background, the folder as registry |
-| [focus-holds](../frames/focus/focus-holds.md) | structural | What a focus holds, soft claims, and the four kinds of file |
-| [focus-tree](../frames/focus/focus-tree.md) | structural | Children, carving a hold, reporting up, what's waiting |
+| Frame | In short |
+|---|---|
+| [focus-nodes](../frames/focus/focus-nodes.md) | The record, opening, attaching, closing, foreground and background, the folder as registry |
+| [focus-holds](../frames/focus/focus-holds.md) | What a focus holds, soft claims, and the four kinds of file |
+| [focus-tree](../frames/focus/focus-tree.md) | Children, carving a hold, reporting up, what's waiting |
 
 ## Revision history
 

@@ -1,6 +1,5 @@
 ---
 frame: library
-kind: structural
 lens: [literacy-tracking]
 derives_from: [literacy-tracking@1]
 version: 1
@@ -55,7 +54,7 @@ updated: 2026-10-14
 
 | Key | Holds |
 |---|---|
-| `artifact` | The name; matches the file. Unique across the library, groups included |
+| `artifact` | The name; matches the file. Unique across the library, groups and archive included |
 | `title` | One line saying what it explains |
 | `type` | What shape it is. The list grows as the human needs new shapes: a map of a system, a breakdown of a change |
 | `subjects` | The subjects it explains, by name. Can be untracked subjects too |

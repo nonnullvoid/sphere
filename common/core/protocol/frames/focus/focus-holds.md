@@ -1,6 +1,5 @@
 ---
 frame: focus-holds
-kind: structural
 lens: [focus, continuity]
 derives_from: [focus@1, continuity@1]
 version: 1

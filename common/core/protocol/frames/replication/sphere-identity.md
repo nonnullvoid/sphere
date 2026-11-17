@@ -1,6 +1,5 @@
 ---
 frame: sphere-identity
-kind: structural
 lens: [replication]
 derives_from: [replication@1]
 version: 1

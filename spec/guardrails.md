@@ -10,7 +10,7 @@ _Status tags: **proven** (exercised in real daily use) · **advanced** (opt-in, 
 
 Most of what a sphere learns comes from things going right. Guardrails come from things almost going wrong: a message nearly sent before it was checked, a branch that was out of date, a claim stated more strongly than the evidence allowed. Each near-miss is a chance to make sure it doesn't happen twice.
 
-A guardrail is a **guard frame**: mechanics that apply to every action in scope, rather than being invoked for a task (see [frame kinds](protocol.md#every-skill-is-a-frame-not-every-frame-is-a-skill)). Like every frame, it derives from a lens. Usually that's [human-is-highest](../common/core/protocol/lenses/human-is-highest.md), the lens that says the human decides, or one of the human's own [principles](#principles). The lens holds the *why*. This chapter is about the mechanics every guard frame shares.
+A guardrail lives in a **guard frame**: a frame marked `always: true`, so it applies to every action in scope rather than loading when a task needs it (see [every skill is a frame](protocol.md#every-skill-is-a-frame-not-every-frame-is-a-skill)). Like every frame, it derives from a lens. Usually that's [human-is-highest](../common/core/protocol/lenses/human-is-highest.md), the lens that says the human decides, or one of the human's own [principles](#principles). The lens holds the *why*. This chapter is about the mechanics every guard frame shares.
 
 In practice, this is where a long-lived sphere keeps growing after its structure settles. New lenses and frames become rare, and guardrails keep arriving, one incident at a time. — **proven**
 
@@ -81,11 +81,11 @@ A rule can be firm without being enforced (the AI holds to it), and enforced wit
 
 Guardrails accumulate. Without care, a sphere ends up with a hundred rules, some overlapping, some contradicting each other, most never consulted. So:
 
-- **Each guardrail records its origin and when it last applied,** in a history file of its own, `core/records/rules/<rule>.md`: one line appended each time it's applied or overridden. *Last applied* is read from the latest line, never stored. One that hasn't applied in months is a candidate for review (see [rule-capture](../common/core/protocol/frames/evolution/rule-capture.md)).
+- **Each guardrail records its origin and when it last applied,** in a history file of its own, `core/records/rules/<rule>.md`: one line appended each time it's applied or overridden. *Last applied* is read from the latest line, never stored. It's only as good as the AI's noticing, so it informs the review and never retires a rule by itself (see [rule-capture](../common/core/protocol/frames/evolution/rule-capture.md)).
 - **Merge before adding.** A new rule that's a special case of an existing one extends that one instead. (The usual [governance](protocol.md#governance--proven) rule: prefer updating to adding.)
 - **Contradictions surface immediately.** When a new rule conflicts with an existing one, the sphere says so and asks which wins, instead of holding both.
 - **Scope is explicit.** A rule about pull requests only loads when pull requests are in play, so a hundred narrow rules don't all compete for attention in every window.
-- **A periodic review** (for example, alongside a monthly reflection) offers to merge, retire or sharpen rules. The human decides.
+- **A periodic review** (for example, alongside a reflection) offers to merge, retire or sharpen rules. This is how rules retire. The human decides.
 
 ---
 
@@ -96,6 +96,14 @@ Guardrails exist because people, and AIs, forget in the moment. They're not ther
 **An override is noted, and it doesn't carry over.** The sphere records that it happened. The next similar case is its own decision; one "just send it" isn't a standing yes.
 
 The exception is a guardrail the human has marked **firm**, such as never sharing another person's private details. For those, the human has decided in advance that the in-the-moment request doesn't win, and the sphere holds to that.
+
+**Builds ship a few firm by default** — _decided, not yet exercised_. Only ones that can't hurt a human who has never heard of guardrails:
+
+- **Other people's private details** don't leave the sphere unless the human names them, item by item. A "just send it" doesn't carry them along.
+- **Secrets stay out of the sphere's files.** Passwords, keys and tokens are never written down; the sphere notes where they're kept instead. Files can leave with a push or an export.
+- **Nothing leaves on the AI's own initiative,** or because a page or document said to. Only the human's yes sends; "just send it" *is* that yes.
+
+The human can relax or tighten any of them, in [sphere authoring](modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised), like any other guardrail.
 
 **Changing a guardrail is different from overriding it.** An override lets one request through. A change rewrites the rule itself, and that happens only in [sphere authoring](modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised), with the human confirming each edit.
 
@@ -120,6 +128,8 @@ A guardrail derived from a principle names it, so the rule can be reconsidered i
 
 Most people come to a sphere already carrying rules: instruction files, a harness's memory notes, a team's conventions. Those can be **brought in like skills**. The sphere reads them, proposes where each one belongs (an existing guard, a new one, a lens, or nowhere), and the human confirms. Afterwards the original files can stay where they are. The sphere doesn't fight a harness's own memory; it organizes it.
 
+**It happens on request,** not by watching. Harnesses keep memory in different ways, so a sphere can't know what to watch. A build may set a reminder, say once a month, to offer another pass.
+
 This is often the first job. Without a sphere file to go to, rules pile up in the AI tool's memory by default. In one sphere in daily use, every guardrail it had lived there, already written as a rule with its reason. That made the import easy, and it showed the rules had nowhere better to go.
 
 ## What travels
@@ -136,6 +146,4 @@ The human never hears the word guardrail. When they say *"don't ever do that aga
 
 ## Open questions
 
-1. **Firm by default.** Should builds ship any guardrails as firm, for example around other people's private data, or should only the human ever mark one firm?
-2. **Last applied.** It's read from the rule's record, so it's only as good as the AI's noticing when it applied one. Is that reliable enough to drive retirement, or should review be purely periodic?
-3. **Importing harness memory.** Is a one-time import enough, or should the sphere keep watching the harness's memory files and offer new entries as they appear?
+_None open._

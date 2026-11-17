@@ -54,11 +54,11 @@ Underneath, the sphere's files are always in one of two states: **working** (cha
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [state-machine](../frames/continuity/state-machine.md) | structural | The states, the operations and their contracts, and ground step by step |
-| [check-shared-state](../frames/continuity/check-shared-state.md) | guard | Before changing what others depend on, look again first |
-| [without-git](../frames/continuity/without-git.md) | structural | Running with no git: one focus at a time, and what's lost |
+| Frame | In short |
+|---|---|
+| [state-machine](../frames/continuity/state-machine.md) | The states, the operations and their contracts, and ground step by step |
+| [check-shared-state](../frames/continuity/check-shared-state.md) | Always on. Before changing what others depend on, look again first |
+| [without-git](../frames/continuity/without-git.md) | Running with no git: one focus at a time, and what's lost |
 
 ## Revision history
 

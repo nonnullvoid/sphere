@@ -16,7 +16,7 @@ The trap is that a list kept by hand drifts. Something changes, nobody updates t
 
 The test for any file: if you could delete it and rebuild it from other files, it's a view. If you couldn't, it's truth, and nothing else should duplicate it.
 
-**How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the structural frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, however it's maintained.
+**How each registry is kept up to date is its own decision,** made by the registry's [frame](protocol.md#frame--proven): the frame that knows what the registry is for. What every registry shares is that **the tooling checks it**, however it's maintained.
 
 ---
 
@@ -188,6 +188,8 @@ Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and th
 
 The capability manifest is a human-facing view, so it's committed: a person can read it to see what their sphere knows how to do. See [loading](loading.md).
 
+**Views follow the files; they don't need rebuilding.** Adding, changing or removing a node never requires changing a view. Wherever it can, a view is computed from the files at the moment it's looked at: the sphere scans frontmatter, a projection reads its sources when it opens. A view's own definition changes only when the sphere's workings change, and only then is it rebuilt as a whole. The few views stored as lists (a committed index a person reads without running anything, or a large layer's [index](loading.md#an-index-once-a-layer-is-big--decided-not-yet-exercised)) are updated at ground, only for the lines whose nodes that ground touched. A sphere without git works the same way. — _decided, not yet exercised_
+
 **Conflicts in a committed view are never resolved by hand.** When two devices both change a view and their copies merge, it's rebuilt from the merged sources: by the tooling for a generated view, or by the AI for an AI-maintained one. Both versions were views of their sources, so the merged sources produce the right one.
 
 ---
@@ -229,5 +231,4 @@ For a **non-technical human**, registries exist but are never mentioned. They're
 
 ## Open questions
 
-1. **When views rebuild.** At every ground, or only when their sources changed? Rebuilding everything is simpler; rebuilding only what changed is faster in a large sphere.
-2. **Views outside git.** In a gitless fallback sphere (one focus in the foreground at a time), "never edited by hand" still holds, but there's no merge to regenerate after. Anything else needed?
+_None open._

@@ -40,12 +40,12 @@ A node's label says what *kind* of work it is. It's a judgment about the work's 
 
 ### Naming — _decided, not yet exercised_
 
-Every node has a **name**: unique, lowercase, and stable once given, so it can be referred to from anywhere: other nodes, plans, knowledge, a conversation. The AI picks a name that fits the context. Two default schemes work in most cases:
+Every node has a **name**: unique, lowercase, and stable once given, so it can be referred to from anywhere: other nodes, plans, knowledge, a conversation. The AI picks a name that fits the context. Work uses two of the named [naming schemes](../common/core/protocol/frames/nodes/node-names.md#naming-schemes):
 
 | Scheme | Example | Best for | Trade-off |
 |---|---|---|---|
-| **Namespace** | `home.kitchen.plumbing` | Stable structure, like areas and the projects inside them | The name records where the node sits. Moving it means renaming it; the tooling fixes links inside the sphere, but references written elsewhere won't follow. |
-| **Prefix + number** | `TAX-20`, `dubai-trip-21` | Work that recurs or may move around the tree | Says less about where the node sits, but never changes when it moves |
+| **`namespace`** | `home.kitchen.plumbing` | Stable structure, like areas and the projects inside them | The name records where the node sits. Moving it means renaming it; the tooling fixes links inside the sphere, but references written elsewhere won't follow. |
+| **`prefix-number`** | `tax-20`, `dubai-trip-21` | Work that recurs or may move around the tree | Says less about where the node sits, but never changes when it moves |
 
 The folder is named after the node (`layers/work/home.kitchen.plumbing/`), and folders stay flat whatever the scheme. In the tree view, a child is shown relative to its parent (`.plumbing`).
 
@@ -134,7 +134,13 @@ Paused always says why, because paused work without a reason quietly becomes for
 
 - **A work node is in focus when an open [focus node](focus.md) holds it,** foreground or background. That's a fact read from the focus tree, not a guess stored on the work.
 - **There's no separate pin.** Keeping work in view on purpose means keeping a focus open that holds it, in the background if nothing is attached. The work node stores nothing about focus.
-- **The sphere may suggest focus** from signals: deadlines coming up, how recently and how often something was touched, the week's plan. A suggestion is a suggestion to open a focus node, shown as one in the Focused view. It's never written into a node as a decision.
+- **The sphere may suggest focus.** A suggestion is a suggestion to open a focus node, shown as one in the Focused view. It's never written into a node as a decision. Usually the human's first words say what they want, and the sphere only narrows it to a few nodes by scanning frontmatter. The signals, in order:
+  1. **A name or topic match** with what the human just said, including paused foci that could be resumed.
+  2. **Waiting on the human:** a focus or node that can't move without them.
+  3. **Recently touched.**
+  4. **A date coming due,** and the week's plan.
+
+  When nothing matches, the sphere offers a new child under the closest existing node, or a new top-level focus. _Examples:_ *"let's look at the green card stuff"* finds the paused `immigration` focus and its child, and offers to resume where it left off. *"I want to plan the trip home"* finds no focus but a `travel` node, and offers a new child under it. A bare *"morning"* gets the two or three nodes waiting on the human or touched most recently, plus anything coming due. Nothing more is learned until real use shows a need: work clusters around topics on its own.
 
 The marks are the base build's defaults. A [witness theme](#witness-optional) can replace them: a garden theme might show 🌱 → 🌿 → 🍄. The node stores the state; the theme decides how it's shown.
 
@@ -436,5 +442,4 @@ What any replacement for this work model has to honor, so that projections, focu
 
 ## Open questions
 
-1. **Suggested focus.** Which signals, weighted how? Learned from what the human keeps in focus over time?
-2. **Grouping top-level work** (life, work, home) as an optional namespace: needed, or does the tree already do this?
+1. **Grouping top-level work** (life, work, home). Not added: the tree's names cover it for now. Groupings tend to start as a tree and then go rigid once one thing belongs in two places (is immigration career or life?). Revisit from real use, by looking at what a sphere misses without them.

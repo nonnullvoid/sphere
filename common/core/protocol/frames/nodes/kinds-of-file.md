@@ -1,6 +1,6 @@
 ---
 frame: kinds-of-file
-kind: guard
+always: true
 lens: [nodes]
 derives_from: [nodes@1]
 version: 1

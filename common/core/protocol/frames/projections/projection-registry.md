@@ -1,6 +1,5 @@
 ---
 frame: projection-registry
-kind: structural
 lens: [projections]
 derives_from: [projections@1]
 version: 1
@@ -58,7 +57,7 @@ projection: work-dashboard
 title: What's in motion
 namespace: work
 kind: live                    # live | refreshed | snapshot | external
-opens: served                 # static | served
+opens: served                 # static | served | markdown
 lifespan: long-lived          # long-lived | time-bound
 freshness: on-open            # on-open | stale after <time> | frozen
 sources: [layers/work/index.md, layers/work/*/work.md]
@@ -83,7 +82,7 @@ legacy: false
 | `template` | The template it was built from, or empty if it's bespoke |
 | `legacy` | `true` for a view built by hand outside the templates |
 
-A retired projection adds `retired:`, the date and why, and only then.
+A retired projection adds `retired:`, the date and why on one line (`retired: 2026-11-16 replaced by money-dashboard`), and only then.
 
 **The body is the recipe:** what it shows and how its sources are composed, its layout and look, what it leaves out, and its engine (a page that reads its sources when opened, a render script, or a one-time synthesis). Below that, a `## History` section: dated entries, newest first, saying what changed and why.
 
@@ -102,6 +101,7 @@ A retired projection adds `retired:`, the date and why, and only then.
 - **It comes with the build.** A sphere doesn't have to make it; the first projection it registers already has somewhere to be found.
 - **It's the registry's own view,** not a projection with a definition of its own, so it's never registered and never an orphan.
 - **It shows matter, not machinery.** Time-bound views appear while they're live; retired ones and `_scratch/` never do.
+- **It shows markdown too.** A projection with `opens: markdown` opens in the default markdown viewer that ships beside the index page.
 
 ## Show my things
 
@@ -134,7 +134,7 @@ This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projecti
 
 - **An artifact under `surface/projections/` with no definition is an orphan.** Fire `projection-orphaned`, and offer to register it or remove it. Removing it asks first, like anything hard to undo. No untraceable pages.
 - **A view built by hand before the templates is registered as legacy,** not rewritten or ignored: `legacy: true`, with an honest `kind` and `freshness`. *Why:* it doesn't have to be rebuilt to be known. `legacy` marks refactor debt, not health; a legacy view can work perfectly well.
-- **One-time renders aren't orphans.** Anything in `_scratch/` is never registered and safe to clear. If the human wants to keep one, it gets a definition and a home.
+- **One-time renders aren't orphans.** Anything in `_scratch/` is never registered, and it's cleared only when the human asks. If the human wants to keep one, it gets a definition and a home.
 
 ## When / do
 

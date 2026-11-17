@@ -60,9 +60,9 @@ So ideas get a place of their own, and speculation stays out of the facts, the w
 
 ## What follows from it
 
-| Frame | Kind | In short |
-|---|---|---|
-| [idea-nodes](../frames/idea-capture/idea-nodes.md) | structural | One file per idea, capture with its conversation, refining, collections by topic, looking into an idea, graduating or parking |
+| Frame | In short |
+|---|---|
+| [idea-nodes](../frames/idea-capture/idea-nodes.md) | One file per idea, capture with its conversation, refining, collections by topic, looking into an idea, graduating or parking |
 
 ## Revision history
 

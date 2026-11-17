@@ -1,6 +1,6 @@
 ---
 frame: circuit-breakers
-kind: guard
+always: true
 lens: [agent-trust]
 derives_from: [agent-trust@1]
 version: 1

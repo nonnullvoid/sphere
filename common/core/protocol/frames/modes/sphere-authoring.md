@@ -1,6 +1,6 @@
 ---
 frame: sphere-authoring
-kind: guard
+always: true
 lens: [modes, human-is-highest]
 derives_from: [modes@1, human-is-highest@2]
 version: 1

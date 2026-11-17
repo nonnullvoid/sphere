@@ -1,6 +1,5 @@
 ---
 frame: protocol-registry
-kind: structural
 lens: [sphere-framework]
 derives_from: [sphere-framework@1]
 version: 1
@@ -43,7 +42,7 @@ An instinct is an ability that runs on a sense instead of being asked for; its r
 
 - **The AI keeps it,** in the same ground as the frame it describes. A new frame isn't usable until its rows exist.
 - **A retired frame takes its rows with it,** except entries another frame still lists.
-- **Framing a skill registers it:** the skill comes in unchanged as a procedure frame, and its abilities (and commands, if the human uses any) get rows. The human is offered a lens for it, and can say no.
+- **Framing a skill registers it:** the skill comes in unchanged as a skill frame, and its abilities (and commands, if the human uses any) get rows. The human is offered a lens for it, and can say no.
 - **A build ships a small core of senses;** a sphere adds its own as it grows.
 
 ## When / do

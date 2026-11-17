@@ -1,6 +1,6 @@
 ---
 frame: say-how-sure
-kind: guard
+always: true
 lens: [knowledge]
 derives_from: [knowledge@1]
 version: 1

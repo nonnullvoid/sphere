@@ -48,6 +48,7 @@ layers/knowledge/
 
 - **Folders stay flat.** Each topic is a folder named by its full namespace (`layers/knowledge/money.taxes.2025-return/`). **A domain is a name prefix, not a folder:** `money.taxes` exists because topics are named under it. The tree lives in the names, and the index groups by them.
 - **Domains nest as deep as they need**, and the namespace keeps it all queryable ("everything under `money`"). **A topic is the unit:** one file. Detail below a fact stays as fields on the fact, never as new files.
+- **A domain can have an overview:** a topic named for the domain itself (`layers/knowledge/money/`), a few lines on what the domain covers and how its topics relate. The generated index lists it first in its domain.
 - **Builds ship starting domains.** A life build might start with health, money, home, people, travel; a work build with domain, engineering and org. A sphere grows its own.
 - **Spheres can add their own facets.** A topic's frontmatter can carry fields a sphere cares about, like a life sphere tagging topics with the part of life they serve.
 
@@ -58,7 +59,7 @@ layers/knowledge/
 name: money.taxes.2025-return
 title: The 2025 tax return
 summary: Filing jointly; two of four estimated payments made
-related: [money.investing, work:TAX-20]
+related: [money.investing, work:tax-20]
 fresh_for: 1y                     # optional: how long its facts stay fresh (<n>d|w|m|y, or never)
 updated: 2026-10-25
 ---
@@ -116,7 +117,7 @@ It's a spectrum, so the point is to **declare where a piece sits.** A soft read 
 
 **A read is still knowledge, not a lens.** *"My manager tends to favor revenue work"* is a low-certainty fact about the world, not the human's meaning. This is the boundary most often confused.
 
-**Facts go stale at different speeds.** A share price is stale in a day, a tax rule in a year, a birthday never. A topic can declare how long its facts stay fresh, in `fresh_for`; without one, the sphere judges by the fact's nature. **Staleness is computed, and visible:** a fact past its *as of* plus the window is *suspected stale* until it's refreshed. A source known to have changed is offered as a refresh, and marked only on the human's yes. When the sphere is about to rely on a stale fact for a decision, it refreshes it first or says plainly that it's stale.
+**Facts go stale at different speeds.** A share price is stale in a day, a tax rule in a year, a birthday never. A topic can declare how long its facts stay fresh, in `fresh_for`; without one, the sphere judges by the fact's nature. The human tunes windows as they like; the sphere doesn't learn them. **Staleness is computed, and visible:** a fact past its *as of* plus the window is *suspected stale* until it's refreshed. A source known to have changed is offered as a refresh, and marked only on the human's yes. When the sphere is about to rely on a stale fact for a decision, it refreshes it first or says plainly that it's stale.
 
 **Saying the grade.** When the sphere tells the human something that isn't verified, it says so: *"reported, not checked against the source,"* or *"that's my read."* A confident answer that turns out wrong costs more than an honest "I'm not sure."
 
@@ -148,6 +149,10 @@ Candidates wait in the **focus's Now** until its next ground, each with the fact
 > - The landlord seems open to renewing (a read, inferred from his last email)
 >
 > Save all, some, or none?
+
+**All of them, in as few words as possible.** The sphere offers every candidate, never a filtered few: what gets kept is the human's call, and seeing what the sphere picked up is how they come to trust it. Each line is the fact at its shortest; a long batch is summarized by topic first, with the detail a word away. A human who'd rather not see the batch says so, and the sphere saves on its own from then on. That's their choice, recorded like any other preference.
+
+**When work is archived,** the sphere looks at what the finished work taught: facts that should outlive it are offered at that ground, for the topics they belong to. Context decides which, not a fixed rule about the node's progress log.
 
 **The exception:** when a fact is about to be lost (the topic is changing, or the window is closing in a hurry), the sphere asks right then, in one line: *"Worth keeping: the lease ends in August. Save it?"*
 
@@ -213,7 +218,4 @@ Knowledge is the sphere's model of *its human's* world, and it's private. It nev
 
 ## Open questions
 
-1. **Freshness windows.** A topic declares one in `fresh_for`, or the sphere judges by the fact's nature. Should the sphere also learn windows from how often the human refreshes?
-2. **Batch size at ground.** When one ground has many candidates, should the sphere offer them all, or only the most useful few?
-3. **Finished work into history.** When a work node is archived, does any of its `progress.md` belong in the knowledge layer's history, or does history stay narrative only?
-4. **Domain overview files.** Should a domain folder hold a short overview of itself, or is the generated index enough?
+_None open._

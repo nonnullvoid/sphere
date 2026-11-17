@@ -1,6 +1,5 @@
 ---
 frame: node-shape
-kind: structural
 lens: [nodes]
 derives_from: [nodes@1]
 version: 1
