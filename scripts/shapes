@@ -16,8 +16,7 @@
 #   values <key> <value>...     the only values <key> may take (its first word is checked)
 #   format <key> <kind> [arg]   name (= the node's name), date (YYYY-MM-DD), int (0 or more),
 #                               version (<major>.<minor>), list [item-pattern], list+ [item-pattern] (one or more)
-#   name <pattern>              node names (file name without .md, or folder name) match this pattern
-#                               (most trees use the common one from the node-names frame)
+#   scheme <scheme>             the naming scheme its node names follow (file name without .md, or folder name)
 #   Names are unique across each tree, archive included; that one rule is checked for every tree.
 #   skip <name>...              folders or files under <dir> that aren't nodes of this tree
 #
@@ -30,9 +29,19 @@
 #                               (folder/ becomes folder/**), and structure-check expects them.
 #   kind reference <prefix>...  reference files: changed only on the human's yes; a revert proposes, never writes.
 #                               A history file under a reference prefix is history.
+#
+#   naming <scheme> <pattern>   a naming scheme and the pattern its names match. Each scheme is described,
+#                               with when it fits, in the node-names frame; a new one is added there first.
+
+naming plain ^[a-z0-9]+(-[a-z0-9]+)*$
+naming namespace ^[a-z0-9]+(-[a-z0-9]+)*(\.[a-z0-9]+(-[a-z0-9]+)*)*$
+naming prefix-number ^[a-z][a-z0-9]*(-[a-z0-9]+)*-[0-9]+$
+naming number-name ^[a-z]+[0-9]+-[a-z0-9]+(-[a-z0-9]+)*$
+naming dated ^[0-9]{8}-[a-z0-9]+(-[a-z0-9]+)*$
 
 tree focus
 nodes folder layers/focus
+scheme number-name
 current focus.md
 history history.md
 keys number name aka parent status intention holds through operating-mode collaboration-mode persona points-at opened
@@ -40,7 +49,7 @@ values status open closed
 
 tree lens
 nodes file core/protocol/lenses
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 keys lens version version_note derives_from status updated verified sharing until? frames
 values status active drafting deprecated
 values verified true false
@@ -49,7 +58,7 @@ format until date
 
 tree frame
 nodes file core/protocol/frames deep
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 keys frame always? lens derives_from version version_note status updated sharing until? reads writes protocol
 values always true
 values status active drafting deprecated
@@ -59,7 +68,7 @@ skip SKILL.md README.md
 
 tree idea
 nodes file layers/ideas
-name ^\d{8}-[a-z0-9]+(-[a-z0-9]+)*$
+scheme dated
 keys idea title captured topics stage refinements refined? related? outcome? change? horizon?
 archived outcome
 format idea name
@@ -75,7 +84,7 @@ values horizon now soon someday
 
 tree plan
 nodes folder layers/work/plans
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 current plan.md
 history history.md
 keys plan title parent? for state version summary created updated
@@ -88,7 +97,7 @@ values state active done dropped
 
 tree agent
 nodes file core/ai/agents
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 keys agent does source trust tier
 format agent name
 values tier light standard deep
@@ -96,7 +105,7 @@ skip index.md teams
 
 tree operating-mode
 nodes file core/operating-modes
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 keys operating-mode persona signals loadout adds-guardrails sharing until?
 format operating-mode name
 format loadout list
@@ -106,7 +115,7 @@ format until date
 
 tree persona
 nodes folder core/ai/personas
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 current {name}.md
 history journal.md
 keys persona default operating-mode
@@ -115,7 +124,7 @@ values default true false
 
 tree projection
 nodes either layers/projections
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 current {name}.md
 keys projection title namespace kind opens lifespan freshness sources writes home sharing until? template legacy
 archived retired
@@ -134,7 +143,7 @@ skip registry.md templates
 
 tree knowledge
 nodes folder layers/knowledge
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme namespace
 current topic.md
 keys name title summary related? fresh_for? updated
 format name name
@@ -145,7 +154,7 @@ skip history
 
 tree literacy
 nodes folder layers/literacy
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme namespace
 current subject.md
 keys subject title summary level rests_on? stale? tracked updated
 format subject name
@@ -157,7 +166,7 @@ skip library
 
 tree library
 nodes file layers/literacy/library grouped
-name ^[a-z0-9-]+(\.[a-z0-9-]+)*$
+scheme plain
 keys artifact title type? subjects? perspective? made_for rests_on? sharing until? created updated
 format artifact name
 format subjects list

@@ -438,6 +438,36 @@ class SharingUntilTest(LensShapeCase):
                 os.remove(self.path(path))
 
 
+class NamingSchemeTest(LensShapeCase):
+    def edit_shapes(self, old: str, new: str) -> None:
+        path = os.path.join(self.root, "core/shapes")
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        self.assertIn(old, text)
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(text.replace(old, new, 1))
+
+    def test_every_tree_names_a_scheme_that_exists(self):
+        shapes = read_shapes(SHAPES_TEMPLATE)
+        for tree in shapes.trees:
+            self.assertIn(tree.scheme, shapes.schemes, tree.name)
+
+    def test_plain_names_have_no_dots(self):
+        out = self.put("core/ai/agents/notes.weekly.md", AGENT.replace("agent: notes", "agent: notes.weekly"))
+        self.assertIn("name 'notes.weekly' doesn't match its scheme, plain", out)
+
+    def test_an_unknown_scheme_is_reported(self):
+        self.edit_shapes("tree agent\nnodes file core/ai/agents\nscheme plain", "tree agent\nnodes file core/ai/agents\nscheme tidy")
+        self.assertIn("tree agent uses scheme 'tidy', which no naming line defines", self.check().out)
+
+    def test_a_new_scheme_is_a_naming_line(self):
+        self.edit_shapes("naming plain", "naming short ^[a-z]{1,5}$\nnaming plain")
+        self.edit_shapes("tree agent\nnodes file core/ai/agents\nscheme plain", "tree agent\nnodes file core/ai/agents\nscheme short")
+        self.assertIn(CLEAN, self.put("core/ai/agents/notes.md", AGENT))
+        out = self.put("core/ai/agents/notetaker.md", AGENT.replace("agent: notes", "agent: notetaker"))
+        self.assertIn("name 'notetaker' doesn't match its scheme, short", out)
+
+
 class HistoryAndReferenceKindsTest(unittest.TestCase):
     def test_history_by_name_folder_and_pattern_and_history_wins_over_reference(self):
         shapes = read_shapes(SHAPES_TEMPLATE)

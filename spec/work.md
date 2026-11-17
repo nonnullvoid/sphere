@@ -38,6 +38,10 @@ A node's label says what *kind* of work it is. It's a judgment about the work's 
 - **`kind:` is optional.** When it's absent, the sphere infers a label from context. When a task grows into an effort of its own, the sphere can suggest calling it a project. The human decides, and relabeling is a one-word edit that moves nothing.
 - **The words are display only.** A human can say "to-do," "chore" or "item," and the sphere understands. Builds can rename the labels for their audience: a code build might say workstream / project / task. The structure underneath never changes.
 
+### No grouping above the tree — _decided_
+
+Top-level work isn't grouped into life, work, home or anything else. The tree's names already say where things belong (`home.kitchen.plumbing`), and a fixed grouping goes rigid as soon as one thing belongs in two places: is an immigration case career or life? Whether a sphere misses groups is left to real use to show.
+
 ### Naming — _decided, not yet exercised_
 
 Every node has a **name**: unique, lowercase, and stable once given, so it can be referred to from anywhere: other nodes, plans, knowledge, a conversation. The AI picks a name that fits the context. Work uses two of the named [naming schemes](../common/core/protocol/frames/nodes/node-names.md#naming-schemes):
@@ -442,4 +446,4 @@ What any replacement for this work model has to honor, so that projections, focu
 
 ## Open questions
 
-1. **Grouping top-level work** (life, work, home). Not added: the tree's names cover it for now. Groupings tend to start as a tree and then go rigid once one thing belongs in two places (is immigration career or life?). Revisit from real use, by looking at what a sphere misses without them.
+_None open._

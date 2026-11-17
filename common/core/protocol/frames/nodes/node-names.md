@@ -26,8 +26,8 @@ A tree names its nodes by one scheme. Each scheme has a name, so a tree can say 
 
 | Scheme | Shape | Example | Fits | Trade-off | Used by |
 |---|---|---|---|---|---|
-| **`plain`** | a few words | `outbound-guard`, `sage` | Things with no place in a hierarchy and no order: definitions that are looked up by name | Says nothing about where it sits; the words are the whole identity | lenses, frames, agents, personas, operating modes, projections, plans |
-| **`namespace`** | words, dot, words | `money.taxes.2025-return` | Things arranged by how the world is, which rarely move. The name *is* the place in the tree | Moving the node means renaming it | knowledge topics, literacy subjects, library groups, work areas |
+| **`plain`** | a few words | `outbound-guard`, `sage` | Things with no place in a hierarchy and no order: definitions that are looked up by name | Says nothing about where it sits; the words are the whole identity | lenses, frames, agents, personas, operating modes, projections, plans, library artifacts |
+| **`namespace`** | words, dot, words | `money.taxes.2025-return` | Things arranged by how the world is, which rarely move. The name *is* the place in the tree | Moving the node means renaming it | knowledge topics, literacy subjects, the library's group folders, work areas |
 | **`prefix-number`** | a prefix, then a running number | `tax-20`, `dubai-trip-21` | Work that recurs, or may move around the tree | Says less about what it is; never changes when it moves | work |
 | **`number-name`** | a number, then a few words | `f21-kitchen-renovation` | Things that shift over time: the number is the identity, the words can be renamed as the thing changes | Two parts to remember, though people use either | focus |
 | **`dated`** | the date, then a few words | `20261116-weekly-summary` | Things whose order of arrival matters and that are captured in quick succession | The date is fixed even when the thing matures | ideas |
@@ -40,11 +40,11 @@ A tree names its nodes by one scheme. Each scheme has a name, so a tree can say 
 4. **Does the order of capture matter?** → `dated`.
 5. **Otherwise** → `plain`.
 
-A tree's pattern is written once, in its `name` line in `core/shapes`. Most trees use the characters above; `dated` adds its own pattern (`^\d{8}-…`).
+**In `core/shapes`,** each scheme is a `naming` line with the pattern its names match, and each tree says which it uses with a `scheme` line. The shape check reports a name that doesn't fit its tree's scheme, and a tree that names a scheme no `naming` line defines.
 
 ## Adding a scheme
 
-A new scheme is a sphere change, made in [sphere authoring](../modes/sphere-authoring.md) like any other. It's added **here**, as a row in the table: its name, its shape, an example, when it fits, its trade-off and the trees that use it. Then its pattern goes into the `name` line of each tree that uses it, in the same commit. A scheme that exists only in one tree's shape, without a row here, is drift: the next evolution session can't tell why it exists or whether to reuse it.
+A new scheme is a sphere change, made in [sphere authoring](../modes/sphere-authoring.md) like any other. It's added **here**, as a row in the table: its name, its shape, an example, when it fits, its trade-off and the trees that use it. In the same commit, it gets a `naming` line in `core/shapes`, and each tree that uses it says so in its `scheme` line. A `naming` line without a row here is drift: the next evolution session can't tell why the scheme exists or whether to reuse it.
 
 ## Rules
 
@@ -68,8 +68,8 @@ The [shape check](../readable-substrate/structure-check.md) checks every name ag
 |---|---|
 | Making a node | Name it by its tree's scheme, unique in the tree, archive included |
 | A name is taken by an archived node | Choose another; never reuse it |
-| Designing a new tree | Pick a scheme with the questions above; write its pattern in `core/shapes` |
-| No scheme fits | Add one here first, with its row, then use it |
+| Designing a new tree | Pick a scheme with the questions above; give the tree a `scheme` line in `core/shapes` |
+| No scheme fits | Add one: a row here and a `naming` line in `core/shapes`, then use it |
 | Renaming | Rename, and fix every link inside the sphere in the same commit |
 | Writing a link to another tree | `tree:name` |
 

@@ -43,7 +43,8 @@ class Tree:
     archived_keys: list[str] = field(default_factory=list)  # keys a node has exactly when it's archived
     allowed_values: dict[str, list[str]] = field(default_factory=dict)
     formats: dict[str, list[str]] = field(default_factory=dict)  # key → [kind, argument...]
-    name_pattern: str = ""  # node names (file name without .md, or folder name)
+    scheme: str = ""  # the naming scheme its names follow (node-names); its pattern comes from a `naming` line
+    name_pattern: str = ""  # node names (file name without .md, or folder name), from the scheme
     skip: list[str] = field(default_factory=list)
 
     @property
@@ -70,6 +71,7 @@ class Shapes:
     trees: list[Tree]
     history_files: list[str]  # append-only, merged by union, never reversed: a file name, a folder/ or a pattern
     reference_prefixes: list[str]  # path prefixes: changed only on the human's yes
+    schemes: dict[str, str] = field(default_factory=dict)  # naming scheme → the pattern its names match
 
     def tree(self, name: str) -> Optional[Tree]:
         for tree in self.trees:
@@ -111,6 +113,7 @@ def read_shapes(path: str) -> Shapes:
     trees: list[Tree] = []
     history_files: list[str] = []
     reference_prefixes: list[str] = []
+    schemes: dict[str, str] = {}
     with open(path, encoding="utf-8") as handle:
         for raw_line in handle:
             words = raw_line.split()
@@ -123,9 +126,13 @@ def read_shapes(path: str) -> Shapes:
                 history_files += rest[1:]
             elif word == "kind" and rest[:1] == ["reference"]:
                 reference_prefixes += rest[1:]
+            elif word == "naming":
+                schemes[rest[0]] = rest[1]
             elif trees:
                 apply_tree_line(trees[-1], word, rest)
-    return Shapes(trees, history_files, reference_prefixes)
+    for tree in trees:
+        tree.name_pattern = schemes.get(tree.scheme, "")
+    return Shapes(trees, history_files, reference_prefixes, schemes)
 
 
 def apply_tree_line(tree: Tree, word: str, rest: list[str]) -> None:
@@ -149,8 +156,8 @@ def apply_tree_line(tree: Tree, word: str, rest: list[str]) -> None:
         tree.allowed_values[rest[0]] = rest[1:]
     elif word == "format":
         tree.formats[rest[0]] = rest[1:]
-    elif word == "name":
-        tree.name_pattern = rest[0]
+    elif word == "scheme":
+        tree.scheme = rest[0]
     elif word == "skip":
         tree.skip = rest
 
@@ -268,7 +275,7 @@ def check_node(tree: Tree, node: str) -> list[Finding]:
             findings.append(Finding(path, f"{key} is '{value}', expected one of: {' '.join(allowed)}"))
     name = node_name(tree, node)
     if tree.name_pattern and not re.match(tree.name_pattern, name):
-        findings.append(Finding(path, f"name '{name}' doesn't match {tree.name_pattern}"))
+        findings.append(Finding(path, f"name '{name}' doesn't match its scheme, {tree.scheme} ({tree.name_pattern})"))
     for key, rule in tree.formats.items():
         value = frontmatter_value(path, key)
         if key in seen and (value or key not in tree.optional_keys):  # an optional key may be left empty
@@ -592,6 +599,8 @@ def check_everything(shapes: Shapes, include_archive: bool = False) -> list[Find
     """Every live node of every tree (archived ones too, when asked), the focus tree, and the repository lines."""
     findings: list[Finding] = []
     for tree in shapes.trees:
+        if tree.scheme and tree.scheme not in shapes.schemes:
+            findings.append(Finding("core/shapes", f"tree {tree.name} uses scheme '{tree.scheme}', which no naming line defines"))
         nodes = node_paths(tree, include_archive)
         for node in nodes:
             findings += check_node(tree, node)

@@ -107,6 +107,8 @@ Going the other way, a skill frame **exports as a plain skill** with no translat
 | **Instinct** | An ability that runs without being invoked, on a sense |
 | **Sense** | An event the sphere notices (`focus-opened`, `work-grounded`, `decision-point`…) |
 
+**Commands are optional** — _decided, not yet exercised_. Asking in plain words always works: the sphere matches what the human says to an ability through its intents, so nobody has to learn a command to use one. A fixed command is only a shortcut. When the human uses the same phrase for the same ability a third time, the sphere offers to keep it as a command (*"You've asked 'what's on my plate' a few times. Keep that as a shortcut?"*); the human decides. A sphere can run its whole life with no commands at all, which is how a non-technical build starts.
+
 Builds ship a small core sense vocabulary (around 15 events). Spheres add their own as they grow. The protocol itself contributes two: `lens-shifted` and `frame-shifted` (see [Cascade](#cascade--proven)).
 
 ---
@@ -279,5 +281,4 @@ The protocol is enough to understand *how* a sphere operates. What it operates *
 
 ## Open questions
 
-1. **Optional commands.** _Under trial, not part of this spec._ Abilities invoked purely by intent matching, with fixed commands proposed only after a phrase repeats. The human decides whether to add one. To be trialed before inclusion.
-2. **Names.** "Lens" and "frame" stay for now. The category sphere belongs to is still open.
+_None open._
