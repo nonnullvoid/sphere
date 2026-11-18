@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/projections, surface/projections]
 writes: [layers/projections, surface/projections/assets]
-protocol: [I-reuse-what-works, A-save-as-template, A-new-from-template, template-extracted, projection-instantiated]
+protocol: [I-reuse-what-works, A-save-as-template, A-new-from-template]
 ---
 
 # Templates, and what views are built with
@@ -23,8 +23,8 @@ extract:      a good projection   →  "save this as a template"     →  a temp
 instantiate:  a template + fills  →  "new <thing> from <template>"  →  a new projection
 ```
 
-- **Extract** keeps what's reusable (the structure, the look, the engine) and leaves placeholders where instances differ: sources, title, scope, lifespan. Fire `template-extracted`.
-- **Instantiate** fills the placeholders. The new projection gets its own definition like any other, with `template:` naming where it came from, and its body says only what it fills in. Fire `projection-instantiated`.
+- **Extract** keeps what's reusable (the structure, the look, the engine) and leaves placeholders where instances differ: sources, title, scope, lifespan.
+- **Instantiate** fills the placeholders. The new projection gets its own definition like any other, with `template:` naming where it came from, and its body says only what it fills in.
 
 **Templates are authored sources,** kept in `layers/projections/templates/<template>/`: a short `template.md` saying what the template is for, its placeholders and its craft notes, beside the files it's made of. Only shared assets they link (stylesheets, scripts) are served from `surface/projections/assets/`.
 
@@ -80,8 +80,8 @@ A build can ship each as a template with its own craft notes: *bottom line first
 
 | When | Do |
 |---|---|
-| *"Save this as a template"* | Keep the structure, look and engine; mark the placeholders; write it to `templates/`. Fire `template-extracted` |
-| *"New X from Y"* | Fill Y's placeholders; write X's definition with `template: Y`; render it. Fire `projection-instantiated` |
+| *"Save this as a template"* | Keep the structure, look and engine; mark the placeholders; write it to `templates/`. |
+| *"New X from Y"* | Fill Y's placeholders; write X's definition with `template: Y`; render it. |
 | The same kind of view is built a third time with no template | Suggest extracting one. The human decides |
 | A snapshot is asked for (a walkthrough, a guide, a report) | Instantiate the one-shot template: read, compose, stamp, write once, freeze |
 | A new view is being built | Start from the default stack and the shared chrome; reach for a library only when needed |
@@ -95,9 +95,3 @@ A build can ship each as a template with its own craft notes: *bottom line first
 - [projection-serving](projection-serving.md): how a view built on the default stack opens.
 - [readable-substrate](../../lenses/readable-substrate.md): plain web, kept local, readable and diffable.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `template-extracted` | a projection is generalized into a template |
-| `projection-instantiated` | a new projection is built from a template |

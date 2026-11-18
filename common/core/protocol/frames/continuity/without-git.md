@@ -9,7 +9,7 @@ updated: 2026-11-11
 sharing: public
 reads: [layers/focus, layers/work, surface/state/focus]
 writes: [layers/focus, layers/work, surface/state/focus]
-protocol: [I-pick-up-where-i-left-off, A-ground, gitless-lock-held]
+protocol: [I-pick-up-where-i-left-off, A-ground, gitless-lock-held, focus-attached]
 ---
 
 # Without git
@@ -43,8 +43,8 @@ Git is the default because it gives history, undo and merges. Without it, a sphe
 | When | Do |
 |---|---|
 | The sphere starts and finds no git | Say what's lost, once, and offer to set up git |
-| A window attaches and no lock exists | Write the lock; carry on |
-| A window attaches and finds a live lock | Open read-only; say which focus holds it |
+| `focus-attached`, with no git and no lock | Write the lock; carry on |
+| `focus-attached`, with no git and a live lock | Open read-only; say which focus holds it. Fire `gitless-lock-held` |
 | A window finds a stale lock | Ask before taking it over |
 | The human asks to undo | Say it isn't available without git |
 | A sync conflict copy appears | Show both versions; the human picks |
@@ -53,3 +53,9 @@ Git is the default because it gives history, undo and merges. Without it, a sphe
 
 - [state-machine](state-machine.md): the same states and operations, minus the commit, undo and revert.
 - [check-shared-state](check-shared-state.md): matters more here, because nothing catches an overwrite afterwards.
+
+## Senses
+
+| Sense | Fires when |
+|---|---|
+| `gitless-lock-held` | a window is turned away, or opened read-only, by a live lock |

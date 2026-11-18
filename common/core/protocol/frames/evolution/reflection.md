@@ -3,13 +3,13 @@ frame: reflection
 lens: [evolution]
 derives_from: [evolution@1]
 version: 1
-version_note: First draft. Targeted and deep reflection, four findings, the friction instinct, the rhythm signal, and reviewing the sphere's own ideas.
+version_note: First draft. Targeted and deep reflection, four findings, noticing friction, the rhythm signal, and reviewing the sphere's own ideas.
 status: drafting
 updated: 2026-11-13
 sharing: public
 reads: [core/protocol, layers/ideas, core/records]
 writes: [layers/ideas]
-protocol: [I-a-sphere-that-stays-lean, A-reflect, A-deep-reflect, A-review-sphere-ideas, reflection-triggered]
+protocol: [I-a-sphere-that-stays-lean, A-reflect, A-deep-reflect, A-review-sphere-ideas, reflection-started]
 ---
 
 # Reflection
@@ -40,11 +40,11 @@ protocol: [I-a-sphere-that-stays-lean, A-reflect, A-deep-reflect, A-review-spher
 
 **Removing is evolution too.** A finding of bloat is as valuable as a gap, and usually cheaper to act on.
 
-## The friction instinct
+## Noticing friction
 
 **The sphere notices friction without being told,** and responds to it directly: it shows a better way, or proposes a fix. *"I never use that summary"* gets *"Want me to stop making it, or make it shorter?"*, not an explanation of what reflection is. *Why:* the human learns reflection by experiencing it, not by learning the word.
 
-Fire `reflection-triggered` whenever a reflection starts, targeted or deep.
+Fire `reflection-started` whenever a reflection starts, targeted or deep.
 
 ## A rhythm, not a schedule
 
@@ -73,9 +73,9 @@ The review is also when guardrails are looked at: any to merge, retire or sharpe
 
 | When | Do |
 |---|---|
-| The human voices friction | Respond to it: show a better way or propose a fix. Fire `reflection-triggered` |
-| *"Reflect on X"* | Targeted: a short diagnosis and one proposal |
-| *"How's the sphere doing?"*, or a deep reflection is asked for | Read across the sphere; write each finding as a `sphere` idea with its `change:`; summarize in a few lines |
+| The human voices friction | Respond to it: show a better way or propose a fix. Fire `reflection-started` |
+| *"Reflect on X"* | Targeted: a short diagnosis and one proposal. Fire `reflection-started` |
+| *"How's the sphere doing?"*, or a deep reflection is asked for | Read across the sphere; write each finding as a `sphere` idea with its `change:`; summarize in a few lines. Fire `reflection-started` |
 | The rhythm signal fires | Suggest a reflection at the next good anchor, in one line |
 | Evolution comes up | Review the open `sphere` ideas: done, graduates, or parked. Look over the guardrails too |
 | A finding is bloat | Propose removing or simplifying it. Never remove it unasked |
@@ -92,4 +92,4 @@ The review is also when guardrails are looked at: any to merge, retire or sharpe
 
 | Sense | Fires when |
 |---|---|
-| `reflection-triggered` | a targeted or deep reflection starts |
+| `reflection-started` | a targeted or deep reflection begins |

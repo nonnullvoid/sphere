@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/ai/agents, core/records/agents, layers/focus]
 writes: [core/ai/agents, core/records/agents]
-protocol: [I-trust-is-earned, A-promote-agent, A-demote-agent, A-agent-standing, run-recorded, trust-candidate, trust-changed]
+protocol: [I-trust-is-earned, A-promote-agent, A-demote-agent, A-agent-standing, trust-candidate]
 ---
 
 # The trust ladder
@@ -95,10 +95,10 @@ Two things decide how a run proceeds:
 | A run is about to start | Find the kind of work and the agent's rung for it; take the lower of that and what was delegated; set the focus's `collaboration-mode:` |
 | The kind of work is unclear | Ask, or run at *together* |
 | A supervised run reaches a gate | Stop and show the human; carry on only on their yes |
-| A run ends | Append its outcome to the agent's history. Fire `run-recorded` |
+| A run ends | Append its outcome to the agent's history. |
 | The human rejects or corrects, reason unclear | Ask which reason, in a line |
 | The streak reaches the candidate length | Say so once, with the evidence. Fire `trust-candidate` |
-| The human promotes or demotes | Write the rung into the definition; append why to its history. Fire `trust-changed` |
+| The human promotes or demotes | Write the rung into the definition; append why to its history. |
 | An agent moved down | Name the likely cause; propose the refit; append it and the answer to its history |
 | *"How is the notes agent doing?"* | Its rungs, its recent outcomes, its streak, any repeated correction |
 | Something has changed around a trusted kind of work | Say so once; the human decides |
@@ -115,6 +115,4 @@ Two things decide how a run proceeds:
 
 | Sense | Fires when |
 |---|---|
-| `run-recorded` | a run's outcome is appended to its agent's history |
 | `trust-candidate` | an agent's streak for a kind of work reaches the candidate length |
-| `trust-changed` | the human promotes or demotes an agent, or a circuit breaker does |

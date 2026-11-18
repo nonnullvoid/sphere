@@ -9,7 +9,7 @@ updated: 2026-11-11
 sharing: public
 reads: [layers]
 writes: []
-protocol: [I-one-way-to-read-anything, A-design-check]
+protocol: [I-one-way-to-read-anything, A-design-check, node-archived]
 ---
 
 # Node shape
@@ -86,7 +86,7 @@ When the human (or the sphere, in [sphere authoring](../../../../../spec/modes.m
 | A list item needs its own memory | Promote it to a node; leave a link behind |
 | A history section outweighs current state | Move it to `history.md` beside the node's file |
 | Changing a tree's frontmatter | Update its declared shape in the same commit |
-| A node is finished | Look down (live children) and across (live links into it); ask once. Then final state, last history entry, move to `archived/` |
+| A node is finished | Look down (live children) and across (live links into it); ask once. Then final state, last history entry, move to `archived/`. Fire `node-archived` with its link |
 | Designing a new part | Walk the eight questions; prefer shape over machinery |
 | Retiring a lens | Retire only the frames that have no other lens |
 | The shape doesn't fit | Say so, record why, and propose the exception to the human |
@@ -95,3 +95,9 @@ When the human (or the sphere, in [sphere authoring](../../../../../spec/modes.m
 
 - [kinds-of-file](kinds-of-file.md): what may be written, by whom.
 - [propose-dont-decide](../human-is-highest/propose-dont-decide.md): a new tree or a recorded exception is a change to the sphere's structure, proposed to the human.
+
+## Senses
+
+| Sense | Fires when |
+|---|---|
+| `node-archived` | a node moves to `archived/`. Carries its link, so each tree's reactions pick their own |

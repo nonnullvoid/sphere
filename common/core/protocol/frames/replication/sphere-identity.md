@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/identity.json]
 writes: [core/identity.json]
-protocol: [I-know-where-it-came-from, A-show-identity, A-name-sphere, A-advance-version, sphere-versioned]
+protocol: [I-know-where-it-came-from, A-show-identity, A-name-sphere, A-advance-version, focus-grounding]
 ---
 
 # Sphere identity
@@ -63,7 +63,6 @@ It lives in its own small file, `core/identity.json`, so tooling can read it wit
 - **It advances when the protocol changes:** a lens or frame lands, changes or retires (see [crystallization](../evolution/crystallization.md#make-the-change)). Work, knowledge and every other kind of data never move it. *Why:* the version describes the sphere's shape, which is what travels and what another sphere compares against.
 - **Each version is a git tag, `sphere-<version>`, on the ground that made it.** Any past shape of the sphere can be looked at again, and a [fork](../evolution/crystallization.md#fork-build-alongside-switch-once) tags its before and after with these.
 - **The next version is computed, not counted by hand.** It's this month's highest tag plus one, or `.1` in a new month. The value in `core/identity.json` is a copy for tooling that reads without git; if the two disagree, the tag wins.
-- Fire `sphere-versioned` when the version moves.
 
 ## A swappable part
 
@@ -82,7 +81,7 @@ It lives in its own small file, `core/identity.json`, so tooling can read it wit
 | Init | Make a new UUID v7; record `born_from`; ask the human for a name, with a suggestion; set the first version |
 | *"Which sphere is this?"* | Answer from `core/identity.json`: name, version, where it began |
 | The human renames the sphere | Change `name` only; the id stays |
-| A lens or frame lands, changes or retires | Compute the next version; write it; tag the ground `sphere-<version>`. Fire `sphere-versioned` |
+| `focus-grounding`, if a lens or frame landed, changed or retired | Compute the next version; write it; tag the ground `sphere-<version>`. |
 | Data changes | Nothing. The version follows the protocol only |
 | An export is built | Copy the identity exactly into its provenance |
 | `core/identity.json` and the tags disagree | The tag wins; correct the file |
@@ -95,8 +94,3 @@ It lives in its own small file, `core/identity.json`, so tooling can read it wit
 - [state-machine](../continuity/state-machine.md): the version's tag sits on a ground.
 - [versions](../../../../../spec/VERSIONS.md#a-spheres-own-version--decided-not-yet-exercised): a sphere's own version beside the architecture's and the build's.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `sphere-versioned` | the sphere's version moves to a new tag |

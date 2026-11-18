@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/witness, layers/work, layers/literacy]
 writes: [layers/witness]
-protocol: [I-see-myself-grow, A-choose-theme, A-swap-theme, A-check-standing, milestone-reached, theme-swapped]
+protocol: [I-see-myself-grow, A-choose-theme, A-swap-theme, A-check-standing, milestone-reached]
 ---
 
 # Themes
@@ -86,8 +86,6 @@ grew: a second mushroom in the home bed
 - **The old theme's records move to `layers/witness/archived/<theme>/`,** kept, never deleted.
 - **Dropping a theme entirely** is a swap to the plain view.
 
-Fire `theme-swapped`.
-
 ## When / do
 
 | When | Do |
@@ -98,7 +96,7 @@ Fire `theme-swapped`.
 | A milestone is reached | One line of celebration. Fire `milestone-reached` |
 | Scores look inflated or stingy | Raise it at the weekly look back; propose a rubric change |
 | A real outside signal outruns the derived standing | Update the source it's derived from |
-| The human wants a different theme | Draft the new one whole; offer to replay the ledger; archive the old records. Fire `theme-swapped` |
+| The human wants a different theme | Draft the new one whole; offer to replay the ledger; archive the old records. |
 | The human wants no theme | Archive its records; show the plain view |
 
 ## Works with
@@ -113,4 +111,3 @@ Fire `theme-swapped`.
 | Sense | Fires when |
 |---|---|
 | `milestone-reached` | a theme's milestone, or a plain one, is reached |
-| `theme-swapped` | a theme is chosen, replaced or dropped |

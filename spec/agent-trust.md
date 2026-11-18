@@ -133,10 +133,10 @@ Agents that watch continuously (a monitor, a standing assistant) keep the human 
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `run-recorded`
 - `trust-candidate` (an agent has enough clean runs for the next rung)
-- `trust-changed` (promoted or demoted)
 - `circuit-breaker-tripped`
+
+A run's outcome and a promotion or demotion are records in the agent's history, not senses (see [reactions](protocol.md#senses-and-reactions--decided-not-yet-exercised)).
 
 **Commands** (natural phrasing works too):
 - `let [agent] run [kind of work] unattended` / `supervised`

@@ -4,10 +4,10 @@ version: 1
 version_note: First draft. The sphere as one unit that does meaningful work; anatomy in registries, convention over configuration, stable interfaces with swappable parts.
 derives_from: practice in spheres in daily use; spec/registries.md, spec/protocol.md, spec/loading.md
 status: drafting
-updated: 2026-11-15
+updated: 2026-11-17
 verified: false
 sharing: public
-frames: [capability-manifest, protocol-registry, structure-check, manifest-check]
+frames: [capability-manifest, protocol-registry, reactions, structure-check, manifest-check]
 ---
 
 # A framework, not a one-off
@@ -73,6 +73,7 @@ Every registry is the same thing:
 |---|---|
 | [capability-manifest](../frames/sphere-framework/capability-manifest.md) | The routing table of every lens and frame: its entries, how it's rebuilt, and how it's used |
 | [protocol-registry](../frames/sphere-framework/protocol-registry.md) | The one registry of intents, abilities, commands and senses, each tied to the frame that defines it |
+| [reactions](../frames/sphere-framework/reactions.md) | Senses, who produces them, and the reactions table that says what follows each |
 | [structure-check](../frames/readable-substrate/structure-check.md) | Shared with [readable-substrate](readable-substrate.md): the anatomy registries, node shapes, links and views, checked at ground |
 | [manifest-check](../frames/readable-substrate/manifest-check.md) | Shared with [readable-substrate](readable-substrate.md): the manifest and protocol registry, checked against lenses and frames |
 

@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [core, layers, surface]
 writes: []
-protocol: [I-trust-what-i-read, A-check-structure, convention-violated]
+protocol: [I-trust-what-i-read, A-check-structure, check-failed, focus-grounding]
 ---
 
 # The structure check
@@ -46,9 +46,9 @@ A sphere is only as trustworthy as the picture it reads of itself. This check co
 
 | When | Do |
 |---|---|
-| Ground, after generated files are rebuilt | Run the check; report findings in one line each, with a fix to offer |
-| A layer or surface space is added, removed or restructured | Fire `structure-changed` so its registry is rebuilt this ground; then check |
-| A node is missing a part or has an undeclared key | Fire `convention-violated`; offer to add the part, or to record an exception |
+| `focus-grounding`, after generated files are rebuilt | Run the check; report findings in one line each, with a fix to offer |
+| A layer or surface space is added, removed or restructured | Rebuild its registry this ground; then check |
+| A node is missing a part or has an undeclared key | Fire `check-failed`; offer to add the part, or to record an exception |
 | A link points at nothing | Look for a rename or an archive first; offer the corrected link |
 | A view doesn't match its sources | Rebuild it; if it was edited by hand, ask where the edit belongs first |
 | A tree's frontmatter changes | Update its declared shape in the same ground |
@@ -65,4 +65,4 @@ A sphere is only as trustworthy as the picture it reads of itself. This check co
 
 | Sense | Fires when |
 |---|---|
-| `convention-violated` | something deviates from a convention with no recorded exception |
+| `check-failed` | something deviates from a convention with no recorded exception |

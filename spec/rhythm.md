@@ -112,9 +112,10 @@ The anchors are where growth becomes visible. The wrap is a natural moment to re
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `day-started`, `day-wrapped`, `week-reviewed`
+- `day-started`, `day-wrapped`: core moments; several frames hook them (what's waiting, open ideas, an offer to record growth)
+- `week-reviewed` (the weekly look begins)
 - `wrap-missed` (the forgotten-wrap trigger fired)
-- `waiting-on-human` (work paused for the human's input)
+- `waiting-on-human` (work paused for the human's input): a core moment
 
 **Commands** (natural phrasing works too):
 - `good morning`

@@ -74,9 +74,10 @@ Don't centralize content registries, and don't scatter structural ones.
 
 ### Senses — _decided, not yet exercised_
 
-- `structure-changed`: a layer, surface area or other structural part was added, removed or restructured. Its registry is now stale and is rebuilt at ground.
-- `convention-violated`: something deviates from a convention without a configured exception.
-- `component-swapped`: a part was replaced behind its interface.
+- `check-failed`: something deviates from a convention without a configured exception.
+- `stale-found`: a generated view (the manifest, the work index) no longer matches what it's built from. It carries what's stale, and that kind's own rows react.
+
+A structural change rebuilds its registry in the same ground; a swapped component is a record. Neither is a sense.
 
 ---
 

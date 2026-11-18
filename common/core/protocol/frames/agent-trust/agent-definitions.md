@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/ai/agents, core/records/agents, layers/focus]
 writes: [core/ai/agents, core/records/agents, layers/focus]
-protocol: [I-know-my-agents, A-register-agent, A-delegate, A-dispatch, A-register-team, A-list-agents, agent-registered]
+protocol: [I-know-my-agents, A-register-agent, A-delegate, A-dispatch, A-register-team, A-list-agents]
 ---
 
 # Agents: who they are, and what they did
@@ -123,7 +123,7 @@ Agents that watch continuously (a monitor, a standing assistant) keep the human 
 
 | When | Do |
 |---|---|
-| The human creates an agent | Write its file with what it does and `trust:` empty; add a history entry. Rebuild the index. Fire `agent-registered` |
+| The human creates an agent | Write its file with what it does and `trust:` empty; add a history entry. Rebuild the index. |
 | An agent's definition lives with a codebase | Set `source:` to it; keep trust here; never copy the definition in |
 | *"Have the notes agent do this"* (stay close) | Delegate: a supervised child focus, naming the agent and kind of work in its opening entry |
 | *"Send the notes agent off to do this"* | Dispatch: an unattended child focus, reporting back when done |
@@ -139,10 +139,3 @@ Agents that watch continuously (a monitor, a standing assistant) keep the human 
 - [kinds-of-file](../nodes/kinds-of-file.md): the definition is current state changed only on the human's say; the history is append-only.
 - [outbound-guard](../human-is-highest/outbound-guard.md): agents draft and queue; they never send.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `agent-registered` | a new agent's file is written |
-
-`run-recorded` and `trust-changed` come from [trust-ladder](trust-ladder.md).

@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [core/protocol, core/manifest.md]
 writes: []
-protocol: [I-trust-what-i-read, A-check-manifest, manifest-stale]
+protocol: [I-trust-what-i-read, A-check-manifest, stale-found, focus-grounding, lens-shifted]
 ---
 
 # The manifest check
@@ -28,8 +28,12 @@ The [capability manifest](../sphere-framework/capability-manifest.md) and the [p
 | **Frames keep up with lenses** | A frame's `derives_from` names its lens's current version. One that names an older version is behind |
 | **Registry and frames agree** | Every entry in a frame's `protocol:` field has a row in the registry, and every row's frame exists |
 | **Data locations exist** | Every path in a frame's `reads:` and `writes:` exists in this sphere |
+| **Senses are wired** | Every sense a When/do row reacts to, or a frame fires, is in that frame's `protocol:` list; every core moment has a frame that reacts to it |
+| **The reactions table is complete** | For each sense, the manifest's reactions table names every frame whose When/do rows react to it |
 
 The shape of each lens and frame file (its keys, in order) is a node's shape, so the [structure-check](structure-check.md) covers it.
+
+**The tool is `scripts/manifest-check`.** In a sphere it runs every check above. `--set <protocol folder>` checks a common set on its own, with no manifest or data locations. `--hash` prints the hash the manifest's header should carry.
 
 ## Rules
 
@@ -42,10 +46,10 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 
 | When | Do |
 |---|---|
-| Ground, when a lens or frame changed | Run the check after the manifest and registry are rebuilt |
-| Coverage or freshness fails | Fire `manifest-stale`; rebuild the entries it names, then check again |
+| `focus-grounding`, if a lens or frame changed | Run the check after the manifest and registry are rebuilt |
+| Coverage or freshness fails | Fire `stale-found` for the manifest; rebuild the entries it names, then check again |
 | A lens and its frames disagree | Offer the one-line fix to whichever list is wrong |
-| A frame is behind its lens | Re-read the frame against the lens; propose any change; then move its `derives_from` up |
+| `lens-shifted` | Re-read each frame derived from it against the lens; propose any change; then move its `derives_from` up |
 | A registry row has no frame, or a frame's entry has no row | Add the row, or retire it, following the protocol registry |
 | A frame names a path this sphere doesn't have | Ask: adapt the frame, or create what it expects? |
 
@@ -60,4 +64,4 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 
 | Sense | Fires when |
 |---|---|
-| `manifest-stale` | the manifest no longer matches the lens and frame files it was built from |
+| `stale-found` | for the manifest: it no longer matches the lens and frame files it was built from |

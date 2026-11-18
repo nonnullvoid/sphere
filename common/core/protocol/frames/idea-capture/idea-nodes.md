@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [layers/ideas, layers/focus]
 writes: [layers/ideas, layers/work]
-protocol: [I-never-lose-an-idea, A-capture-idea, A-refine-idea, A-check-ideas, A-investigate-idea, A-settle-idea, idea-captured, idea-refined, idea-investigated, idea-graduated, idea-parked]
+protocol: [I-never-lose-an-idea, A-capture-idea, A-refine-idea, A-check-ideas, A-investigate-idea, A-settle-idea, node-archived, day-started, reflection-started]
 ---
 
 # Ideas, one file each
@@ -165,19 +165,19 @@ An idea can be **investigated:** researched by the sphere or an agent, often wit
 
 | When | Do |
 |---|---|
-| The human names an idea | Write its file: verbatim words, the conversation around it, `stage: raw`. Say so in a line. Fire `idea-captured` |
+| The human names an idea | Write its file: verbatim words, the conversation around it, `stage: raw`. Say so in a line. |
 | An idea comes up in passing | Offer to catch it, once; on yes, write it |
 | It's really a fact or work | Send it there instead |
 | It's part of an idea already caught | Offer to add it there as a refinement |
-| The human works on an idea | Propose the new shape; they decide. Rewrite the top, add a refinement entry, update the count and date. Fire `idea-refined` |
+| The human works on an idea | Propose the new shape; they decide. Rewrite the top, add a refinement entry, update the count and date. |
 | An idea looks ready | Say so; `ready` is the human's to set |
 | *"Check my ideas"* | List open ideas, newest first, one line each; act on nothing |
-| An anchor, with ideas open | Offer them in one line |
-| Evolution comes up | Review the `sphere` collection |
-| *"Look into that idea"* | Open a child focus holding it; it writes Findings and reports up. Fire `idea-investigated` |
+| `day-started`, with ideas open | Offer them in one line |
+| `reflection-started`, deep | Review the `sphere` collection |
+| *"Look into that idea"* | Open a child focus holding it; it writes Findings and reports up. |
 | Findings suggest an end | Put it to the human: graduate into what, or park |
-| An idea graduates | Create or propose where it went; set `outcome`; archive the file. Fire `idea-graduated` |
-| An idea is parked | Set `outcome` with the reason; archive the file. Fire `idea-parked` |
+| An idea graduates | Create or propose where it went; set `outcome`; archive the file. Fire `node-archived` |
+| An idea is parked | Set `outcome` with the reason; archive the file. Fire `node-archived` |
 | A parked idea comes back | Move it back, clear `outcome`, say why now in a refinement |
 
 ## Works with
@@ -193,8 +193,4 @@ An idea can be **investigated:** researched by the sphere or an agent, often wit
 
 | Sense | Fires when |
 |---|---|
-| `idea-captured` | a new idea file is written |
-| `idea-refined` | an idea gets a refinement entry |
-| `idea-investigated` | an idea's Findings are written |
-| `idea-graduated` | an idea becomes work, a fact, a sphere change or part of another idea, and is archived |
-| `idea-parked` | an idea is parked and archived |
+| `node-archived` | for an idea: it graduates or is parked, and moves to `archived/` |

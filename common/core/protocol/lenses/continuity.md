@@ -7,7 +7,7 @@ status: drafting
 updated: 2026-11-11
 verified: false
 sharing: public
-frames: [state-machine, check-shared-state, without-git]
+frames: [state-machine, check-shared-state, without-git, focus-nodes, focus-holds]
 ---
 
 # The thread survives the window
@@ -59,6 +59,8 @@ Underneath, the sphere's files are always in one of two states: **working** (cha
 | [state-machine](../frames/continuity/state-machine.md) | The states, the operations and their contracts, and ground step by step |
 | [check-shared-state](../frames/continuity/check-shared-state.md) | Always on. Before changing what others depend on, look again first |
 | [without-git](../frames/continuity/without-git.md) | Running with no git: one focus at a time, and what's lost |
+| [focus-nodes](../frames/focus/focus-nodes.md) | Shared with [focus](focus.md): the record a window picks up from, and attaching to it |
+| [focus-holds](../frames/focus/focus-holds.md) | Shared with [focus](focus.md): what a focus may write, so nothing is overwritten unseen |
 
 ## Revision history
 

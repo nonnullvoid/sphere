@@ -74,7 +74,7 @@ Commands: what you can say to use it
 
 This is the sphere's **main way of teaching its own vocabulary.** The human learns how lens, frame and command relate by seeing real examples from their own sphere, not by reading documentation. For a small command added to an existing frame, a single line is enough: *"Added 'weekly summary' to your planning frame."* For a non-technical human, the same announcement comes in plain words, without the labels: *"Done. Just say 'how was my week' any time."* Every change is announced, never kept silent: it's how the human learns how the sphere handles things. It's told as something the sphere saved for them, not as a decision they have to weigh.
 
-The announcement fires the `sphere-evolved` sense. A witness theme can record it as growth of the sphere itself.
+The announcement is the change's record. A witness theme can point at it as growth of the sphere itself.
 
 ---
 
@@ -98,11 +98,11 @@ Evolution adds. Reflection balances. Without it, a sphere accumulates capabiliti
 
 A useful test for bloat, borrowed from the wider personal-AI community: *would a more capable model make this rule unnecessary?* If yes, it's scaffolding, and it's a candidate to cut. Guards, hard-won gotchas, and exact tool recipes survive the test. They hold no matter how capable the model gets.
 
-### The friction instinct
+### Noticing friction
 
 The sphere notices friction without being told: *"something feels off about how we track meetings,"* *"I never use that summary."* It responds to the friction directly, by showing a better way or proposing a fix. It doesn't explain what reflection is. The human learns reflection by experiencing it, not by learning the word.
 
-Reflection fires the `reflection-triggered` sense.
+Reflection fires the `reflection-started` sense: rules, open `sphere` ideas and notes waiting in the tool's memory react to it.
 
 ### A rhythm, not a schedule
 

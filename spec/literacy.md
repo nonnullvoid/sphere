@@ -125,9 +125,10 @@ At three depths, chosen by what the human wants:
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `understanding-changed`, `understanding-stale`
-- `new-territory`, `gap-detected`, `taught`
-- `artifact-added` (to the library), `artifact-stale`
+- `new-territory`, `gap-detected`
+- `node-archived` for a subject no longer tracked, or a retired library artifact
+
+**Reacts to:** `focus-grounding` (evidence, *taught* entries, tagging drafts), and `stale-found` for knowledge a subject or an artifact rests on (marked stale, checked lightly next time).
 
 **Commands** (natural phrasing works too):
 - `explain [subject]`

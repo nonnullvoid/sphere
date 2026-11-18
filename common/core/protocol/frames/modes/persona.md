@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/ai/personas, core/user]
 writes: [core/ai/personas, layers/focus]
-protocol: [I-a-companion-who-knows-me, A-switch-persona, A-show-observations, persona-switched]
+protocol: [I-a-companion-who-knows-me, A-switch-persona, A-show-observations, mode-switched, focus-opened]
 ---
 
 # The persona
@@ -104,8 +104,8 @@ Three registers that are easy to blur, kept apart:
 
 | When | Do |
 |---|---|
-| A focus opens | Set `persona:` to the default, unless the human names another |
-| *"Switch to Forge"* | Switch for this focus; say so in a line. Fire `persona-switched` |
+| `focus-opened` | Set `persona:` to the default, unless the human names another |
+| *"Switch to Forge"* | Switch for this focus; say so in a line. Fire `mode-switched` |
 | The work seems to want another persona | Suggest it once; switch only on a yes |
 | The AI notices something lasting about the human | Propose it for *what I've learned*; keep it on a yes |
 | *"What have you noticed about me?"* | Show *what I've learned*, as it stands |
@@ -127,4 +127,4 @@ Three registers that are easy to blur, kept apart:
 
 | Sense | Fires when |
 |---|---|
-| `persona-switched` | a focus moves to another persona |
+| `mode-switched` | a focus moves to another persona |

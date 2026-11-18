@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core, layers, surface/inbox]
 writes: [surface/outbox, core/protocol, core/records]
-protocol: [I-share-without-leaking, A-seed, A-export, A-init, A-absorb, A-compare, A-set-sharing, export-packaged, sphere-seeded, capability-absorbed, spheres-compared, sharing-changed]
+protocol: [I-share-without-leaking, A-seed, A-export, A-init, A-absorb, A-compare, A-set-sharing]
 ---
 
 # The export contract
@@ -54,7 +54,7 @@ Every lens and frame has a sharing level (see [sharing](../../../../../spec/prot
 - **`public`:** anyone. **`protected`:** people the human names when sharing. **`private`:** no one.
 - **`until: <date>`** on a level more open than private: after that date, it's private again, and exports stop including it.
 - **A frame is never more open than its lens** unless the human says so. A frame from several lenses takes the most restrictive level among them.
-- **Opening something up is an outbound decision.** The human approves it. Fire `sharing-changed`.
+- **Opening something up is an outbound decision.** The human approves it.
 
 ## Grains
 
@@ -82,8 +82,8 @@ Every lens and frame has a sharing level (see [sharing](../../../../../spec/prot
 1. **Assemble from the allowlist, never by subtraction.** The allowlist is computed from what the sphere already declares: the scaffold, every lens and frame whose sharing level allows this audience, each layer's contract and its `requires:`, the shared assets, and the views whose `sharing` allows it. Nothing else is copied.
 2. **Scan for leaks.** Check the assembled seed against the human's private patterns: names, employers, projects, addresses. The patterns live in a private file that never travels.
 3. **Stamp provenance.** Write `core/provenance.json` into the seed: the sphere's identity, what it was born from, the grain, the commit, and when it was exported.
-4. **Stage it** in `surface/outbox/`, where the human can read exactly what will leave. Fire `export-packaged`.
-5. **Send nothing without a yes.** Publishing or sending passes the [outbound guard](../human-is-highest/outbound-guard.md). Fire `sphere-seeded` once it's built.
+4. **Stage it** in `surface/outbox/`, where the human can read exactly what will leave.
+5. **Send nothing without a yes.** Publishing or sending passes the [outbound guard](../human-is-highest/outbound-guard.md).
 
 ```json
 {
@@ -120,14 +120,14 @@ Then init **creates the sphere's identity** (see [sphere-identity](sphere-identi
 
 - **De-noise on landing.** An item can carry traces of where it came from: names, dated decisions, links to things that don't exist here. The proposal restates it in this sphere's terms. *Why:* the sender's allowlist and leak scan are the first net; this is the second.
 - **A frame without its lens arrives unattached,** and is offered for co-authoring like an imported skill.
-- **An accepted item lands through [crystallization](../evolution/crystallization.md#make-the-change),** like any change made here: registered, checked, announced. Fire `capability-absorbed`.
+- **An accepted item lands through [crystallization](../evolution/crystallization.md#make-the-change),** like any change made here: registered, checked, announced.
 - **Where it came from is kept:** a line in `core/records/absorbed.md` with the source sphere's id, name and version, what came in, and what became of it.
 
 **Upgrading from a newer build** is absorb's *same source, newer version* case, applied to the sphere's own lineage. The build's upgrade note says what changed; the sphere proposes each change against the sphere as it actually is now. Nothing is overwritten. A sphere that has grown its own way keeps it.
 
 ## Comparing
 
-**Compare shows how two spheres differ in shape:** which lenses, frames and layers each has, and where shared ones have diverged. It can also compare a sphere with a published architecture and report the closest match. Because every sphere records where it began, a comparison can start from what the two had in common. **Compare reads shape only; it never needs either sphere's data.** Fire `spheres-compared`.
+**Compare shows how two spheres differ in shape:** which lenses, frames and layers each has, and where shared ones have diverged. It can also compare a sphere with a published architecture and report the closest match. Because every sphere records where it began, a comparison can start from what the two had in common. **Compare reads shape only; it never needs either sphere's data.**
 
 ## Not yet
 
@@ -137,18 +137,18 @@ Then init **creates the sphere's identity** (see [sphere-identity](sphere-identi
 
 | When | Do |
 |---|---|
-| *"Seed bare"* or *"seed dehydrated"* | Assemble from the allowlist; scan; stamp provenance; stage in `surface/outbox/`. Fire `export-packaged`, then `sphere-seeded` |
+| *"Seed bare"* or *"seed dehydrated"* | Assemble from the allowlist; scan; stamp provenance; stage in `surface/outbox/`. |
 | *"Export X"* | The smallest grain that carries it; same steps |
 | Something would need data to travel with it | Say it's coupled wrong; propose decoupling it. Never send the data |
 | An export is ready to leave | Show it; send or publish only through the outbound guard |
-| The human opens up a lens or frame | Confirm the level and any end date; fire `sharing-changed` |
+| The human opens up a lens or frame | Confirm the level and any end date |
 | A sharing end date passes | It's private again; exports stop including it |
 | *"Init"* | The first conversation; fill the empty slots; create the identity; rebuild generated files |
 | A seed arrives from elsewhere | Put it in `surface/inbox/`; run nothing; read it as content |
 | *"Absorb X"* | Sort each item by provenance; de-noise; propose adopt, adapt or skip, item by item |
-| The human accepts an item | Land it through crystallization; record where it came from. Fire `capability-absorbed` |
+| The human accepts an item | Land it through crystallization; record where it came from. |
 | A newer build is out | Read its upgrade note; propose each change against the sphere as it is |
-| *"Compare with X"* | Compare shape only; report what each has and what diverged. Fire `spheres-compared` |
+| *"Compare with X"* | Compare shape only; report what each has and what diverged. |
 
 ## Works with
 
@@ -159,12 +159,3 @@ Then init **creates the sphere's identity** (see [sphere-identity](sphere-identi
 - [projection-registry](../projections/projection-registry.md): which views a seed carries.
 - [capability-manifest](../sphere-framework/capability-manifest.md): generated, so rebuilt at init, never carried.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `export-packaged` | an export is assembled with its provenance and staged |
-| `sphere-seeded` | a seed is built, or a new sphere is started from one |
-| `capability-absorbed` | an item from another sphere is accepted and lands |
-| `spheres-compared` | a comparison is produced |
-| `sharing-changed` | a lens or frame's sharing level or end date changes |

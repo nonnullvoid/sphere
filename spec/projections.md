@@ -290,9 +290,11 @@ Each comes from a real failure:
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `projection-registered`, `projection-instantiated`, `projection-retired`, `projection-orphaned`
-- `template-extracted`
-- `refresh-requested`, `projection-stale`
+- `projection-orphaned`, `projection-input`
+- `stale-found` for a projection: shown as stale on the page, with a refresh offered
+- `node-archived` for a retired projection
+
+**Reacts to:** `focus-grounding` (render refreshed views whose sources changed; rebuild the registry when a definition changed).
 
 **Commands** (natural phrasing works too):
 - `show my things`, `list projections`

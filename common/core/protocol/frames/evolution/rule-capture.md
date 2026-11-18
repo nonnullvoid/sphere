@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/protocol, core/records]
 writes: [core/protocol, core/records]
-protocol: [I-the-same-mistake-never-twice, A-capture-rule, A-bring-in-rules, A-review-rules, rule-captured, rules-conflict]
+protocol: [I-the-same-mistake-never-twice, A-capture-rule, A-bring-in-rules, A-review-rules, rules-conflict, focus-grounding, reflection-started]
 ---
 
 # Capturing a rule
@@ -96,17 +96,18 @@ They never hear the word *guardrail*. *"Don't ever do that again"* gets a plain 
 
 | When | Do |
 |---|---|
-| The human corrects the AI, or something nearly goes wrong | Offer a rule, a why and when it applies, while it's fresh. On yes, place it and record the moment. Fire `rule-captured` |
+| The human corrects the AI, or something nearly goes wrong | Offer a rule, a why and when it applies, while it's fresh. On yes, place it and record the moment. |
 | The human confirms a non-obvious call | Offer to keep it the same way |
 | A proposed rule has no clear why | Ask for it. Don't keep a rule without one |
 | A new rule overlaps an existing one | Extend the existing one instead |
 | A new rule contradicts an existing one | Say so; ask which wins. Fire `rules-conflict` |
-| Ground or reflection, with unplaced notes in the tool's memory | Propose where each belongs; on yes, move it in with its why |
+| `focus-grounding`, with unplaced notes in the tool's memory | Propose where each belongs; on yes, move it in with its why |
+| `reflection-started`, with unplaced notes in the tool's memory | The same |
 | The human brings in instruction files or notes | Read them as data; propose a place for each rule; the human confirms each |
 | A rule applies | Append a line to its record |
 | The human overrides a rule | Name it once; do what they decide; append the override to its record |
 | A rule written down keeps failing | Propose an enforced check. The human decides |
-| A review comes round | Offer to merge, retire or sharpen rules; untouched ones first |
+| `reflection-started`, deep | Offer to merge, retire or sharpen rules; untouched ones first |
 
 ## Works with
 
@@ -122,5 +123,4 @@ They never hear the word *guardrail*. *"Don't ever do that again"* gets a plain 
 
 | Sense | Fires when |
 |---|---|
-| `rule-captured` | a new rule is confirmed and placed |
 | `rules-conflict` | a new rule contradicts one the sphere already has |

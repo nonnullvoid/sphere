@@ -70,7 +70,7 @@ cd ~/my-worksphere && claude
 ├── CLAUDE.md          ← tells the AI to load the sphere on startup
 ├── sphere.md          ← orchestrator: startup sequence, identity, layer registry
 ├── core/
-│   ├── engine.md      ← runtime rules: layers, senses, instincts, evolution
+│   ├── engine.md      ← runtime rules: layers, senses, reactions, evolution
 │   ├── protocol.md    ← operating vocabulary: what the sphere can do and why
 │   ├── init.md        ← initialization protocol: how the AI sets up a new sphere
 │   ├── records/       ← compacted history and long-term memory

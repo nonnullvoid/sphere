@@ -68,7 +68,7 @@ use → notice → propose → (the human decides) → crystallize → announce 
 | Frame | In short |
 |---|---|
 | [crystallization](../frames/evolution/crystallization.md) | Sizing a change, proposing it, making it in order with the checks, announcing it, and changes sized by how much they touch |
-| [reflection](../frames/evolution/reflection.md) | Targeted and deep reflection, the four findings, the friction instinct, the rhythm, and reviewing the `sphere` ideas |
+| [reflection](../frames/evolution/reflection.md) | Targeted and deep reflection, the four findings, noticing friction, the rhythm, and reviewing the `sphere` ideas |
 | [rule-capture](../frames/evolution/rule-capture.md) | A rule from a real moment, with its why; where it lives; the memory loop; keeping rules few |
 
 ## Revision history

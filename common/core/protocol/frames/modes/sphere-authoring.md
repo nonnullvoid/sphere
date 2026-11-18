@@ -10,7 +10,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/protocol, core/operating-modes, core/ai/personas, layers/ideas]
 writes: [core/protocol, core/operating-modes, core/ai/personas, layers/ideas, layers/focus]
-protocol: [I-nothing-changes-without-me, A-author-sphere, A-propose-sphere-change, sphere-authoring-started, sphere-authoring-ended]
+protocol: [I-nothing-changes-without-me, A-author-sphere, A-propose-sphere-change, sphere-authoring-started, sphere-authoring-ended, lens-shifted, frame-shifted]
 ---
 
 # Sphere authoring
@@ -94,5 +94,5 @@ The sphere can still notice that a lens is off, a frame is awkward, a guardrail 
 |---|---|
 | `sphere-authoring-started` | the human starts sphere authoring in a focus |
 | `sphere-authoring-ended` | it ends, at detach or on the human's word |
-
-`lens-shifted` and `frame-shifted` come from the protocol itself.
+| `lens-shifted` | a lens changed, so the frames derived from it are re-read |
+| `frame-shifted` | a frame changed, so the entries it defines are re-read |

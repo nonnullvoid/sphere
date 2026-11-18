@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/protocol, core/shapes, layers/ideas, layers/work]
 writes: [core/protocol, core/shapes, layers/ideas, layers/work]
-protocol: [I-a-sphere-that-fits-how-i-work, A-evolve, A-plan-change, A-announce-change, sphere-evolved]
+protocol: [I-a-sphere-that-fits-how-i-work, A-evolve, A-plan-change, A-announce-change, node-archived]
 ---
 
 # Crystallization
@@ -72,7 +72,7 @@ Commands: what you can say to use it
 - **A small addition gets one line:** *"Added 'weekly summary' to your planning frame."*
 - **A non-technical human gets plain words, no labels:** *"Done. Just say 'how was my week' any time."* Told as something the sphere saved for them, never as a decision to weigh.
 - **Every change is announced.** None is kept silent: announcements are how the human learns how the sphere handles things.
-- **One announcement per capability.** Fire `sphere-evolved`; a witness view can show it as the sphere growing too.
+- **One announcement per capability.** Its record is what a witness view reads to show the sphere growing too.
 
 ## Sized by how much it touches
 
@@ -111,10 +111,10 @@ Commands: what you can say to use it
 | The human asks for a new capability | Size it; propose in plain words; wait for a clear yes |
 | A pattern keeps recurring | Ask whether to capture it. Never write it unasked |
 | A change is noticed outside sphere authoring | Capture it as a `sphere` idea; leave the files alone |
-| A `sphere` idea graduates | Size it and propose it like any change |
+| `node-archived idea`, if a `sphere` idea graduated | Size it and propose it like any change |
 | A change is approved | Make it in order, in one ground: lens, frame, abilities, registry, manifest, checks, versions, records, idea |
 | The change adds a tree, a layer or a kind of file, or changes a frontmatter | Update `core/shapes` and the structure check in the same step |
-| A change is made | Run the checks; show the human the change; announce it. Fire `sphere-evolved` |
+| A change is made | Run the checks; show the human the change; announce it. |
 | A refactor touches more than one sitting can finish | Make it a project; build beside the old; declare the cutover |
 | A change would stop the sphere working while it's made | Propose a fork; the human picks directory or branch |
 
@@ -129,8 +129,3 @@ Commands: what you can say to use it
 - [sphere-authoring](../modes/sphere-authoring.md): where changes to the sphere's internals are made, shown and confirmed.
 - [sphere-identity](../replication/sphere-identity.md): the sphere's version moves when its protocol does.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `sphere-evolved` | a lens, frame or capability lands and is announced |

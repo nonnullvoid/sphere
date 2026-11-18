@@ -7,7 +7,7 @@ status: drafting
 updated: 2026-11-13
 verified: false
 sharing: public
-frames: [trust-ladder, circuit-breakers, agent-definitions]
+frames: [trust-ladder, circuit-breakers, agent-definitions, collaboration-modes]
 ---
 
 # How far an agent may go on its own
@@ -64,6 +64,7 @@ Until an agent has shown it does a kind of work well, **the human is the one who
 | [trust-ladder](../frames/agent-trust/trust-ladder.md) | The rungs, the lower of earned and delegated, clean runs, candidates, promotion, reject reasons |
 | [circuit-breakers](../frames/agent-trust/circuit-breakers.md) | Always on. What stops a run at once and sends the agent back to *together* |
 | [agent-definitions](../frames/agent-trust/agent-definitions.md) | An agent's file and its history, definition apart from runs, delegating and dispatching, teams, right-sized intelligence |
+| [collaboration-modes](../frames/modes/collaboration-modes.md) | Shared with [modes](modes.md): who does the work, capped by what an agent has earned |
 
 ## Revision history
 

@@ -10,7 +10,7 @@ updated: 2026-10-28
 sharing: public
 reads: []
 writes: []
-protocol: [I-trust-what-leaves, A-draft-outbound, A-register-vetted, outbound-sent]
+protocol: [I-trust-what-leaves, A-draft-outbound, A-register-vetted]
 ---
 
 # Outbound guard

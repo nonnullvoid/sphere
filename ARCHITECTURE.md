@@ -40,7 +40,7 @@ my-sphere/
 ├── core/
 │   ├── identity.json        id, name, version, and where this sphere was born from
 │   ├── trusted-spheres.json spheres this one trusts, and what each may do
-│   ├── engine.md            runtime rules: senses, instincts, the state machine
+│   ├── engine.md            runtime rules: senses, reactions, the state machine
 │   ├── ai/personas/         who the AI is in this sphere (one or more)
 │   ├── ai/agents/           one file per agent: where it's defined, the trust it has earned; index.md
 │   ├── user/                profile.md (who the human is, in their words), voice.md
@@ -96,7 +96,7 @@ Two kinds of thing live in these folders:
 A sphere separates **why** from **how**:
 
 - A **lens** holds the human's understanding: why something matters to them, in their own terms.
-- A **frame** holds the mechanics derived from it: when it applies, what the sphere does. Every skill is a frame. Frames also include always-on guards, event-triggered instincts, and the sphere's own mechanics.
+- A **frame** holds the mechanics derived from it: when it applies, what the sphere does. Every skill is a frame. Frames also include always-on guards, frames that react to senses, and the sphere's own mechanics.
 
 Lenses and frames are **co-authored**. The human brings the understanding; the AI drafts; the human reviews and iterates; nothing is captured without the human's instruction. When understanding changes, everything derived from it is revisited. See [protocol](spec/protocol.md).
 

@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [layers/work, layers/knowledge]
 writes: [layers/work]
-protocol: [I-know-whats-next, A-plan-work, A-replan, A-archive-plan, plan-versioned, plan-deviation, plan-assumption-stale, plan-archived]
+protocol: [I-know-whats-next, A-plan-work, A-replan, A-archive-plan, plan-deviation, node-archived, stale-found]
 ---
 
 # Plans
@@ -124,14 +124,14 @@ Then set `state`, write the last `history.md` entry (how it ended, and why), and
 |---|---|
 | Work needs direction across several nodes or phases | Propose a plan: direction, phases, steps, assumptions, what would change it |
 | About to write phases or steps | Put them in a plan and nodes, never a free-form document |
-| A small refinement | Minor version: change it, say so in one line, record it. Fire `plan-versioned` |
-| A change of direction | Propose a major version. On approval, review each following node. Fire `plan-versioned` |
+| A small refinement | Minor version: change it, say so in one line, record it. |
+| A change of direction | Propose a major version. On approval, review each following node. |
 | *"What's next?"* on planned work | The next step not yet evidenced as done |
 | A focus departs from the plan | Record the departure and the reason; raise it at ground. Fire `plan-deviation` |
-| A fact an assumption points at changes or goes stale | Flag the plan for review. Fire `plan-assumption-stale` |
+| `stale-found knowledge`, if a plan's assumption points at the topic | Flag the plan for review |
 | A step needs its own memory | Make it a work node; link the step to it |
-| A plan's work is done, or the plan is given up | Look down and across; ask once. Then state, last entry, move. Fire `plan-archived` |
-| The last work in a plan's `for:` is archived | Ask whether the plan is done too |
+| A plan's work is done, or the plan is given up | Look down and across; ask once. Then state, last entry, move. Fire `node-archived` |
+| `node-archived work`, if it was the last work in a plan's `for:` | Ask whether the plan is done too |
 
 ## Works with
 
@@ -146,7 +146,5 @@ Then set `state`, write the last `history.md` entry (how it ended, and why), and
 
 | Sense | Fires when |
 |---|---|
-| `plan-versioned` | a plan gets a new minor or major version |
 | `plan-deviation` | a focus does something its plan has elsewhere or later |
-| `plan-assumption-stale` | a knowledge fact a plan assumption points at changes or goes stale |
-| `plan-archived` | a plan's folder moves to `plans/archived/` |
+| `node-archived` | for a plan: its folder moves to `plans/archived/` |

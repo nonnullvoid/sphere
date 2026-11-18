@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/focus, surface/state/focus]
 writes: [layers/focus]
-protocol: [I-hear-back-when-im-here, A-ask-the-human, A-whats-waiting, waiting-on-human]
+protocol: [I-hear-back-when-im-here, A-ask-the-human, A-whats-waiting, waiting-on-human, focus-grounding, day-started, day-wrapped, circuit-breaker-tripped]
 ---
 
 # Reaching the human when they're there
@@ -63,12 +63,13 @@ protocol: [I-hear-back-when-im-here, A-ask-the-human, A-whats-waiting, waiting-o
 | When | Do |
 |---|---|
 | A supervised or unattended run needs the human | Ask in the human's window if there is one. Otherwise ground, append *waiting on you*, report up, and wait. Fire `waiting-on-human` |
-| Any ground completes | Add the ground line if anything is waiting; nothing if not |
-| The morning or the wrap | List everything waiting, a line each |
+| `focus-grounding`, if anything is waiting | Add the ground line |
+| `day-started` | List everything waiting, a line each |
+| `day-wrapped` | List everything waiting, a line each |
 | *"What's waiting?"* | List waiting foci and drafts, oldest first, each with its question |
 | The human answers | Attach to that focus; the answer is the next history entry. The run carries on, or a new one starts |
 | Something the human marked as can't-wait comes up | Notify, through the outbound guard |
-| A circuit breaker trips | Stop, and tell the human on the most direct channel, at any hour |
+| `circuit-breaker-tripped` | Stop, and tell the human on the most direct channel, at any hour |
 | After hours, nothing urgent | Wait for the next anchor |
 
 ## Works with

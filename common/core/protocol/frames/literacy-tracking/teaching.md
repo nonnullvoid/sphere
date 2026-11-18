@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/literacy, core/protocol]
 writes: [layers/literacy]
-protocol: [I-understand-more, A-teach, A-explain-sphere, gap-detected, taught]
+protocol: [I-understand-more, A-teach, A-explain-sphere, gap-detected, focus-grounding, sphere-authoring-ended]
 ---
 
 # Teaching
@@ -57,7 +57,7 @@ Fire `gap-detected`.
 
 ## After teaching
 
-- **Add a *taught* entry** to the subject, if it's tracked, at ground: what was explained, in a line. **It doesn't raise the level.** Only what the human does with it does (see [skill-progress](skill-progress.md#levels-come-from-evidence)). Fire `taught`.
+- **Add a *taught* entry** to the subject, if it's tracked, at ground: what was explained, in a line. **It doesn't raise the level.** Only what the human does with it does (see [skill-progress](skill-progress.md#levels-come-from-evidence)).
 - **Watch for it to land.** The next time the human uses it, that's evidence.
 - **An open question it answered** is offered for removal at ground, with the rest.
 
@@ -91,8 +91,8 @@ Fire `gap-detected`.
 | Questions show a missing foundation | Offer the foundation, in one idea. Fire `gap-detected` |
 | The human asks to be taught | Teach at their level, the lightest form that works |
 | The explanation is worth keeping | Make it an artifact in the library |
-| Teaching happened in a tracked subject | A *taught* entry at ground; the level doesn't move. Fire `taught` |
-| The sphere changes | Announce it in a line, at the human's depth |
+| `focus-grounding`, if teaching happened in a tracked subject | A *taught* entry; the level doesn't move |
+| `sphere-authoring-ended`, if the sphere changed | Announce it in a line, at the human's depth |
 | *"Explain …"* about the sphere | Answer at the asked depth, with examples from this sphere |
 | *"What can you do?"* | Answer from the protocol registry |
 
@@ -109,4 +109,3 @@ Fire `gap-detected`.
 | Sense | Fires when |
 |---|---|
 | `gap-detected` | the sphere is about to rely on something thin, or questions reveal a missing foundation |
-| `taught` | the sphere explains something in a tracked subject |

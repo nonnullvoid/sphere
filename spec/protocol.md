@@ -104,12 +104,43 @@ Going the other way, a skill frame **exports as a plain skill** with no translat
 | **Intent** | Something the human wants, stable over time ("know what's on my plate") |
 | **Ability** | A capability that serves an intent ("plan my day") |
 | **Command** | The words the human says to invoke an ability |
-| **Instinct** | An ability that runs without being invoked, on a sense |
-| **Sense** | An event the sphere notices (`focus-opened`, `work-grounded`, `decision-point`…) |
+| **Reaction** | What a frame does when a sense fires, without being asked: a When/do row that starts with the sense |
+| **Sense** | A moment or condition the sphere notices (`focus-opened`, `focus-grounding`, `waiting-on-human`…) |
 
 **Commands are optional** — _decided, not yet exercised_. Asking in plain words always works: the sphere matches what the human says to an ability through its intents, so nobody has to learn a command to use one. A fixed command is only a shortcut. When the human uses the same phrase for the same ability a third time, the sphere offers to keep it as a command (*"You've asked 'what's on my plate' a few times. Keep that as a shortcut?"*); the human decides. A sphere can run its whole life with no commands at all, which is how a non-technical build starts.
 
-Builds ship a small core sense vocabulary (around 15 events). Spheres add their own as they grow. The protocol itself contributes two: `lens-shifted` and `frame-shifted` (see [Cascade](#cascade--proven)).
+Builds ship a small core of senses; spheres add their own as they grow. The protocol itself contributes two: `lens-shifted` and `frame-shifted` (see [Cascade](#cascade--proven)). How senses work is below.
+
+---
+
+## Senses and reactions — _decided, not yet exercised_
+
+A sphere has no event bus. A **sense** is the name of a moment the AI is told to watch for, and what follows it is a lookup, not a load. The full mechanics are in the [reactions](../common/core/protocol/frames/sphere-framework/reactions.md) frame.
+
+**Who produces a sense:**
+
+| Producer | Examples |
+|---|---|
+| **The `sphere` script** prints it | `focus-opened`, `focus-attached` |
+| **A check** reports it: a finding is the condition | `stale-found`, `check-failed`, `dirty-detected` |
+| **The AI, as it begins something** | `focus-grounding`, `focus-closing`, `day-wrapped`, `reflection-started` |
+| **The AI's judgment** (best effort; the manifest's trigger line tells it to look) | `waiting-on-human`, `work-stalled`, `gap-detected` |
+
+A ground's reactions run before its commit, so what they write lands with the work that caused them. That's why the sense is `focus-grounding`, not *grounded*.
+
+**Three kinds of thing get confused with each other:**
+
+| Kind | What it is | Is it a sense? |
+|---|---|---|
+| **Moment** | A point in the sphere's life many frames hook: a focus opens, a ground begins, the day starts | Yes: the **core moments**, about a dozen, that every build has |
+| **Condition** | Something one frame notices that needs action: stale, conflicting, unsafe | Yes, living in that frame |
+| **Record** | Something the sphere did: an idea captured, a template extracted | **No.** The history entry, ledger line or commit is the record; growth and reflection read records |
+
+**The reactions table.** A frame reacts in its When/do table: the When cell starts with the sense in backticks, and whatever follows is a guard (`` `focus-grounding`, with facts to offer ``). The AI gathers these rows into the [manifest](loading.md#the-capability-manifest--decided-not-yet-exercised) as a **reactions table**, one block per sense. When a sense fires, the AI reads its block (already in context), skips rows whose guard doesn't apply, and does each one-line action, opening a frame only when it needs that frame's mechanics.
+
+**Conditions find their frame by tree.** A condition about a node carries its [link](../common/core/protocol/frames/nodes/node-names.md#links): `stale-found knowledge:money.taxes` reaches the rows for `stale-found knowledge`, and `stale-found projection:monthly-budget` reaches the projection rows. One word to learn, eight kinds of stale, no guessing from context. A gap (a kind a check can produce with no row) is a manifest-check finding.
+
+**Common sense grows out of reactions.** A habit the human repeats at the same moment three times is offered as a reaction; reactions several frames share become one row; reactions found in many spheres are what the common set ships. Nothing adopts itself: the sphere offers, the human decides.
 
 ---
 
@@ -178,7 +209,7 @@ protocol: [I-trust-what-leaves, A-review-outbound, draft-left-unsent]   # intent
 ```
 
 - **Data locations** (`reads`, `writes`) are paths. They never travel; an exported frame keeps the fields and drops the values.
-- **Protocol entries** (`protocol`) travel. Intents are `I-…`, abilities `A-…`, and senses go by their own event names (`focus-grounded`). Each entry is defined in the registry, `protocol.md`.
+- **Protocol entries** (`protocol`) travel. Intents are `I-…`, abilities `A-…`, and senses go by their own event names (`focus-grounding`). Each entry is defined in the registry, `protocol.md`.
 - **Empty is explicit.** A guard that reads and writes nothing says `reads: []`, so "touches no data" is a statement, not an omission.
 
 Skill frame. This is standard Agent Skills frontmatter. The same fields go inside `metadata`, prefixed `sphere-`, which the standard provides for exactly this, so the file stays a valid skill everywhere. Its values are strings, so lists are comma-separated:
@@ -214,7 +245,7 @@ Changes flow downward, and only as far as they need to:
 | What changed | What gets re-evaluated | Sense |
 |---|---|---|
 | A lens | Every frame derived from it, and their components | `lens-shifted` |
-| A frame | The abilities, commands and instincts it defines | `frame-shifted` |
+| A frame | The abilities, commands and reactions it defines | `frame-shifted` |
 | An ability or command | Nothing beyond itself | — |
 
 Re-evaluating means checking that the frame still follows from the lens. Often nothing changes. When something does, the sphere proposes the change and the human confirms it, like any other edit.

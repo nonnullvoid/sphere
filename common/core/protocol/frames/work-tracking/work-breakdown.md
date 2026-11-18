@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [layers/work]
 writes: [layers/work]
-protocol: [I-work-as-one-tree, A-add-work, A-move-work, A-relabel-work, A-promote-item, A-save-work-template, work-node-added, work-node-moved]
+protocol: [I-work-as-one-tree, A-add-work, A-move-work, A-relabel-work, A-promote-item, A-save-work-template]
 ---
 
 # Breaking work down
@@ -95,10 +95,10 @@ From another tree, refer to work as `work:<name>`. In a tree view, a child shows
 
 | When | Do |
 |---|---|
-| New work to track | Name it, set `parent:`, write `work.md` and a first `progress.md` entry. Start from a template if one fits. Fire `work-node-added` |
+| New work to track | Name it, set `parent:`, write `work.md` and a first `progress.md` entry. Start from a template if one fits. |
 | Something needs breaking down | Add child nodes under it |
 | A checklist line needs its own memory | Promote it; leave a link in its place |
-| Work belongs under a different parent | Edit `parent:` (and the name, under the namespace scheme). Fire `work-node-moved` |
+| Work belongs under a different parent | Edit `parent:` (and the name, under the namespace scheme). |
 | A task has grown into an effort of its own | Suggest calling it a project; on yes, edit `kind:` |
 | A file is added to a node's folder | Link it from References |
 | A node's shape is worth reusing | Offer to save it as a template |
@@ -113,9 +113,3 @@ From another tree, refer to work as `work:<name>`. In a tree view, a child shows
 - [plans](plans.md): direction lives beside the work, not in its checklist.
 - [focus-tree](../focus/focus-tree.md): carving a parent's checklist item for a child focus is a promotion.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `work-node-added` | a work node is created |
-| `work-node-moved` | a work node's `parent:` changes |

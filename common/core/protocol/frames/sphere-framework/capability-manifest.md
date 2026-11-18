@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [core/protocol]
 writes: [core/manifest.md]
-protocol: [I-know-what-it-can-do, A-build-manifest, manifest-built]
+protocol: [I-know-what-it-can-do, A-build-manifest, floor-grew, focus-grounding, sphere-authoring-started, sphere-authoring-ended]
 ---
 
 # The capability manifest
@@ -27,8 +27,9 @@ The manifest, `core/manifest.md`, is the sphere's routing table: one short file 
 | **Lens line** | its name and its job, in one line |
 | **When to load** | the topics or situations that make this lens relevant |
 | **Frame line** | its name, its scope in one line, and its trigger: the command or sense that brings it in |
+| **Reactions** | after the entries: for each sense, the frames that react, each with its guard and a one-line action (see [reactions](reactions.md)) |
 
-A header at the top says it's generated, when it was built, which files it was built from, and a hash over them. That hash is what the [manifest-check](../readable-substrate/manifest-check.md) compares.
+A header at the top says it's generated, when it was built, which files it was built from, and a hash over them. `scripts/manifest-check --hash` prints that hash. That hash is what the [manifest-check](../readable-substrate/manifest-check.md) compares.
 
 **An entry is a pointer, never a copy.** If a line needs more than a sentence, the detail belongs in the frame.
 
@@ -53,7 +54,10 @@ A header at the top says it's generated, when it was built, which files it was b
 |---|---|
 | A window starts | Read the manifest with the identity core; open nothing else until a task points at it |
 | A task might need a capability | Look it up in the manifest; open the frame only to run it |
-| A lens or frame is added, changed or retired | Rebuild its entries in the same ground; fire `manifest-built` |
+| `focus-grounding`, if a lens or frame was added, changed or retired | Rebuild its entries in this ground, its rows in the reactions table included |
+| `sphere-authoring-started` | Load the deeper engine mechanics: how evolution runs, how replication works, how registries rebuild |
+| `sphere-authoring-ended` | Drop the deeper engine mechanics again |
+| Something is added to the floor | Say so in a line; reflection asks whether it earns its place. Fire `floor-grew` |
 | The manifest-check reports drift | Rebuild the entries it names, then check again |
 | Someone edited the manifest by hand | Ask where the change belongs; put it in that lens or frame and rebuild |
 | A new sphere starts from a seed | Build its manifest from its own lenses and frames |
@@ -69,4 +73,4 @@ A header at the top says it's generated, when it was built, which files it was b
 
 | Sense | Fires when |
 |---|---|
-| `manifest-built` | the manifest was rebuilt |
+| `floor-grew` | something was added to the floor. Worth a second look |

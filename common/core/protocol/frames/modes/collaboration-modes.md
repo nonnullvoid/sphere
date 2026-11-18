@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/focus, core/ai/agents]
 writes: [layers/focus]
-protocol: [I-say-who-does-the-work, A-set-collaboration-mode, collaboration-mode-changed]
+protocol: [I-say-who-does-the-work, A-set-collaboration-mode, mode-switched, focus-opened, focus-grounding]
 ---
 
 # Collaboration modes
@@ -54,12 +54,12 @@ protocol: [I-say-who-does-the-work, A-set-collaboration-mode, collaboration-mode
 
 | When | Do |
 |---|---|
-| A focus opens with the human in the window | `collaboration-mode: together` |
+| `focus-opened`, with the human in the window | `collaboration-mode: together` |
 | A focus delegates to an agent | Set the lower of what was asked and what the agent has earned |
-| *"Let me take over"*, *"let's do this together"* | Drop to that collaboration mode at once. Fire `collaboration-mode-changed` |
-| *"Run this one unattended"* | If the agent has earned it for this kind of work, set it; otherwise say so and offer *supervised*. Fire `collaboration-mode-changed` |
+| *"Let me take over"*, *"let's do this together"* | Drop to that collaboration mode at once. Fire `mode-switched` |
+| *"Run this one unattended"* | If the agent has earned it for this kind of work, set it; otherwise say so and offer *supervised*. Fire `mode-switched` |
 | The human is doing this part alone | `human-only`; when they come back, capture what happened in the next ground |
-| Grounding after a change | Write the new value and note the change in the history entry |
+| `focus-grounding`, if the collaboration mode changed | Write the new value and note the change in the history entry |
 
 ## Works with
 
@@ -72,4 +72,4 @@ protocol: [I-say-who-does-the-work, A-set-collaboration-mode, collaboration-mode
 
 | Sense | Fires when |
 |---|---|
-| `collaboration-mode-changed` | a focus's collaboration mode changes |
+| `mode-switched` | a focus's collaboration mode changes |

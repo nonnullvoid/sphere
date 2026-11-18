@@ -347,12 +347,12 @@ What changed, and why. Newest first.
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `work-node-added`, `work-node-moved`, `work-node-archived`
-- `work-state-changed`
-- `work-progress-measured`, `work-stalled`
-- `plan-versioned`, `plan-deviation`, `plan-assumption-stale`, `plan-archived`
-- `work-index-stale`
-- witness, when a build has it: `growth-recorded`, `record-exported`, `milestone-reached`, `theme-swapped`
+- `work-stalled`, `plan-deviation`
+- `node-archived` for work and plans: knowledge offers what should outlive the work; a plan asks whether it's done when its last work is archived
+- `stale-found` for the work index, outside a ground; and for knowledge a plan's assumption points at, which flags the plan for review
+- witness, when a build has it: `milestone-reached`
+
+**Reacts to:** `focus-grounding` (progress entries, re-measure, rebuild the index). Adding, moving and state changes are records in each node's progress, not senses.
 
 **Commands** (natural phrasing works too):
 - `add [task or project] [name] under [parent]`

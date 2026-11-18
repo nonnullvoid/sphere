@@ -1,0 +1,300 @@
+#!/usr/bin/env python3
+"""manifest-check: confirm the protocol registry, the manifest and the lens and frame files agree.
+
+The registry (core/protocol/protocol.md) and the manifest (core/manifest.md) are written
+by the AI, with judgment; this is the deterministic comparison against the files on disk
+(frames/readable-substrate/manifest-check.md). It reports; it never rewrites.
+
+Checks: lenses and frames name each other both ways; a frame's derives_from names its
+lens's current version; every protocol entry a frame lists has a registry row, and every
+row is listed by a frame and points at frames that exist; every sense a When/do row reacts
+to, or a frame fires, is in that frame's protocol list; every core moment has a frame that
+reacts to it. With a manifest: every lens and frame has an entry, the header hash matches
+the lens and frame files, and its reactions table names every frame that reacts to each
+sense. In a sphere (not a common set), every path in reads: and writes: exists.
+Standard library only; runs on Python 3.9.
+"""
+
+import argparse
+import glob
+import hashlib
+import os
+import re
+import subprocess
+import sys
+from dataclasses import dataclass, field
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from sphere_shapes import Finding, frontmatter_value, parse_list  # noqa: E402
+
+ROW = re.compile(r"^\| `([^`]+)` \|(.*)$")
+LINK = re.compile(r"\[([a-z0-9-]+)\]\(([^)]+)\)")
+REACTS = re.compile(r"^\| `([a-z][a-z0-9-]*)(?: ([a-z][a-z0-9-]*))?`")
+FIRES = re.compile(r"[Ff]ire `([a-z][a-z0-9-]*)`")
+HASH_LINE = re.compile(r"Hash: ([0-9a-f]+)")
+
+
+@dataclass
+class Frame:
+    name: str
+    path: str  # relative to the protocol folder
+    lenses: list[str]
+    derives_from: list[str]
+    protocol: list[str]
+    reads: list[str]
+    writes: list[str]
+    reacts: set[str] = field(default_factory=set)  # senses its When/do rows start with
+    fires: set[str] = field(default_factory=set)  # senses it says to fire
+
+
+@dataclass
+class Lens:
+    name: str
+    path: str
+    version: str
+    frames: list[str]
+
+
+@dataclass
+class RegistryRow:
+    entry: str
+    home: str  # the first frame linked in the row's third column
+    links: list[tuple[str, str]]  # every (name, target) the row links to
+    core: bool
+
+
+def section(text: str, heading: str) -> str:
+    """The body of a `## heading` section, up to the next `## `; "" when absent."""
+    match = re.search(rf"\n## {re.escape(heading)}\n(.*?)(?=\n## |\Z)", text, re.S)
+    return match.group(1) if match else ""
+
+
+def read_frames(protocol: str) -> dict[str, Frame]:
+    frames: dict[str, Frame] = {}
+    for path in sorted(glob.glob(f"{protocol}/frames/**/*.md", recursive=True)):
+        name = frontmatter_value(path, "frame")
+        if not name:
+            continue
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        when_do = section(text, "When / do")
+        frames[name] = Frame(
+            name=name,
+            path=os.path.relpath(path, protocol),
+            lenses=parse_list(frontmatter_value(path, "lens")),
+            derives_from=parse_list(frontmatter_value(path, "derives_from")),
+            protocol=parse_list(frontmatter_value(path, "protocol")),
+            reads=parse_list(frontmatter_value(path, "reads")),
+            writes=parse_list(frontmatter_value(path, "writes")),
+            reacts={m.group(1) for m in map(REACTS.match, when_do.splitlines()) if m},
+            fires={sense for sense in FIRES.findall(text) if sense != "x"},
+        )
+    return frames
+
+
+def read_lenses(protocol: str) -> dict[str, Lens]:
+    lenses: dict[str, Lens] = {}
+    for path in sorted(glob.glob(f"{protocol}/lenses/**/*.md", recursive=True)):
+        name = frontmatter_value(path, "lens")
+        if name:
+            lenses[name] = Lens(
+                name,
+                os.path.relpath(path, protocol),
+                frontmatter_value(path, "version"),
+                parse_list(frontmatter_value(path, "frames")),
+            )
+    return lenses
+
+
+def read_registry(path: str) -> list[RegistryRow]:
+    """Every table row that starts with a backticked entry, under Senses, Intents, Abilities or Commands."""
+    rows: list[RegistryRow] = []
+    with open(path, encoding="utf-8") as handle:
+        heading = ""
+        for line in handle:
+            if line.startswith("#"):
+                heading = line.strip("# \n").lower()
+                continue
+            match = ROW.match(line.rstrip("\n"))
+            if not match:
+                continue
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            links = LINK.findall(line)
+            home_links = LINK.findall(cells[2]) if len(cells) > 2 else []
+            rows.append(
+                RegistryRow(match.group(1), home_links[0][0] if home_links else "", links, heading == "core moments")
+            )
+    return rows
+
+
+def is_sense(entry: str) -> bool:
+    return not entry.startswith(("I-", "A-"))
+
+
+def protocol_hash(protocol: str) -> str:
+    """sha256 over every lens and frame file (path, then content), sorted by path; the first 12 hex digits."""
+    digest = hashlib.sha256()
+    paths = glob.glob(f"{protocol}/lenses/**/*", recursive=True) + glob.glob(f"{protocol}/frames/**/*", recursive=True)
+    for path in sorted(p for p in paths if os.path.isfile(p)):
+        digest.update(os.path.relpath(path, protocol).encode())
+        with open(path, "rb") as handle:
+            digest.update(handle.read())
+    return digest.hexdigest()[:12]
+
+
+def check_lenses(lenses: dict[str, Lens], frames: dict[str, Frame], protocol: str) -> list[Finding]:
+    findings: list[Finding] = []
+    for lens in lenses.values():
+        where = f"{protocol}/{lens.path}"
+        for name in lens.frames:
+            if name not in frames:
+                findings.append(Finding(where, f"frames: names '{name}', which no frame file defines"))
+            elif lens.name not in frames[name].lenses:
+                findings.append(Finding(where, f"frames: names '{name}', whose lens: doesn't name {lens.name}"))
+    for frame in frames.values():
+        where = f"{protocol}/{frame.path}"
+        for name in frame.lenses:
+            if name not in lenses:
+                findings.append(Finding(where, f"lens: names '{name}', which no lens file defines"))
+            elif frame.name not in lenses[name].frames:
+                findings.append(Finding(where, f"lens {name}'s frames: doesn't list {frame.name}"))
+        for item in frame.derives_from:
+            name, _, version = item.partition("@")
+            if name in lenses and version and lenses[name].version and version != lenses[name].version:
+                findings.append(Finding(where, f"derives from {name}@{version}; the lens is at {lenses[name].version}"))
+    return findings
+
+
+def check_registry(rows: list[RegistryRow], frames: dict[str, Frame], protocol: str, registry: str) -> list[Finding]:
+    findings: list[Finding] = []
+    listed: dict[str, list[str]] = {}
+    for frame in frames.values():
+        for entry in frame.protocol:
+            listed.setdefault(entry, []).append(frame.name)
+    seen: set[str] = set()
+    for row in rows:
+        if row.entry in seen:
+            findings.append(Finding(registry, f"'{row.entry}' has more than one row"))
+        seen.add(row.entry)
+        for name, target in row.links:
+            if target.startswith("frames/") and not os.path.isfile(os.path.join(protocol, target.split("#")[0])):
+                findings.append(Finding(registry, f"'{row.entry}' links to {target}, which doesn't exist"))
+            elif target.startswith("frames/") and name not in frames:
+                findings.append(Finding(registry, f"'{row.entry}' names frame '{name}', which no frame file defines"))
+        if row.entry not in listed:
+            findings.append(Finding(registry, f"'{row.entry}' isn't in any frame's protocol: list"))
+        elif row.home and row.home in frames and row.entry not in frames[row.home].protocol:
+            findings.append(Finding(registry, f"'{row.entry}' names {row.home} as home, which doesn't list it"))
+    for entry, names in sorted(listed.items()):
+        if entry not in seen:
+            findings.append(Finding(registry, f"no row for '{entry}' (listed by {', '.join(names)})"))
+    for row in rows:
+        if row.core and not any(row.entry in frame.reacts for frame in frames.values()):
+            findings.append(Finding(registry, f"core moment '{row.entry}' has no frame that reacts to it"))
+    return findings
+
+
+def check_senses(frames: dict[str, Frame], protocol: str) -> list[Finding]:
+    findings: list[Finding] = []
+    for frame in frames.values():
+        where = f"{protocol}/{frame.path}"
+        for sense in sorted(frame.reacts - set(frame.protocol)):
+            findings.append(Finding(where, f"a When/do row reacts to `{sense}`, which isn't in its protocol: list"))
+        for sense in sorted(frame.fires - set(frame.protocol)):
+            findings.append(Finding(where, f"fires `{sense}`, which isn't in its protocol: list"))
+    return findings
+
+
+def check_manifest(manifest: str, lenses: dict[str, Lens], frames: dict[str, Frame], protocol: str) -> list[Finding]:
+    with open(manifest, encoding="utf-8") as handle:
+        text = handle.read()
+    findings: list[Finding] = []
+    names = set(re.findall(r"`([a-z0-9-]+)`", text)) | set(re.findall(r"^#+ ([a-z0-9-]+)", text, re.M))
+    for name in sorted(set(lenses) | set(frames)):
+        if name not in names:
+            findings.append(Finding(manifest, f"no entry for '{name}'"))
+    stamped = HASH_LINE.search(text)
+    current = protocol_hash(protocol)
+    if not stamped:
+        findings.append(Finding(manifest, f"no Hash: line in the header (the lens and frame files hash to {current})"))
+    elif stamped.group(1) != current:
+        findings.append(
+            Finding(manifest, f"stale: built from {stamped.group(1)}, the lens and frame files are now {current}")
+        )
+    blocks: dict[str, set[str]] = {}
+    sense = ""
+    for line in section(text, "Reactions").splitlines():
+        if re.match(r"^[a-z]", line):
+            sense = line.split()[0]
+            blocks.setdefault(sense, set())
+        elif sense and line.strip():
+            blocks[sense].add(line.split()[0])
+    for frame in frames.values():
+        for reacted in sorted(frame.reacts):
+            if frame.name not in blocks.get(reacted, set()):
+                findings.append(Finding(manifest, f"reactions table: {reacted} is missing {frame.name}"))
+    return findings
+
+
+def check_data(frames: dict[str, Frame], protocol: str) -> list[Finding]:
+    findings: list[Finding] = []
+    for frame in frames.values():
+        for path in frame.reads + frame.writes:
+            if not glob.glob(path.split("{")[0].rstrip("/") or "."):
+                findings.append(Finding(f"{protocol}/{frame.path}", f"names '{path}', which this sphere doesn't have"))
+    return findings
+
+
+def default_root() -> str:
+    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    return result.stdout.strip() if result.returncode == 0 else os.getcwd()
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="manifest-check",
+        description=(__doc__ or "").split("\n\n")[1],
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument("--root", help="the sphere (default: the git top level, else the current folder)")
+    parser.add_argument(
+        "--set", metavar="DIR", help="check a common set's protocol folder alone: no manifest, no data locations"
+    )
+    parser.add_argument("--hash", action="store_true", help="print the lens and frame files' hash, for the header")
+    parser.add_argument("--strict", action="store_true", help="exit 1 when anything is reported (default: exit 0)")
+    args = parser.parse_args(argv)
+
+    set_dir: str = os.path.abspath(args.set) if args.set else ""
+    os.chdir(args.root or default_root())
+    protocol: str = os.path.relpath(set_dir) if set_dir else "core/protocol"
+    if not os.path.isdir(protocol):
+        print(f"manifest-check: no protocol folder at {protocol} (pass --set DIR)", file=sys.stderr)
+        return 2
+    if args.hash:
+        print(protocol_hash(protocol))
+        return 0
+
+    frames, lenses = read_frames(protocol), read_lenses(protocol)
+    registry = f"{protocol}/protocol.md"
+    findings = check_lenses(lenses, frames, protocol) + check_senses(frames, protocol)
+    if os.path.isfile(registry):
+        findings += check_registry(read_registry(registry), frames, protocol, registry)
+    else:
+        findings.append(Finding(registry, "no registry"))
+    if not set_dir:
+        manifest = "core/manifest.md"
+        if os.path.isfile(manifest):
+            findings += check_manifest(manifest, lenses, frames, protocol)
+        else:
+            findings.append(Finding(manifest, "no manifest yet: build it from the lenses and frames"))
+        findings += check_data(frames, protocol)
+
+    for finding in findings:
+        print(finding)
+    print("manifest-check: clean" if not findings else f"manifest-check: {len(findings)} to look at")
+    return 1 if args.strict and findings else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

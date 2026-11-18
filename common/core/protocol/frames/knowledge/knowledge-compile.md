@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/knowledge, layers/work]
 writes: [layers/knowledge]
-protocol: [I-trust-what-the-sphere-knows, A-compile-knowledge, A-refresh-knowledge, A-check-current, knowledge-compiled, knowledge-refreshed, knowledge-stale]
+protocol: [I-trust-what-the-sphere-knows, A-compile-knowledge, A-refresh-knowledge, A-check-current, stale-found]
 ---
 
 # Building and refreshing what the sphere knows
@@ -28,7 +28,7 @@ protocol: [I-trust-what-the-sphere-knows, A-compile-knowledge, A-refresh-knowled
 6. **Offer the result** like any capture: a short summary, what's new, what changed, what conflicts with what the sphere already had.
 7. **Ask what's missing.** A source records what was said, not what mattered: notes from a meeting miss the tone of the room; a report misses what everyone already knew. **The human fills the gaps,** and their answer is saved with the rest, graded *stated*.
 
-On a yes, write the topic, add a history entry naming the sources, and fire `knowledge-compiled`.
+On a yes, write the topic, add a history entry naming the sources.
 
 - **A big compile can run without the human,** as a child focus or an agent (see [focus-tree](../focus/focus-tree.md#agents)). What it produces is still a proposal: the topic isn't written until the human confirms.
 - **Never invent to fill a gap.** A question the sources don't answer stays a question, in the offer.
@@ -40,7 +40,7 @@ On a yes, write the topic, add a history entry naming the sources, and fire `kno
 
 - **A topic can say how long its facts stay fresh:** `fresh_for: 1d` for a price, `1y` for a rule, `never` for a birthday. A fact whose *as of* is older than that is **suspected stale.** Nothing has to mark it; anyone reading the row can tell.
 - **A topic with no `fresh_for`** has no window. Judge by the fact's nature: a price is never fresh for long.
-- **A source known to have changed** (a new statement arrived, the rule was revised) makes its facts stale whatever their age. Offer to refresh now. If not now, add *suspected stale* and the reason to the fact's *As of*, with the human's yes. Fire `knowledge-stale`.
+- **A source known to have changed** (a new statement arrived, the rule was revised) makes its facts stale whatever their age. Offer to refresh now. If not now, add *suspected stale* and the reason to the fact's *As of*, with the human's yes. Fire `stale-found`.
 - **About to rely on a stale fact for a decision?** Refresh it first, or say plainly that it's stale (see [say-how-sure](say-how-sure.md)).
 
 ## Refreshing
@@ -54,7 +54,7 @@ On a yes, write the topic, add a history entry naming the sources, and fire `kno
 | The fact turns out wrong | Correct it (below) |
 | The source is gone or unreachable | Say so; leave the fact, still stale |
 
-Reads are revisited rather than re-checked: does the read still hold, given what's happened since? Offer the changes as one batch. On a yes, write them, clear any stale marks, add one history entry, set `updated`, and fire `knowledge-refreshed`.
+Reads are revisited rather than re-checked: does the read still hold, given what's happened since? Offer the changes as one batch. On a yes, write them, clear any stale marks, add one history entry and set `updated`.
 
 *"Is the lease still current?"* is a read, not a refresh: list what's stale and why, then offer to refresh.
 
@@ -75,11 +75,11 @@ Reads are revisited rather than re-checked: does the read still hold, given what
 
 | When | Do |
 |---|---|
-| *"Compile … from …"* | Read, extract, grade, cite, keep sources; offer; ask what's missing. On yes, write. Fire `knowledge-compiled` |
+| *"Compile … from …"* | Read, extract, grade, cite, keep sources; offer; ask what's missing. On yes, write. |
 | A compile is big | Run it as a child focus or an agent; its result is a proposal |
-| *"Refresh …"* | Reconcile each fact against its source; offer the changes. On yes, write. Fire `knowledge-refreshed` |
+| *"Refresh …"* | Reconcile each fact against its source; offer the changes. On yes, write. |
 | *"Is … still current?"* | List what's stale and why; offer to refresh |
-| A source is known to have changed | Offer to refresh now; or, with a yes, mark its facts stale. Fire `knowledge-stale` |
+| A source is known to have changed | Offer to refresh now; or, with a yes, mark its facts stale. Fire `stale-found` with the topic's link |
 | About to rely on a stale fact for a decision | Refresh it first, or say it's stale |
 | A fact is wrong | Correct it; history entry; flag whatever cites it |
 | A domain is retired | Move or rename its topics with the human's yes; fix links |
@@ -97,6 +97,4 @@ Reads are revisited rather than re-checked: does the read still hold, given what
 
 | Sense | Fires when |
 |---|---|
-| `knowledge-compiled` | a topic is built or extended from sources |
-| `knowledge-refreshed` | a topic is reconciled against its sources |
-| `knowledge-stale` | a source a topic rests on is known to have changed |
+| `stale-found` | for a topic: a source it rests on is known to have changed |

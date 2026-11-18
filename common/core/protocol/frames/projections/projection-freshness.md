@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers, layers/projections]
 writes: [surface/projections]
-protocol: [I-trust-what-i-see, A-render-projection, A-refresh-projection, A-preview-projection, refresh-requested, projection-stale]
+protocol: [I-trust-what-i-see, A-render-projection, A-refresh-projection, A-preview-projection, stale-found, focus-grounding]
 ---
 
 # How fresh a view is
@@ -39,7 +39,7 @@ protocol: [I-trust-what-i-see, A-render-projection, A-refresh-projection, A-prev
 
 - **At ground,** a refreshed view is rendered again if any of its `sources` changed in that ground. That's computed from what the ground changed, never tracked separately.
 - **On request:** `refresh <name>`, or `refresh all`, which skips live views and snapshots because they have nothing to refresh.
-- **Stale is computed, not stored.** A refreshed view is stale when one of its sources changed after it was rendered, or when it's past its `freshness` window. Git already knows both. Fire `projection-stale` when one is found outside a ground.
+- **Stale is computed, not stored.** A refreshed view is stale when one of its sources changed after it was rendered, or when it's past its `freshness` window. Git already knows both. Fire `stale-found`, with the view's link, when one is found outside a ground.
 
 ## Snapshots are made once
 
@@ -75,10 +75,11 @@ A snapshot is built with the one-shot template: read across the sphere, compose 
 | When | Do |
 |---|---|
 | A projection is made | Render it according to its kind, with provenance stamped in. Snapshots go through the one-shot template |
-| A ground changed a refreshed view's sources | Render it again, as part of the ground |
-| *"Refresh X"* | Render X from its sources. Fire `refresh-requested`. Refuse if X is a snapshot, and offer a new one |
+| `focus-grounding`, if it changed a refreshed view's sources | Render it again, as part of the ground |
+| *"Refresh X"* | Render X from its sources. Refuse if X is a snapshot, and offer a new one |
 | *"Refresh all"* | Render every refreshed view; skip live views and snapshots |
-| A refreshed view is found stale outside a ground | Show it as stale on the page; fire `projection-stale`; offer to refresh |
+| A refreshed view is found stale outside a ground | Fire `stale-found` with the view's link |
+| `stale-found projection` | Show it as stale on the page; offer to refresh |
 | An external app has no declared refresh | Treat it as stale after a day; ask the human how it should stay current |
 | A focus wants to see its changes in a view | Render a preview into `_scratch/`, marked as a preview |
 | *"Is this current?"* | Answer from the page's provenance and the sources' last change |
@@ -96,5 +97,4 @@ A snapshot is built with the one-shot template: read across the sphere, compose 
 
 | Sense | Fires when |
 |---|---|
-| `refresh-requested` | the human asks for a projection, or all of them, to be refreshed |
-| `projection-stale` | a refreshed view is found out of date with its sources, or past its freshness |
+| `stale-found` | for a projection: a refreshed view is out of date with its sources, or past its freshness |

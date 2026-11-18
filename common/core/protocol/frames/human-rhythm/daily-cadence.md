@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/focus, layers/work, layers/ideas, layers/knowledge, surface/state/focus]
 writes: [layers/focus, layers/work]
-protocol: [I-daily-rhythm, A-start-day, A-recalibrate, A-wrap-day, A-review-week, day-started, day-wrapped, week-reviewed, wrap-missed]
+protocol: [I-daily-rhythm, A-start-day, A-recalibrate, A-wrap-day, A-review-week, day-started, day-wrapped, week-reviewed, wrap-missed, focus-attached]
 ---
 
 # The day's anchors
@@ -96,13 +96,13 @@ On the human's chosen day: what got done (foci closed, work finished, from histo
 | When | Do |
 |---|---|
 | *"Good morning"*, *"start my day"* | Read the clock and calendar, gather what's pending, hand back candidates. Fire `day-started` |
-| A window attaches | Read the clock; greet in a line. No orientation |
+| `focus-attached` | Read the clock; greet in a line. No orientation |
 | *"Catch me up"*, *"what should I work on?"* | Re-calibrate: what flipped since the morning; candidates; say the picture may be stale |
-| *"Wrap up"* | Ground this window's focus and offer the rest, say what carries over, list what's waiting. Fire `day-wrapped` |
+| *"Wrap up"* | Fire `day-wrapped` and let its reactions run; ground this window's focus and offer the rest, say what carries over |
 | Past the usual end of day, the human is there | Offer the wrap once |
 | Past the usual end of day, the human has gone | If scheduled: ground only stale foci with unsaved work, and say so in their history. Fire `wrap-missed` |
 | The next morning, after a missed wrap with no scheduler | Lead with what was left unsaved; offer to ground it |
-| The weekly anchor | Look back and ahead. Fire `week-reviewed` |
+| The weekly anchor | Fire `week-reviewed`; look back and ahead |
 | A pattern in the human's days becomes clear | Offer it once as an *inferred* fact; keep it only on a yes |
 | The human skips an anchor | Nothing. Never mention it |
 
@@ -119,6 +119,6 @@ On the human's chosen day: what got done (foci closed, work finished, from histo
 | Sense | Fires when |
 |---|---|
 | `day-started` | the morning orientation is given |
-| `day-wrapped` | the wrap finishes |
-| `week-reviewed` | the weekly look finishes |
+| `day-wrapped` | the wrap begins |
+| `week-reviewed` | the weekly look begins |
 | `wrap-missed` | the end of the day passed without a wrap, and the safety net ran or was deferred to the next window |

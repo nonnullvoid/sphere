@@ -9,7 +9,7 @@ updated: 2026-11-11
 sharing: public
 reads: [layers/focus, layers/work]
 writes: [layers/focus, layers/work]
-protocol: [I-delegate-and-hear-back, A-open-child, A-report-up, A-inspect, A-request, A-share, child-reported]
+protocol: [I-delegate-and-hear-back, A-open-child, A-report-up, A-inspect, A-request, A-share, child-reported, focus-grounding, focus-closing]
 ---
 
 # The focus tree
@@ -79,13 +79,13 @@ Follow [finishing a node](../nodes/node-shape.md#finishing-a-node). For a focus:
 |---|---|
 | The human narrows mid-conversation | Propose a child: name, intention, what it takes. On yes, carve, write, ground the parent, report |
 | A focus delegates to an agent | Open a child in supervised or unattended mode, with the task as its intention and a standing approval to ground |
-| A child grounds | Append its history entry and one line to the parent's history. Fire `child-reported` |
-| A parent grounds with reports waiting | Roll them into the parent's Now |
+| `focus-grounding`, in a child focus | Append its history entry and one line to the parent's history. Fire `child-reported` |
+| `focus-grounding`, with child reports waiting | Roll them into the parent's Now |
 | Offering a change to a file another focus holds | Add an entry to your own history headed `## <date> — offer to fNN`, naming the file and the change |
 | An offer naming this focus has no answer yet | Show it as waiting; on the human's call, apply it and append *accepted*, or append *declined* |
 | A focus wants something from a sibling | Ask through the parent; never message the sibling directly |
-| A child closes | Ask once: hold back to the parent (default) or released; write it into the parent's `holds:`; move it to `archived/` |
-| Closing a focus with open children | List them with Next and unsaved work; ask once: close them too, move them up, or keep it open |
+| `focus-closing`, in a child focus | Ask once: hold back to the parent (default) or released; write it into the parent's `holds:`; move it to `archived/` |
+| `focus-closing`, with open children | List them with Next and unsaved work; ask once: close them too, move them up, or keep it open |
 
 ## Works with
 

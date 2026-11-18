@@ -707,6 +707,14 @@ Main holds nothing. Quick work grounds here by appending to history.md; real wor
 """
 
 
+def sense(name: str) -> None:
+    """Name the moment that just happened, as the last line, so the AI reads its block
+    in the reactions table (frames/sphere-framework/reactions.md). Only open and attach
+    print one: their reactions come after. A ground's and a close's run before the
+    command, so the AI fires those itself as it begins."""
+    print(f"sense: {name}")
+
+
 def cmd_init(args: argparse.Namespace) -> None:
     """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes and .gitignore."""
     global SHAPES
@@ -850,6 +858,9 @@ def cmd_open(args: argparse.Namespace) -> None:
         if not USE_GIT:
             take_gitless_lock(ref)
     print(f"{ref} open · {state} · under {parent}" + (f" · carved {' '.join(carved)}" if carved else ""))
+    sense("focus-opened")
+    if args.attach:
+        sense("focus-attached")
 
 
 def cmd_attach(args: argparse.Namespace) -> None:
@@ -863,6 +874,7 @@ def cmd_attach(args: argparse.Namespace) -> None:
     if ref == MAIN:
         cmd_list(args)
         print("f0-main open · the sphere")
+        sense("focus-attached")
         return
     changes = changed_files(owner_table())
     print(f"== {ref} · {stage_of(ref, changes)} · parent {parent_ref(ref)}")
@@ -885,6 +897,7 @@ def cmd_attach(args: argparse.Namespace) -> None:
     if kids:
         print("== open children: " + " ".join(kids))
     print(f"{ref} open · foreground")
+    sense("focus-attached")
 
 
 def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[list[str]] = None) -> None:

@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/literacy, layers/knowledge, layers/focus]
 writes: [layers/literacy]
-protocol: [I-know-where-i-stand, A-track-subject, A-stop-tracking, A-show-understanding, A-set-level, understanding-changed, understanding-stale, new-territory]
+protocol: [I-know-where-i-stand, A-track-subject, A-stop-tracking, A-show-understanding, A-set-level, new-territory, node-archived, focus-grounding, stale-found]
 ---
 
 # Where the human stands in a subject
@@ -114,7 +114,7 @@ A two-minute version of what an index fund tracks.
 | Moment | What happens |
 |---|---|
 | **Ground** | For each tracked subject the window touched, append the evidence it produced. Then offer any change to the level, Now or open questions, **one line per subject:** *"Index funds: skimmed → can use? You compared two funds unprompted twice this week."* Write what's confirmed |
-| **The human says where they stand** | Set the level; add a *stated* entry. Fire `understanding-changed` |
+| **The human says where they stand** | Set the level; add a *stated* entry. |
 | **During** | Notice evidence as it happens; leave the writing for ground |
 
 - **The top is reference, the evidence is history.** Any ground can append evidence. The level, Now and open questions change only on the human's yes. *Why:* it's the sphere's read of the human, and they're the authority on themselves.
@@ -126,7 +126,7 @@ A two-minute version of what an index fund tracks.
 
 - **Inside the sphere:** a topic in `rests_on` updated after the subject's latest evidence makes it *suspected stale*. The index computes this; nobody marks it.
 - **Outside the sphere:** a tool or a rule known to have changed sets `stale:` with a short reason, with the human's yes.
-- **Stale means check, not demote.** Next time it comes up, check lightly that the human's picture still holds, and say what changed. Fire `understanding-stale`. Fresh evidence clears it.
+- **Stale means check, not demote.** Next time it comes up, check lightly that the human's picture still holds, and say what changed. Fresh evidence clears it.
 
 ## The index
 
@@ -140,12 +140,12 @@ A two-minute version of what an index fund tracks.
 |---|---|
 | *"Track my learning of …"* | Write `subject.md`; first evidence entry |
 | The human takes on unfamiliar ground | Offer to track it, once. Fire `new-territory` |
-| Ground touched a tracked subject | Append evidence; offer level, Now and question changes in one line per subject |
-| The human confirms a change | Write it; a *level* entry for a level change. Fire `understanding-changed` |
-| *"I've got this now"* | Set the level; a *stated* entry. Fire `understanding-changed` |
-| A topic it rests on changed | It's stale: check lightly next time. Fire `understanding-stale` |
+| `focus-grounding`, if it touched a tracked subject | Append evidence; offer level, Now and question changes in one line per subject |
+| The human confirms a change | Write it; a *level* entry for a level change. |
+| *"I've got this now"* | Set the level; a *stated* entry. |
+| `stale-found knowledge`, if a tracked subject rests on the topic | Mark the subject stale: check lightly next time |
 | An outside change is known | Offer to set `stale:` with the reason |
-| *"Stop tracking …"* | Last entry; move to `archived/` |
+| *"Stop tracking …"* | Last entry; move to `archived/`. Fire `node-archived` |
 | *"What do I know about …?"* | Level, summary, open questions, recent evidence |
 
 ## Works with
@@ -162,6 +162,5 @@ A two-minute version of what an index fund tracks.
 
 | Sense | Fires when |
 |---|---|
-| `understanding-changed` | a subject's level changes |
-| `understanding-stale` | what a subject was learned from has changed since its latest evidence |
 | `new-territory` | the human takes on unfamiliar ground that isn't tracked |
+| `node-archived` | for a subject: tracking stops |

@@ -9,7 +9,7 @@ updated: 2026-11-11
 sharing: public
 reads: [layers/focus, layers/work, surface/state/focus]
 writes: [layers/focus, layers/work, surface/state/focus]
-protocol: [I-pick-up-where-i-left-off, I-see-whats-in-focus, A-open-focus, A-attach, A-detach, A-close-focus, A-rename-focus, A-list-foci, focus-opened, focus-attached, focus-closed, focus-stale]
+protocol: [I-pick-up-where-i-left-off, I-see-whats-in-focus, A-open-focus, A-attach, A-detach, A-close-focus, A-rename-focus, A-list-foci, focus-opened, focus-attached, focus-closing, stale-found, focus-grounding]
 ---
 
 # Focus nodes
@@ -180,15 +180,15 @@ Reconciliation runs in the tooling, never from memory. **But a ground asks only 
 | Any phrasing of resume or attach | The whole attach: find, read, brief. Fire `focus-attached` |
 | More than one focus matches | Show candidates; ask |
 | The human says they're stopping, or *park it* | Detach: ground, then background |
-| *"Close focus"*, *"we're done with this"* | Close: ground, last history entry, `status: closed`, ask whether the parent takes the hold back (default) or it's released, move to `archived/`. Fire `focus-closed` |
+| *"Close focus"*, *"we're done with this"* | Fire `focus-closing` and let its reactions run; then close: ground, last history entry, `status: closed`, ask whether the parent takes the hold back (default) or it's released, move to `archived/` |
 | The intention has drifted a little | Suggest a rename |
 | It drifted out, old intention unfinished | Suggest a child ([focus-tree](focus-tree.md)) |
 | It drifted out, old intention finished | Suggest closing and opening a new focus |
 | A window not attached to a focus writes and grounds | Ground into main; append to main's history |
 | The same window grounds into main a second time | Offer a focus once |
-| Grounding any focus | Ask only about this focus's own touched files |
-| A window starts while some focus has stale unsaved work | Say so in one line; offer to recover |
-| A focus's heartbeat lapses with unsaved work | Fire `focus-stale`; offer to recover at the next chance |
+| `focus-grounding` | Ask only about this focus's own touched files |
+| `stale-found focus` | Say so in one line at the next window; offer to recover |
+| A focus's heartbeat lapses with unsaved work | Fire `stale-found` with the focus's link |
 
 ## Works with
 
@@ -200,9 +200,7 @@ Reconciliation runs in the tooling, never from memory. **But a ground asks only 
 
 | Sense | Fires when |
 |---|---|
-| `focus-opened` | a focus's folder is created |
-| `focus-attached` | an attach finishes its briefing |
-| `focus-closed` | close finishes and the folder has moved |
-| `focus-stale` | a focus with unsaved work has gone quiet for more than 30 minutes |
-
-`focus-grounded` and `dirty-detected` come from [state-machine](../continuity/state-machine.md).
+| `focus-opened` | a focus's folder is created. `sphere open` prints it |
+| `focus-attached` | an attach finishes its briefing. `sphere attach` prints it |
+| `focus-closing` | a close begins; its ground and the move to `archived/` follow |
+| `stale-found` | for a focus: one with unsaved work has gone quiet for more than 30 minutes |

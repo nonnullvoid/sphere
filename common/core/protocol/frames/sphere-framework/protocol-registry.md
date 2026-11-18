@@ -27,7 +27,7 @@ protocol: [I-know-what-it-can-do, A-register-protocol, frame-shifted]
 | **Command** | the words that ask for an ability | the human's own words: *"save"*, *"where was I?"* |
 | **Sense** | an event the sphere notices | a bare event name: `focus-opened` |
 
-An instinct is an ability that runs on a sense instead of being asked for; its row names the sense.
+An ability can also run on a sense instead of being asked for: that's a [reaction](reactions.md), written as a When/do row that starts with the sense.
 
 ## Rules
 
@@ -50,7 +50,7 @@ An instinct is an ability that runs on a sense instead of being asked for; its r
 | When | Do |
 |---|---|
 | A frame is added | Add a row for each entry in its `protocol:` field, naming it as home |
-| A frame changes | Fire `frame-shifted`; re-read its rows and change only what no longer follows |
+| `frame-shifted` | Re-read the frame's rows; change only what no longer follows |
 | A frame is retired | Remove its rows, unless another frame lists the entry; then move its home |
 | The human keeps asking with the same words | Offer them as a command. The human decides |
 | Importing a skill | Frame it: copy unchanged, register its abilities, offer a lens |
@@ -64,8 +64,3 @@ An instinct is an ability that runs on a sense instead of being asked for; its r
 - [propose-dont-decide](../human-is-highest/propose-dont-decide.md): a new command, or a lens for a framed skill, is proposed to the human.
 - [protocol](../../../../../spec/protocol.md#the-registry--proven): the vocabulary, the cascade and framing a skill, in full.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `frame-shifted` | a frame changed, so the entries it defines are re-read |

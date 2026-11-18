@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/knowledge, layers/focus]
 writes: [layers/knowledge, layers/focus]
-protocol: [I-trust-what-the-sphere-knows, A-remember-fact, A-offer-facts, A-ask-what-it-knows, knowledge-captured, knowledge-grade-conflict, knowledge-domain-added]
+protocol: [I-trust-what-the-sphere-knows, A-remember-fact, A-offer-facts, A-ask-what-it-knows, knowledge-grade-conflict, focus-grounding, node-archived]
 ---
 
 # Catching facts
@@ -120,7 +120,7 @@ Every fact and read carries both.
    >
    > Save all, some, or none?
 
-3. **Write what's confirmed:** re-read the topic, add or change the rows, add a history entry, set `updated`. Clear them from the Now, kept or not. Fire `knowledge-captured`.
+3. **Write what's confirmed:** re-read the topic, add or change the rows, add a history entry, set `updated`. Clear them from the Now, kept or not.
 
 - **The exception: a fact about to be lost.** If the topic is changing or the window is closing in a hurry, ask right then, in one line: *"Worth keeping: notice period is two months. Save it?"*
 - **"Remember …" is the human's say.** Write it straight away, graded *stated*, and say where it went in one line.
@@ -132,7 +132,7 @@ Every fact and read carries both.
 - **The most specific topic wins.** A fact about the 2025 return goes in that topic, not in `money`.
 - **A fact that spans domains goes to the more general one,** never copied into several. Copies drift apart.
 - **Unclear placement is asked, in the offer,** never solved by storing it twice.
-- **Update before adding.** A fact that fits an existing topic goes there. A new topic, or a new domain, is proposed only when a genuinely different part of the world needs modelling. A new domain fires `knowledge-domain-added`.
+- **Update before adding.** A fact that fits an existing topic goes there. A new topic, or a new domain, is proposed only when a genuinely different part of the world needs modelling.
 
 ## Not knowledge
 
@@ -155,12 +155,13 @@ Read the index, then the topic. Answer from its facts and reads, **each with its
 |---|---|
 | The human states something durable about how things are | Note it in the focus's Now as a fact to offer |
 | A fact is about to be lost | Ask now, in one line |
-| *"Remember …"* | Write it, graded *stated*; say where in one line. Fire `knowledge-captured` |
-| The human corrects the sphere | Fix the fact; add a history entry. Fire `knowledge-captured` |
-| Ground, with facts to offer | Offer them as one batch; write what's confirmed; clear the list. Fire `knowledge-captured` |
+| *"Remember …"* | Write it, graded *stated*; say where in one line. |
+| The human corrects the sphere | Fix the fact; add a history entry. |
+| `focus-grounding`, with facts to offer | Offer them as one batch; write what's confirmed; clear the list. |
 | A grade and its shape disagree, or a fact has no source | Raise it; propose the fix. Fire `knowledge-grade-conflict` |
-| A candidate fits no existing topic | Propose a topic, or a domain. Fire `knowledge-domain-added` for a new domain |
+| A candidate fits no existing topic | Propose a topic, or a domain. |
 | It's really an idea, work or a lens | Send it there |
+| `node-archived work`, if the work taught something that should outlive it | Offer those facts at this ground, for the topics they belong to |
 | *"What do you know about …?"* | Answer from the topic, with grades and ages |
 
 ## Works with
@@ -176,6 +177,4 @@ Read the index, then the topic. Answer from its facts and reads, **each with its
 
 | Sense | Fires when |
 |---|---|
-| `knowledge-captured` | a fact or read is written into a topic, from conversation or a correction |
 | `knowledge-grade-conflict` | a fact's grade and its shape disagree, or a fact has no source |
-| `knowledge-domain-added` | a topic opens a domain the sphere didn't have |

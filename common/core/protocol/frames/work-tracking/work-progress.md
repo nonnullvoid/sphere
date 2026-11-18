@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [layers/work, layers/knowledge]
 writes: [layers/work]
-protocol: [I-honest-progress, A-set-work-state, A-measure-progress, work-state-changed, work-progress-measured, work-stalled]
+protocol: [I-honest-progress, A-set-work-state, A-measure-progress, work-stalled, focus-grounding]
 ---
 
 # Where the work really is
@@ -70,10 +70,10 @@ protocol: [I-honest-progress, A-set-work-state, A-measure-progress, work-state-c
 
 | When | Do |
 |---|---|
-| Work starts, stops or finishes | Set `state:`. Fire `work-state-changed` |
+| Work starts, stops or finishes | Set `state:`. |
 | Work stops for a reason | `paused`, with `paused:` and `waiting_on:` both set |
 | Ongoing work is marked done | Ask: has it really ended, or did something inside it finish? |
-| Grounding work a focus touched | Progress entry, refresh state, summary and Now, re-measure. Fire `work-progress-measured` |
+| `focus-grounding`, if it touched work | Progress entry, refresh state, summary and Now, re-measure. |
 | Asked how far along something is | Answer from evidence; say where the count is a claim, not a measure |
 | An active node shows no movement | Surface it once; ask the human. Fire `work-stalled` |
 | A project has run far past its plan | Ask whether it's really an area |
@@ -91,6 +91,4 @@ protocol: [I-honest-progress, A-set-work-state, A-measure-progress, work-state-c
 
 | Sense | Fires when |
 |---|---|
-| `work-state-changed` | a work node's `state:` changes |
-| `work-progress-measured` | ground re-measures progress on a touched node |
 | `work-stalled` | an active node has shown no evidence of movement for longer than its work suggests |

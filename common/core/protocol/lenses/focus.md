@@ -7,7 +7,7 @@ status: drafting
 updated: 2026-11-11
 verified: false
 sharing: public
-frames: [focus-nodes, focus-holds, focus-tree]
+frames: [focus-nodes, focus-holds, focus-tree, agent-definitions]
 ---
 
 # What we're focusing on, together
@@ -76,6 +76,7 @@ Work is what's changing in the world. Focus is what's being attended to. Many fo
 | [focus-nodes](../frames/focus/focus-nodes.md) | The record, opening, attaching, closing, foreground and background, the folder as registry |
 | [focus-holds](../frames/focus/focus-holds.md) | What a focus holds, soft claims, and the four kinds of file |
 | [focus-tree](../frames/focus/focus-tree.md) | Children, carving a hold, reporting up, what's waiting |
+| [agent-definitions](../frames/agent-trust/agent-definitions.md) | Shared with [agent-trust](agent-trust.md): delegating and dispatching an agent as a child focus |
 
 ## Revision history
 

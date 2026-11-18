@@ -9,7 +9,7 @@ updated: 2026-11-11
 sharing: public
 reads: [layers/focus]
 writes: [layers/focus]
-protocol: [I-never-overwrite-unseen, A-hold, A-offer-change, hold-claimed]
+protocol: [I-never-overwrite-unseen, A-hold, A-offer-change, hold-claimed, focus-opened, focus-grounding]
 ---
 
 # What a focus holds
@@ -50,8 +50,8 @@ Every file is one of [four kinds](../nodes/kinds-of-file.md): current state, his
 |---|---|
 | About to write a file | Is it current state this focus holds, its own record, history to append, reference to propose, or generated? Act by kind |
 | About to write current state another focus holds | Don't. Offer the change to the holder, as an entry in your own history |
-| Opening a focus whose holds overlap an open one | Ask through the parent; never refuse. Fire `hold-claimed` |
-| Ground finds other changed files no focus holds | List them in one line, left for main. Don't stop |
+| `focus-opened`, if its holds overlap an open focus's | Ask through the parent; never refuse. Fire `hold-claimed` |
+| `focus-grounding`, with changed files no focus holds | List them in one line, left for main. Don't stop |
 | This window edited a file outside the holds | Ask once whether to hold it too |
 | Two proposals disagree about one fact | Show them as one question |
 

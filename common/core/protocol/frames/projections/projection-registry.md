@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/projections, surface/projections]
 writes: [layers/projections, surface/projections]
-protocol: [I-see-my-things, A-show-my-things, A-list-projections, A-register-projection, A-retire-projection, projection-registered, projection-retired, projection-orphaned]
+protocol: [I-see-my-things, A-show-my-things, A-list-projections, A-register-projection, A-retire-projection, node-archived, projection-orphaned, focus-grounding]
 ---
 
 # What projections exist
@@ -116,7 +116,7 @@ Making a projection the human asked for is ordinary work, not a proposal. In one
 1. Write its definition, with a first history entry.
 2. **Propose a sharing level** as a best guess and confirm it. If nobody answers, it's `private`.
 3. Render it into its home (see [projection-freshness](projection-freshness.md)).
-4. The registry, navigation and index page rebuild at ground. Fire `projection-registered`.
+4. The registry, navigation and index page rebuild at ground.
 
 **A new kind of projection that needs a new tree or a new key** is an evolution step: its shape goes into `core/shapes` with it (see [crystallization](../evolution/crystallization.md#make-the-change)).
 
@@ -126,7 +126,7 @@ Making a projection the human asked for is ordinary work, not a proposal. In one
 
 - **Definition:** add `retired:` and a last history entry, then move the file (or its folder) to `layers/projections/archived/`.
 - **Artifact:** move it to `_legacy/` in its namespace. It's kept as reference, not rendered, and not linked from anywhere a human lands.
-- **Navigation and the index page drop it** at the next rebuild. Fire `projection-retired`.
+- **Navigation and the index page drop it** at the next rebuild. Fire `node-archived`.
 
 This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projections.
 
@@ -142,10 +142,10 @@ This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projecti
 |---|---|
 | *"Show my things"* | Open `surface/projections.html`: the human's live projections, never machinery |
 | *"List projections"* | One line each from the registry: name, kind, freshness, home |
-| The human asks for a new view | Write the definition, confirm a sharing level, render it. Fire `projection-registered` |
+| The human asks for a new view | Write the definition, confirm a sharing level, render it. |
 | A view is opened up to more people | Outbound: the human approves it, through the outbound guard |
-| A ground touched a definition | Rebuild the registry, navigation and index page from the definitions |
-| A time-bound view's purpose has ended | Suggest retiring it; on yes, archive the definition, move the artifact to `_legacy/`. Fire `projection-retired` |
+| `focus-grounding`, if it touched a definition | Rebuild the registry, navigation and index page from the definitions |
+| A time-bound view's purpose has ended | Suggest retiring it; on yes, archive the definition, move the artifact to `_legacy/`. Fire `node-archived` |
 | A page has no definition | Fire `projection-orphaned`; offer to register it (as legacy if hand-built) or remove it |
 | The human wants to keep a one-time render | Give it a definition and a home; it leaves `_scratch/` |
 
@@ -163,6 +163,5 @@ This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projecti
 
 | Sense | Fires when |
 |---|---|
-| `projection-registered` | a new projection's definition is written |
-| `projection-retired` | a projection's definition is archived and its artifact moved to `_legacy/` |
+| `node-archived` | for a projection: its definition is archived and its artifact moved to `_legacy/` |
 | `projection-orphaned` | an artifact is found with no definition |

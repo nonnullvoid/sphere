@@ -97,6 +97,20 @@ class OpenTest(SphereCase):
         self.assertIn("under f1-bathroom", result.out)
 
 
+class SenseTest(SphereCase):
+    """Open and attach end by naming their moment; ground and close don't (the AI fires those first)."""
+
+    def test_open_and_attach_name_their_moment(self):
+        opened = self.ok("open", "kitchen-renovation", "-i", "Renovate the kitchen")
+        self.assertEqual(opened.out.strip().splitlines()[-1], "sense: focus-opened")
+        attached = self.ok("attach", "f1")
+        self.assertEqual(attached.out.strip().splitlines()[-1], "sense: focus-attached")
+        both = self.ok("open", "plumbing-quotes", "-i", "Get plumbing quotes", "--attach")
+        self.assertEqual(both.out.strip().splitlines()[-2:], ["sense: focus-opened", "sense: focus-attached"])
+        self.assertEqual(self.ok("attach", "main").out.strip().splitlines()[-1], "sense: focus-attached")
+        self.assertNotIn("sense:", self.ok("ground", "f1").out)
+
+
 class GroundTest(SphereCase):
     def setUp(self):
         super().setUp()

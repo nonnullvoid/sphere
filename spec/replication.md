@@ -244,13 +244,7 @@ Connection comes in steps, each with more automation than the last:
 
 ## Senses and commands
 
-| Sense | When |
-|---|---|
-| `export-packaged` | an export was assembled, with provenance |
-| `sphere-seeded` | a seed was built, or a new sphere was started from one |
-| `capability-absorbed` | an absorbed item was accepted and landed |
-| `spheres-compared` | a comparison was produced |
-| `sharing-changed` | an item's sharing level or end date changed |
+Replication has no senses of its own. Packaging, seeding, absorbing, comparing and a sharing change are records: each writes its history or provenance, and nothing reacts to it as an event. The version moves on `focus-grounding`, when a lens or frame landed, changed or retired.
 
 | Command | Does |
 |---|---|

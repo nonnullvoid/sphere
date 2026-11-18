@@ -202,10 +202,10 @@ Knowledge is the sphere's model of *its human's* world, and it's private. It nev
 ## Senses and commands — _decided, not yet exercised_
 
 **Senses:**
-- `knowledge-captured`, `knowledge-compiled`, `knowledge-refreshed`
-- `knowledge-stale`
+- `stale-found` for a topic (`stale-found knowledge:money.taxes`): a source it rests on changed. Plans, tracked subjects and library artifacts that rest on the topic react to it
 - `knowledge-grade-conflict`
-- `knowledge-domain-added`
+
+**Reacts to:** `focus-grounding` (offer the facts gathered), `node-archived` for work (offer the facts that should outlive it).
 
 **Commands** (natural phrasing works too):
 - `what do you know about [topic]?`

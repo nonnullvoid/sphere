@@ -9,7 +9,7 @@ updated: 2026-11-12
 sharing: public
 reads: [layers/work, layers/focus]
 writes: [layers/work]
-protocol: [I-whats-on-my-plate, A-show-work, A-archive-work, work-node-archived, work-index-stale]
+protocol: [I-whats-on-my-plate, A-show-work, A-archive-work, node-archived, stale-found, focus-grounding]
 ---
 
 # What work exists
@@ -39,7 +39,7 @@ Children show their name relative to their parent. Folders on disk stay flat.
 | **Archived** | Collapsed; listed on request |
 
 - **Reverse links are computed here, not stored.** Children are found from `parent:`; which nodes follow a plan, from `plan:`; which foci hold a node, from their `holds:`.
-- **If the index disagrees with the nodes, the nodes win.** Rebuild it; never fix the index by hand. Fire `work-index-stale` if it was found out of date outside a ground.
+- **If the index disagrees with the nodes, the nodes win.** Rebuild it; never fix the index by hand. Fire `stale-found` for the work index if it was found out of date outside a ground.
 
 ## What's in focus
 
@@ -78,11 +78,11 @@ Then set the final state, write the last `progress.md` entry (how it ended, and 
 |---|---|
 | *"What's on my plate?"* | Focused, then paused work that may be unblocked, then Active. One line each, from the index |
 | *"Show the tree"* | The index's tree. Archived only if asked |
-| A ground touched work | Rebuild the index from committed frontmatter plus this ground's changes |
-| The index disagrees with the nodes | Rebuild it. Fire `work-index-stale` if found outside a ground |
+| `focus-grounding`, if it touched work | Rebuild the index from committed frontmatter plus this ground's changes |
+| The index disagrees with the nodes | Rebuild it. Fire `stale-found` for the work index if found outside a ground |
 | The human wants something kept in view | Open a focus that holds it, or keep its focus open |
 | Signals suggest something deserves attention | Show a suggestion to open a focus; write nothing to the node |
-| Archiving work | Look down and across; ask once. Then last state, last entry, move. Fire `work-node-archived` |
+| Archiving work | Look down and across; ask once. Then last state, last entry, move. Fire `node-archived` |
 | Work is dropped | Last entry saying why; archive it |
 | Work has been done for a while | Suggest archiving it |
 
@@ -98,5 +98,5 @@ Then set the final state, write the last `progress.md` entry (how it ended, and 
 
 | Sense | Fires when |
 |---|---|
-| `work-node-archived` | a work node's folder moves to `archived/` |
-| `work-index-stale` | the work index is found out of date with the nodes outside a ground |
+| `node-archived` | for work: a node's folder moves to `archived/` |
+| `stale-found` | for the work index: found out of date with the nodes outside a ground |

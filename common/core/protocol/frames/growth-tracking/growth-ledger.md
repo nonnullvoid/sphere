@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/witness, layers/work, layers/literacy, layers/focus, core/ai, core/records]
 writes: [layers/witness]
-protocol: [I-see-myself-grow, A-record-win, A-show-growth, A-export-record, growth-recorded, record-exported]
+protocol: [I-see-myself-grow, A-record-win, A-show-growth, A-export-record, focus-grounding, day-wrapped, week-reviewed]
 ---
 
 # The growth ledger
@@ -46,7 +46,7 @@ tracks: unit          # unit | apart | human | world
 | `human` | the human's achievements and milestones | left out |
 | `world` | outcomes in the world, whoever made them | left out |
 
-- **`apart` adds a `sphere` lane** for the sphere's own effectiveness. Its entries point at records the sphere already keeps: an agent trusted with more (`trust-changed`), a rule captured after a mistake, a sphere change that landed, a stretch of grounds with no correction.
+- **`apart` adds a `sphere` lane** for the sphere's own effectiveness. Its entries point at records the sphere already keeps: an agent trusted with more (the promotion in its history), a rule captured after a mistake, a sphere change that landed, a stretch of grounds with no correction.
 - **Changing what's tracked never rewrites the ledger.** Old entries stay as they were; the views read what's there.
 
 ## An entry
@@ -91,8 +91,8 @@ evidence: core/records/agents/research.md (trust changed)
 |---|---|
 | **A work node finished** (`done`) | At the ground that finished it, quietly. Tasks too small to matter are left out by the lane's own line on what counts |
 | **A subject reached a new level** | At the ground that confirmed it, quietly. In the learning lane |
-| **The sphere changed** (`sphere-evolved`) | One entry for the change, in the sphere's own lane, if it keeps one |
-| **An agent earned more trust** (`trust-changed`, upward) | One entry in the sphere's lane, when the sphere tracks `apart` |
+| **The sphere changed** | One entry pointing at the change's record, in the sphere's own lane, if it keeps one |
+| **An agent earned more trust** | One entry pointing at the promotion in its history, in the sphere's lane, when the sphere tracks `apart` |
 | **The human names a win** | Straight away; they said so. Say it in one line: *"Recorded: first 10k."* |
 | **The wrap** | Offer once, in a line: *"Anything worth recording today?"* Never more than once |
 
@@ -120,20 +120,18 @@ evidence: core/records/agents/research.md (trust changed)
 - **Facts about other people stay out,** unless the human puts them in.
 - **The ledger stays the truth.** An export is a copy for a purpose; it isn't kept in step.
 
-Fire `record-exported`.
-
 ## When / do
 
 | When | Do |
 |---|---|
-| A ground finished a work node | Append an entry pointing at it, quietly. Fire `growth-recorded` |
-| A ground confirmed a new level | Append an entry in the learning lane, quietly. Fire `growth-recorded` |
-| The human names a win | Append it; say so in a line. Fire `growth-recorded` |
-| The wrap | Offer once: anything worth recording? |
-| The weekly look back | Offer the plain view in a line |
+| `focus-grounding`, if it finished a work node | Append an entry pointing at it, quietly. |
+| `focus-grounding`, if it confirmed a new level | Append an entry in the learning lane, quietly. |
+| The human names a win | Append it; say so in a line. |
+| `day-wrapped` | Offer once: anything worth recording? |
+| `week-reviewed` | Offer the plain view in a line |
 | *"How am I doing?"* | The plain view for the period, or the theme's view if there is one |
 | A lane goes quiet for a long while | Name it gently in the plain view; nothing more |
-| An export is asked for | Build it from the ledger; draft it; outbound guard if it leaves. Fire `record-exported` |
+| An export is asked for | Build it from the ledger; draft it; outbound guard if it leaves. |
 | An entry was wrong | Append a correction pointing at it |
 
 ## Works with
@@ -144,9 +142,3 @@ Fire `record-exported`.
 - [kinds-of-file](../nodes/kinds-of-file.md): the ledger is history, `lanes.md` is reference, views are generated.
 - [outbound-guard](../human-is-highest/outbound-guard.md): exports that leave the sphere.
 
-## Senses
-
-| Sense | Fires when |
-|---|---|
-| `growth-recorded` | an entry is appended to the ledger |
-| `record-exported` | an export is built from the ledger |

@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [layers/literacy, layers/knowledge]
 writes: [layers/literacy]
-protocol: [I-keep-what-i-learned, A-save-artifact, A-browse-library, A-share-artifact, artifact-added, artifact-stale]
+protocol: [I-keep-what-i-learned, A-save-artifact, A-browse-library, A-share-artifact, node-archived, focus-grounding, stale-found]
 ---
 
 # The library
@@ -76,7 +76,7 @@ updated: 2026-10-14
 
 - **A topic in `rests_on` updated after the artifact's `updated`** makes it suspected stale, computed by the index. Nobody marks it.
 - **A subject it explains, marked stale for an outside change** (see [skill-progress](skill-progress.md#staleness-is-computed)), makes it stale too.
-- **Stale artifacts are flagged, never silently served.** Opening one says so: *"This predates the rate change in September."* Offer to revise it. Fire `artifact-stale`.
+- **Stale artifacts are flagged, never silently served.** Opening one says so: *"This predates the rate change in September."* Offer to revise it.
 
 **Revising** rewrites the body, sets `updated`, and adds a line to the revisions.
 
@@ -107,13 +107,13 @@ An artifact nobody needs any more, or one replaced by a better one, moves to `li
 
 | When | Do |
 |---|---|
-| An explanation is worth keeping | Write it to the library with every tag that's known. Fire `artifact-added` |
-| *"Save this as a cheat sheet"* | Write it, `type: cheat-sheet`, tagged. Fire `artifact-added` |
-| Ground, with drafts in the library | Offer once to tag them |
-| What an artifact rests on has changed | Flag it when opened; offer to revise. Fire `artifact-stale` |
+| An explanation is worth keeping | Write it to the library with every tag that's known. |
+| *"Save this as a cheat sheet"* | Write it, `type: cheat-sheet`, tagged. |
+| `focus-grounding`, with drafts in the library | Offer once to tag them |
+| `stale-found knowledge`, if an artifact rests on the topic | Mark it stale; flag it when opened; offer to revise |
 | *"What's in my library?"* | List from the index, one line each |
 | The human wants to share an artifact | If generic: draft the share through the outbound guard. If personalized: say why not; offer a generic version |
-| An artifact is retired | Last revision line; move to `archived/` |
+| An artifact is retired | Last revision line; move to `archived/`. Fire `node-archived` |
 
 ## Works with
 
@@ -127,5 +127,4 @@ An artifact nobody needs any more, or one replaced by a better one, moves to `li
 
 | Sense | Fires when |
 |---|---|
-| `artifact-added` | an artifact is written to the library |
-| `artifact-stale` | an artifact is found to predate a change in what it explains |
+| `node-archived` | for a library artifact: it is retired |

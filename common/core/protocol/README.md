@@ -8,12 +8,12 @@ This folder holds how the sphere understands its human and what it does about it
 | **Frame** | What the sphere does because of a lens: when it applies, and the steps. *Every outbound message is drafted and shown first.* |
 | **Skill** | A frame that works on its own, in any AI tool that loads skills. |
 | **Guard** | A frame that applies to everything, all the time. |
-| **Instinct** | A frame that runs by itself when something happens: a window closes, a fact comes up. |
 | **Intent** | Something you want from the sphere, steadily over time. *Pick up where I left off.* |
 | **Ability** | Something the sphere can do for an intent. *Resume a piece of work.* |
 | **Command** | The words you can use to ask for an ability. You don't have to use them; asking naturally works too. |
-| **Sense** | Something the sphere notices: a focus opening, work being grounded, a decision being made. |
+| **Sense** | Something the sphere notices: a focus opening, a save beginning, a fact going out of date. |
+| **Reaction** | What a frame does when it notices one. The sphere's list of reactions is how it knows what to do at each moment without rereading everything. |
 
-`protocol.md` lists every intent, ability and command, and the lens and frame each one comes from.
+`protocol.md` lists every intent, ability, command and sense, and the lens and frame each one comes from.
 
 **Nothing in here changes without you.** The AI can propose a new lens or a change to a frame. You decide.

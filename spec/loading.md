@@ -48,7 +48,7 @@ Plain text search over files is fast; reading is what costs. So a layer that gro
 | Tier | What | When it loads | How often |
 |---|---|---|---|
 | **1. Identity core** | Who the human is, who the AI is, the rules, the kernel of the engine | Every window, at startup | Always |
-| **2. Capability manifest** | One line per lens: its job and when to load it; under each, its frames' scope and triggers | Every window, at startup | Always |
+| **2. Capability manifest** | One line per lens: its job and when to load it; under each, its frames' scope and triggers; then the reactions table: for each sense, who reacts, when and how, in a line | Every window, at startup | Always |
 | **3. Frame text** | The full mechanics of a frame | When the frame is invoked | Often |
 | **4. Lens text** | The full understanding behind a set of frames | When the *why* is in question: a judgment call, a change, evolution | Rarely |
 
@@ -98,9 +98,17 @@ _Load when: adding, planning, reviewing or archiving work._
 - `work-breakdown`: splitting a node into children. Trigger: "break this down", a node too big to act on.
 - `work-progress`: measuring progress from what shipped. Trigger: "how's it going?", ground.
 - `work-registry`: the work index. Trigger: a node added, moved or archived.
+
+## Reactions
+focus-grounding
+  knowledge-capture   with facts to offer             offer them as one batch
+  work-registry       if it touched work              rebuild the index
+stale-found knowledge
+  plans               if a plan's assumption points at it   flag the plan for review
 ```
 
 - **One entry per lens:** its job, and when to load it. **Under it, each frame:** its scope and its trigger.
+- **Then the reactions table:** for each sense, the frames that react, each with its guard and a one-line action, keyed by tree for conditions about nodes. Built from the frames' When/do rows; see [senses and reactions](protocol.md#senses-and-reactions--decided-not-yet-exercised).
 - **If it isn't in the manifest, it doesn't exist.** The sphere doesn't go looking for capabilities by scanning folders. A lens or frame that should be used has to be in the manifest. This is the [registry pattern](registries.md#the-registry-pattern--proven) applied to capabilities.
 - **It's AI-maintained, with a deterministic check.** Writing a good "when to load" line takes judgment, so the AI writes and updates the entries. The tooling checks the result: every lens and frame on disk has an entry, every entry points at a file that exists, and the content hash over the source files matches. A mismatch means the manifest is stale. See [registries](registries.md#three-ways-a-registry-is-maintained).
 - **It's rebuilt at ground and whenever the sphere evolves.** A new frame isn't usable until the manifest knows about it.
@@ -142,10 +150,10 @@ The operating mode is declared by the human (preferred), inferred from how the w
 
 ## Senses — _decided, not yet exercised_
 
-- `lens-loaded`, `frame-loaded`: a body was read. Counted, so reflection can see what's actually used.
-- `manifest-built`, `manifest-stale`: the manifest was rebuilt, or its hash no longer matches its sources.
-- `startup-trimmed`: something was moved off the floor.
 - `floor-grew`: something was added to the floor. Worth a second look.
+- `stale-found` for the manifest: its hash no longer matches its sources.
+
+What gets loaded isn't a sense: the frames a focus used are recorded when it closes, which is what loadouts learn from. A rebuilt manifest or a trimmed floor is a record in the ground that did it.
 
 ---
 

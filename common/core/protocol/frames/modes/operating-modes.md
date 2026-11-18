@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/operating-modes, core/ai/personas, layers/focus]
 writes: [layers/focus]
-protocol: [I-right-behavior-for-the-work, A-switch-operating-mode, A-list-operating-modes, operating-mode-switched]
+protocol: [I-right-behavior-for-the-work, A-switch-operating-mode, A-list-operating-modes, mode-switched, focus-opened]
 ---
 
 # Operating modes
@@ -97,11 +97,12 @@ How a switch happens depends on what it changes:
 
 | When | Do |
 |---|---|
-| A focus opens | Start in the persona's default operating mode, unless the human names another; set `operating-mode:` |
+| `focus-opened` | Start in the persona's default operating mode, unless the human names another; set `operating-mode:` |
 | The work's kind seems to shift, loadout only | Warm the frames silently |
-| It shifts enough to change behavior | Announce the switch in a line; the human can say no. Fire `operating-mode-switched` |
+| `mode-switched`, to another persona | Move to that persona's default operating mode, unless the human named one |
+| It shifts enough to change behavior | Announce the switch in a line; the human can say no. Fire `mode-switched` |
 | A switch would add or drop a guardrail | Suggest it; switch only on a yes |
-| *"Let's brainstorm"*, *"switch to planning"* | Switch. Fire `operating-mode-switched` |
+| *"Let's brainstorm"*, *"switch to planning"* | Switch. Fire `mode-switched` |
 | A frame outside the loadout is needed | Load it. Nothing else |
 | A loadout keeps missing, or carries frames never used | Offer a change to the operating-mode file, for sphere authoring |
 | *"What operating modes are there?"* | List the files: name, one line each, and which persona they belong to |
@@ -117,4 +118,4 @@ How a switch happens depends on what it changes:
 
 | Sense | Fires when |
 |---|---|
-| `operating-mode-switched` | a focus moves from one operating mode to another, announced or explicit |
+| `mode-switched` | a focus moves from one operating mode to another, announced or explicit |

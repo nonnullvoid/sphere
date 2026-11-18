@@ -6,14 +6,14 @@
 target-version = "py39"
 line-length = 120
 # The two command-line tools have no .py extension.
-extend-include = ["sphere", "structure-check"]
+extend-include = ["sphere", "structure-check", "manifest-check"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM"]
 
 [tool.basedpyright]
 pythonVersion = "3.9"
-include = ["sphere", "structure-check", "sphere_shapes.py", "tests"]
+include = ["sphere", "structure-check", "manifest-check", "sphere_shapes.py", "tests"]
 extraPaths = [".", "tests"]
 # basedpyright's default ("recommended") mode, minus four checks that fight this code:
 # argparse.Namespace attributes are Any by design; a typed Namespace per verb would add a class per verb.
