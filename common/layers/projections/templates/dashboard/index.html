@@ -1,0 +1,46 @@
+<!doctype html>
+<!-- From the dashboard template. The page stays as it is; a render rewrites data.js beside it. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="../../assets/sphere-chrome.css" />
+    <script src="../../assets/registry.js"></script>
+    <script src="../../assets/sphere-chrome.js"></script>
+    <script src="../../assets/markdown.js"></script>
+    <script src="data.js"></script>
+  </head>
+  <body>
+    <main class="sphere-page">
+      <div class="sphere-header">
+        <div>
+          <h1 id="title">{{title}}</h1>
+          <p class="sphere-header__sub" id="subtitle" hidden></p>
+        </div>
+        <span id="badge"></span>
+      </div>
+      <div id="panels"></div>
+    </main>
+    <script>
+      (function () {
+        "use strict";
+        var data = window.VIEW_DATA || {};
+        var page = document.querySelector(".sphere-page");
+        if (data.title) {
+          document.getElementById("title").textContent = data.title;
+          document.title = data.title;
+        }
+        if (data.subtitle) {
+          var sub = document.getElementById("subtitle");
+          sub.textContent = data.subtitle;
+          sub.hidden = false;
+        }
+        var entry = window.Sphere.currentEntry() || { kind: "refreshed" };
+        document.getElementById("badge").appendChild(window.Sphere.badge(entry, data.generated));
+        window.Sphere.panels(document.getElementById("panels"), data.panels);
+        page.appendChild(window.Sphere.footer(data.generated, data.sources));
+      })();
+    </script>
+  </body>
+</html>

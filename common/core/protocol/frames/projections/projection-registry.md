@@ -91,17 +91,18 @@ A retired projection adds `retired:`, the date and why on one line (`retired: 20
 `layers/projections/registry.md` is **built from the definitions' frontmatter alone,** one line per projection, grouped by namespace, and rebuilt at ground. It says it's generated. If it disagrees with the definitions, the definitions win.
 
 - **Navigation is built from the registry,** never written into pages. One list for every view means adding a view is one change. See [projection-templates](projection-templates.md#one-look).
+- **The registry has a mirror, `surface/projections/assets/registry.js`,** written in the same step: each projection that isn't retired, with its name, title, namespace, kind, how it opens, its freshness, its home, its sharing and when it was last rendered. The top bar and the index page read it, so navigation works from a double-clicked file with no server.
 - **Which views a seed carries is read from `sharing`,** not from a list kept by hand. See [export-contract](../replication/export-contract.md).
 
 ## The index page
 
 **Every sphere with projections has an index page, `surface/projections.html`.** It's the front door to the surface: every projection the human may see that isn't retired, grouped by namespace, one line each with its title and how fresh it is.
 
-- **It's built from the registry,** at the same time as navigation, and rebuilt at ground when a definition changed. Never edited by hand.
+- **It's built from the registry,** through its mirror, so the page itself never changes: rebuilding the mirror at ground is enough. Never edited by hand.
 - **It comes with the build.** A sphere doesn't have to make it; the first projection it registers already has somewhere to be found.
 - **It's the registry's own view,** not a projection with a definition of its own, so it's never registered and never an orphan.
 - **It shows matter, not machinery.** Time-bound views appear while they're live; retired ones and `_scratch/` never do.
-- **It shows markdown too.** A projection with `opens: markdown` opens in the default markdown viewer that ships beside the index page.
+- **It shows markdown too.** A projection with `opens: markdown` opens in the markdown viewer built into the index page (`projections.html?view=<path>`). It reads the file, so it needs the sphere's local server; opened as a plain file, it offers the file as plain text instead.
 
 ## Show my things
 
@@ -144,7 +145,7 @@ This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projecti
 | *"List projections"* | One line each from the registry: name, kind, freshness, home |
 | The human asks for a new view | Write the definition, confirm a sharing level, render it. |
 | A view is opened up to more people | Outbound: the human approves it, through the outbound guard |
-| `focus-grounding`, if it touched a definition | Rebuild the registry, navigation and index page from the definitions |
+| `focus-grounding`, if it touched a definition | Rebuild the registry and its mirror from the definitions; navigation and the index page follow |
 | A time-bound view's purpose has ended | Suggest retiring it; on yes, archive the definition, move the artifact to `_legacy/`. Fire `node-archived` |
 | A page has no definition | Fire `projection-orphaned`; offer to register it (as legacy if hand-built) or remove it |
 | The human wants to keep a one-time render | Give it a definition and a home; it leaves `_scratch/` |

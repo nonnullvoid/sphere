@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- The index: every projection the human may see, grouped by namespace, read from the
+     registry mirror. Also the default markdown viewer: projections.html?view=<path>.
+     Ships with every build; never edited per sphere. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My things</title>
+    <link rel="stylesheet" href="projections/assets/sphere-chrome.css" />
+    <script src="projections/assets/registry.js"></script>
+    <script src="projections/assets/sphere-chrome.js"></script>
+    <script src="projections/assets/markdown.js"></script>
+  </head>
+  <body>
+    <main class="sphere-page" id="page">
+      <div class="sphere-header">
+        <div>
+          <h1 id="title">My things</h1>
+          <p class="sphere-header__sub" id="subtitle"></p>
+        </div>
+        <span id="badge"></span>
+      </div>
+      <div id="content"></div>
+    </main>
+    <script>
+      (function () {
+        "use strict";
+        var registry = window.Sphere.registry;
+        var content = document.getElementById("content");
+        var view = new URLSearchParams(location.search).get("view");
+
+        function el(tag, className, text) {
+          var node = document.createElement(tag);
+          if (className) node.className = className;
+          if (text != null) node.textContent = text;
+          return node;
+        }
+
+        function showIndex() {
+          var entries = registry.projections || [];
+          if (registry.name) document.title = registry.name;
+          if (!entries.length) {
+            var empty = el("div", "sphere-empty");
+            empty.appendChild(el("p", "", "Nothing here yet."));
+            empty.appendChild(el("p", "", "Ask your sphere for a view of anything you keep in it, and it will show up here."));
+            content.appendChild(empty);
+            return;
+          }
+          var groups = {};
+          var order = [];
+          entries.forEach(function (entry) {
+            var key = entry.namespace || "other";
+            if (!groups[key]) {
+              groups[key] = [];
+              order.push(key);
+            }
+            groups[key].push(entry);
+          });
+          order.forEach(function (key) {
+            var group = el("section", "sphere-group");
+            group.appendChild(el("h2", "", key.replace(/-/g, " ")));
+            var list = el("ul", "sphere-list");
+            groups[key].forEach(function (entry) {
+              var li = el("li");
+              var link = el("a", "", entry.title || entry.name);
+              link.href = window.Sphere.hrefFor(entry);
+              li.appendChild(link);
+              li.appendChild(window.Sphere.badge(entry, entry.rendered));
+              list.appendChild(li);
+            });
+            group.appendChild(list);
+            content.appendChild(group);
+          });
+        }
+
+        function showMarkdown(path) {
+          document.getElementById("page").classList.add("sphere-page--reading");
+          var entry = (registry.projections || []).filter(function (e) {
+            return e.home === path;
+          })[0];
+          var title = entry ? entry.title || entry.name : path.split("/").pop();
+          document.getElementById("title").textContent = title;
+          document.title = title;
+          var back = el("a", "", "← All my things");
+          back.href = location.pathname;
+          document.getElementById("subtitle").appendChild(back);
+          if (entry) document.getElementById("badge").appendChild(window.Sphere.badge(entry, entry.rendered));
+          var url = new URL(path, window.Sphere.root);
+          fetch(url)
+            .then(function (response) {
+              if (!response.ok) throw new Error(String(response.status));
+              return response.text();
+            })
+            .then(function (text) {
+              var prose = el("article", "sphere-prose");
+              prose.innerHTML = window.SphereMarkdown.render(text);
+              // Relative links in the file point from the file, not from this page.
+              Array.prototype.forEach.call(prose.querySelectorAll("a[href]"), function (link) {
+                var href = link.getAttribute("href");
+                if (!/^([a-z]+:|#)/i.test(href)) link.href = new URL(href, url).href;
+              });
+              content.appendChild(prose);
+            })
+            .catch(function () {
+              var note = el("div", "sphere-notice sphere-notice--info");
+              note.appendChild(
+                document.createTextNode(
+                  location.protocol === "file:"
+                    ? "Opened as a file, the browser won't let this page read other files. Ask your sphere to show your things, or "
+                    : "This file couldn't be read. "
+                )
+              );
+              var raw = el("a", "", "open it as plain text");
+              raw.href = url.href;
+              note.appendChild(raw);
+              note.appendChild(document.createTextNode("."));
+              content.appendChild(note);
+            });
+        }
+
+        if (view && !/^\/|\.\.|:/.test(view)) showMarkdown(view);
+        else showIndex();
+      })();
+    </script>
+  </body>
+</html>

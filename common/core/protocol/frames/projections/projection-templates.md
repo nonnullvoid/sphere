@@ -36,7 +36,7 @@ instantiate:  a template + fills  →  "new <thing> from <template>"  →  a new
 
 ## One look
 
-- **Chrome is shared; content isn't.** Every view uses one stylesheet and a small set of components: a header, panels, a footer, a freshness badge, navigation. The design effort goes into each view's content.
+- **Chrome is shared; content isn't.** Every view uses one stylesheet and a small set of components: a header, panels, a footer, a freshness badge, navigation. The design effort goes into each view's content. They live in `surface/projections/assets/`: `sphere-chrome.css` (the tokens and every component's look), `sphere-chrome.js` (the top bar, badge, panels and footer), `markdown.js` (the viewer) and `registry.js` (the registry's mirror, below). A static snapshot copies the stylesheet in, so it stays self-contained.
 - **Themes vary; structure doesn't.** Colors, type and density come from design tokens, so a build or a sphere can re-theme every view without touching any view's structure.
 - **Navigation comes from the [registry](projection-registry.md#the-registry-is-generated),** never written into pages. *Why:* when each page carries its own list of links, a new page stays unlinked from the others, and the lists quietly drift apart. One list built from the registry makes adding a view a single change.
 - **Moving assets is checked.** When a projection or its assets move, the [structure check](../readable-substrate/structure-check.md) confirms its stylesheet and scripts still resolve. A view that renders unstyled is easy to miss for days.

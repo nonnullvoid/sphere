@@ -1,0 +1,498 @@
+/* Sphere chrome: the one stylesheet every projection shares.
+   Re-theme a sphere by changing the tokens in the first three blocks; never restyle a single view.
+   Plain CSS, no build step. Static snapshots inline this file (see the one-shot template). */
+
+:root {
+  /* type */
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.75rem;
+  --leading: 1.55;
+
+  /* space and shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2.5rem;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --page-width: 72rem;
+  --reading-width: 44rem;
+
+  /* color: light */
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-sunk: #f0f0ed;
+  --border: #e2e2dd;
+  --text: #1d1d1b;
+  --text-muted: #6b6b66;
+  --accent: #3b5bdb;
+  --accent-soft: #e8ecfb;
+  --good: #2b8a3e;
+  --good-soft: #e6f4ea;
+  --warn: #b35c00;
+  --warn-soft: #fdf0e1;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 1px 1px rgb(0 0 0 / 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413;
+    --surface: #1c1c1a;
+    --surface-sunk: #232321;
+    --border: #2f2f2c;
+    --text: #ececea;
+    --text-muted: #9a9a94;
+    --accent: #8ea4f5;
+    --accent-soft: #232a45;
+    --good: #69c27f;
+    --good-soft: #1d2e22;
+    --warn: #f0a457;
+    --warn-soft: #33261a;
+    --shadow: none;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141413;
+  --surface: #1c1c1a;
+  --surface-sunk: #232321;
+  --border: #2f2f2c;
+  --text: #ececea;
+  --text-muted: #9a9a94;
+  --accent: #8ea4f5;
+  --accent-soft: #232a45;
+  --good: #69c27f;
+  --good-soft: #1d2e22;
+  --warn: #f0a457;
+  --warn-soft: #33261a;
+  --shadow: none;
+}
+
+/* ---------------------------------------------------------------- base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+.sphere-page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) var(--space-6);
+}
+
+.sphere-page--reading {
+  max-width: var(--reading-width);
+}
+
+/* ---------------------------------------------------------------- top bar */
+
+.sphere-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.sphere-topbar__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 3rem;
+}
+
+.sphere-topbar__home {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.sphere-topbar__nav {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.sphere-topbar__nav::-webkit-scrollbar {
+  display: none;
+}
+
+.sphere-topbar__nav a {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.sphere-topbar__nav a:hover {
+  background: var(--surface-sunk);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.sphere-topbar__nav a[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- page header */
+
+.sphere-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.sphere-header h1 {
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.sphere-header__sub {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------- freshness badge */
+
+.sphere-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.15rem var(--space-3);
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  background: var(--surface-sunk);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.sphere-badge::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.sphere-badge--fresh {
+  background: var(--good-soft);
+  color: var(--good);
+}
+
+.sphere-badge--stale {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.sphere-badge--frozen::before {
+  border-radius: 1px;
+}
+
+/* ---------------------------------------------------------------- panels */
+
+.sphere-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: var(--space-4);
+}
+
+.sphere-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space-4);
+  min-width: 0;
+}
+
+.sphere-panel--wide {
+  grid-column: 1 / -1;
+}
+
+.sphere-panel h2 {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.sphere-panel__empty {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.sphere-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sphere-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+}
+
+.sphere-list li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.sphere-list__meta {
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.sphere-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--space-3);
+}
+
+.sphere-stat__value {
+  display: block;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.sphere-stat__label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ---------------------------------------------------------------- index groups */
+
+.sphere-group + .sphere-group {
+  margin-top: var(--space-5);
+}
+
+.sphere-group h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.sphere-group .sphere-list {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-4);
+}
+
+.sphere-group .sphere-list li,
+.sphere-group .sphere-list li:first-child {
+  padding: var(--space-3) 0;
+  align-items: center;
+  font-size: var(--text-md);
+}
+
+.sphere-empty {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* ---------------------------------------------------------------- notices */
+
+.sphere-notice {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: var(--text-sm);
+}
+
+.sphere-notice--info {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------------------------------------------------------------- footer and provenance */
+
+.sphere-footer {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.sphere-footer ul {
+  margin: var(--space-1) 0 0;
+  padding-left: var(--space-4);
+}
+
+/* ---------------------------------------------------------------- prose (markdown and snapshots) */
+
+.sphere-prose {
+  max-width: var(--reading-width);
+}
+
+.sphere-prose > :first-child {
+  margin-top: 0;
+}
+
+.sphere-prose h1,
+.sphere-prose h2,
+.sphere-prose h3,
+.sphere-prose h4 {
+  line-height: 1.25;
+  margin: 1.8em 0 0.5em;
+}
+
+.sphere-prose h1 {
+  font-size: var(--text-xl);
+}
+
+.sphere-prose h2 {
+  font-size: var(--text-lg);
+}
+
+.sphere-prose h3 {
+  font-size: var(--text-md);
+}
+
+.sphere-prose p,
+.sphere-prose ul,
+.sphere-prose ol,
+.sphere-prose blockquote,
+.sphere-prose pre,
+.sphere-prose table {
+  margin: 0 0 1em;
+}
+
+.sphere-prose ul,
+.sphere-prose ol {
+  padding-left: 1.4em;
+}
+
+.sphere-prose li + li {
+  margin-top: 0.25em;
+}
+
+.sphere-prose blockquote {
+  padding: 0 var(--space-4);
+  border-left: 3px solid var(--border);
+  color: var(--text-muted);
+}
+
+.sphere-prose code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--surface-sunk);
+}
+
+.sphere-prose pre {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunk);
+  overflow-x: auto;
+}
+
+.sphere-prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.sphere-prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.sphere-prose th,
+.sphere-prose td {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.sphere-prose th {
+  background: var(--surface-sunk);
+}
+
+.sphere-prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+
+/* ---------------------------------------------------------------- small screens */
+
+@media (max-width: 40rem) {
+  .sphere-page {
+    padding-top: var(--space-4);
+  }
+
+  .sphere-header h1 {
+    font-size: var(--text-lg);
+  }
+}

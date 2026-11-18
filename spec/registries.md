@@ -117,7 +117,7 @@ Every registry declares how it's maintained where it can be seen:
 ---
 registry: work-index
 maintained: generated        # generated | ai | authored
-frame: work_registry
+frame: work-registry
 sources: layers/work/*/work.md
 ---
 ```

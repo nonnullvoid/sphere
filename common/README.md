@@ -9,22 +9,30 @@ Every lens starts `verified: false`. A lens is in force only once a human has re
 ## Layout
 
 ```
-common/core/protocol/
-├── README.md                  the vocabulary, in plain words
-├── lenses/<lens>.md
-└── frames/<lens>/<frame>.md   frames that live only in the sphere
-    frames/<lens>/<skill>/SKILL.md   skill frames, in the Agent Skills format
+common/
+├── core/protocol/
+│   ├── README.md                      the vocabulary, in plain words
+│   ├── protocol.md                    the registry: every intent, ability, command and sense
+│   ├── lenses/<lens>.md
+│   └── frames/<lens>/<frame>.md       frames that live only in the sphere
+│       frames/<lens>/<skill>/SKILL.md skill frames, in the Agent Skills format
+├── layers/projections/templates/      dashboard and one-shot (snapshot) templates
+└── surface/
+    ├── projections.html               the index of the human's things, and the markdown viewer
+    └── projections/assets/            shared chrome: stylesheet, components, markdown, registry mirror
 ```
+
+`scripts/manifest-check --set common/core/protocol` confirms the set agrees with itself.
 
 ## Contents
 
 | Lens | Frames | Version |
 |---|---|---|
-| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted | v2 |
+| [human-is-highest](core/protocol/lenses/human-is-highest.md) | outbound-guard · destructive-actions-ask · propose-dont-decide · evaluator-not-self · external-tools-untrusted · sphere-authoring | v2 |
 | [nodes](core/protocol/lenses/nodes.md) | node-shape · kinds-of-file | v1 |
-| [continuity](core/protocol/lenses/continuity.md) | state-machine · check-shared-state · without-git | v1 |
-| [focus](core/protocol/lenses/focus.md) | focus-nodes · focus-holds · focus-tree | v1 |
-| [sphere-framework](core/protocol/lenses/sphere-framework.md) | capability-manifest · protocol-registry · structure-check · manifest-check | v1 |
+| [continuity](core/protocol/lenses/continuity.md) | state-machine · check-shared-state · without-git · focus-nodes · focus-holds | v1 |
+| [focus](core/protocol/lenses/focus.md) | focus-nodes · focus-holds · focus-tree · agent-definitions | v1 |
+| [sphere-framework](core/protocol/lenses/sphere-framework.md) | capability-manifest · protocol-registry · reactions · structure-check · manifest-check | v1 |
 | [readable-substrate](core/protocol/lenses/readable-substrate.md) | structure-check · manifest-check | v1 |
 | [work-tracking](core/protocol/lenses/work-tracking.md) | work-breakdown · work-progress · work-registry · plans | v1 |
 | [idea-capture](core/protocol/lenses/idea-capture.md) | idea-nodes | v1 |
@@ -32,7 +40,7 @@ common/core/protocol/
 | [literacy-tracking](core/protocol/lenses/literacy-tracking.md) | skill-progress · adapt-to-level · teaching · library | v1 |
 | [growth-tracking](core/protocol/lenses/growth-tracking.md) | growth-ledger · growth-themes | v1 |
 | [human-rhythm](core/protocol/lenses/human-rhythm.md) | daily-cadence · reaching-the-human | v1 |
-| [agent-trust](core/protocol/lenses/agent-trust.md) | trust-ladder · circuit-breakers · agent-definitions | v1 |
+| [agent-trust](core/protocol/lenses/agent-trust.md) | trust-ladder · circuit-breakers · agent-definitions · collaboration-modes | v1 |
 | [modes](core/protocol/lenses/modes.md) | operating-modes · collaboration-modes · persona · sphere-authoring | v1 |
 | [projections](core/protocol/lenses/projections.md) | projection-registry · projection-freshness · projection-templates · projection-serving | v1 |
 | [evolution](core/protocol/lenses/evolution.md) | crystallization · reflection · rule-capture | v1 |
