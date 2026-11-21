@@ -50,8 +50,9 @@ usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's
   open <name> -i <intention>   open a focus under --parent (default f0); --holds a,b; --attach
   start [focus]                the whole startup: the sphere, what's open, and the briefing to work from
   attach <focus>               foreground it and print its briefing
-  ground [focus] [--reacted]   commit this focus's held files, its own files and history appends
-                               (first prints what reacts to the ground; act on it, then --reacted)
+  ground [focus] [--reacted] [--did … --next …]
+                               commit this focus's held files, its own files and history; --did writes
+                               the entry (first prints what reacts to the ground; act on it, then --reacted)
   detach <focus>               ground, then send to the background
   close <focus> -m <why>       ground, write the last entry, give its holds back, archive
   list                         what's in focus: the tree, needs-attention first
@@ -215,31 +216,38 @@ def add_entry(path: str, heading: str, text: str) -> None:
     write_text(path, f"## {now_minute()} — {heading}\n\n{text}\n\n" + read_text(path))
 
 
+ENTRY_HEADING = re.compile(r"^## (\d{4}-\d{2}-\d{2})(?: (\d{2}:\d{2}))?", re.M)
+
+
+def entries_newest_first(path: str) -> list[str]:
+    """A history or progress file's entries, newest first, as the file keeps them.
+    Order on disk is the truth, not the times in the headings: those can be mistyped, and an
+    AI may invent one. `sphere ground --did` writes the entry itself, at the top, with the clock's time."""
+    text = read_text(path)
+    starts = [match.start() for match in ENTRY_HEADING.finditer(text)]
+    entries = [text[a:b].rstrip("\n") for a, b in zip(starts, [*starts[1:], len(text)])]
+
+    return entries
+
+
 def latest_field(path: str, field_name: str) -> str:
     """The newest `**Field:** …` line's text, e.g. latest_field(h, "Next")."""
     marker = f"**{field_name}:**"
-    for line in read_text(path).split("\n"):
-        if line.startswith(marker):
-            return line[len(marker) :].strip()
+    for entry in entries_newest_first(path):
+        for line in entry.split("\n"):
+            if line.startswith(marker):
+                return line[len(marker) :].strip()
     return ""
 
 
 def latest_entry_date(path: str) -> Optional[datetime.date]:
-    match = re.search(r"^## (\d{4}-\d{2}-\d{2})", read_text(path), re.MULTILINE)
+    entries = entries_newest_first(path)
+    match = ENTRY_HEADING.match(entries[0]) if entries else None
     return datetime.date.fromisoformat(match.group(1)) if match else None
 
 
 def latest_entries(path: str, count: int) -> str:
-    lines: list[str] = []
-    seen = 0
-    for line in read_text(path).split("\n"):
-        if line.startswith("## "):
-            seen += 1
-        if seen > count:
-            break
-        if seen:
-            lines.append(line)
-    return "\n".join(lines)
+    return "\n\n".join(entries_newest_first(path)[:count]) + "\n"
 
 
 # ================================================================ foci
@@ -924,6 +932,17 @@ def cmd_open(args: argparse.Namespace) -> None:
         sense("focus-attached")
 
 
+def profile_lead() -> str:
+    """The first section of the human's profile, as one line: their own words about who they are."""
+    path = "core/user/profile.md"
+    if not os.path.isfile(path):
+        return ""
+    sections = re.split(r"^## .*$", read_text(path), flags=re.M)
+    lead = sections[1] if len(sections) > 1 else ""
+    lines = [line.strip() for line in lead.split("\n") if line.strip() and not line.strip().startswith("_")]
+    return " ".join(lines)
+
+
 def cmd_start(args: argparse.Namespace) -> None:
     """The whole startup in one command: the sphere, what's open, and the briefing to work from.
     Attaches once: the focus named; else the one open focus besides main; else, with several, asks."""
@@ -932,6 +951,12 @@ def cmd_start(args: argparse.Namespace) -> None:
         with open("core/identity.json", encoding="utf-8") as handle:
             name = str(json.load(handle).get("name", ""))
     print(f"== {name or 'this sphere'} · {today()}")
+    about = profile_lead()
+    if about:  # who the human is, in their own words: never a name from the tool or git
+        print(f"== who you're working with (their profile): {about}")
+    persona = default_persona()
+    if persona:
+        print(f"== you are {persona} (core/ai/personas/{persona}/{persona}.md)")
     literacy = "layers/literacy/sphere/subject.md"
     if os.path.isfile(literacy):  # how much to explain: the human's level with the sphere itself
         level, summary = frontmatter_value(literacy, "level"), frontmatter_value(literacy, "summary")
@@ -1018,8 +1043,8 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
         return
     if f"{folder}/history.md" not in sorting.mine:
         ask(
-            f"{ref} has unsaved changes but no new history entry. "
-            f"Add one to {folder}/history.md (Did, Decided, Next, Pointers), then ground."
+            f"{ref} has unsaved changes but no new history entry. Say what this ground did:"
+            f' sphere ground {ref} --did "…" --next "…" (and --decided, --pointers when there are any).'
         )
     if report and parent:  # reporting up: one line added to the parent's history
         add_entry(history_file(parent), f"{ref} reported", f"{ref}: {report}")
@@ -1057,11 +1082,22 @@ def print_left_for_main(ref: str, sorting: Sorting) -> None:
         print("Left for main (no open focus holds them): " + ", ".join(left))
 
 
+def write_ground_entry(ref: str, args: argparse.Namespace) -> str:
+    """With --did, write this ground's history entry: at the top, with the clock's time. Returns the summary."""
+    if not args.did:
+        return args.m
+    fields = [("Did", args.did), ("Decided", args.decided), ("Next", args.next), ("Pointers", args.pointers)]
+    text = "\n".join(f"**{name}:** {value}" for name, value in fields if value)
+    add_entry(history_file(ref), args.heading or "grounded", text)
+    return args.m or args.did
+
+
 def cmd_ground(args: argparse.Namespace) -> None:
     """Commit this focus's held files, its own files and history appends."""
     ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
     reactions_gate(["focus-grounding"], args.reacted)
-    ground_focus(ref, args.m, args.report, clean_paths(args.also))
+    summary = write_ground_entry(ref, args)
+    ground_focus(ref, summary, args.report, clean_paths(args.also))
 
 
 def clean_paths(paths: list[str]) -> list[str]:
@@ -1075,7 +1111,7 @@ def cmd_detach(args: argparse.Namespace) -> None:
         fail("main can't be detached: it's always open, and has no heartbeat")
     reactions_gate(["focus-grounding"], args.reacted)
     try:
-        ground_focus(ref, args.m, args.report, clean_paths(args.also))
+        ground_focus(ref, write_ground_entry(ref, args), args.report, clean_paths(args.also))
     except Stop as stop:
         warn(str(stop))
         raise Stop("sphere: detach stopped at its ground step", stop.code) from stop
@@ -1548,6 +1584,11 @@ def build_parser() -> argparse.ArgumentParser:
         sub.add_argument(
             "--reacted", action="store_true", help="the reactions it printed have been acted on: go ahead and commit"
         )
+        sub.add_argument("--did", default="", help="what this ground did: writes its history entry, at the top")
+        sub.add_argument("--decided", default="", help="judgment calls worth keeping (with --did)")
+        sub.add_argument("--next", default="", help="a concrete first action for next time (with --did)")
+        sub.add_argument("--pointers", default="", help="links to what it touched (with --did)")
+        sub.add_argument("--heading", default="", help="the entry's heading after the time (default: grounded)")
 
     sub = verb("init", cmd_init)
     sub.add_argument("--git", action="store_true", help="run git init first")

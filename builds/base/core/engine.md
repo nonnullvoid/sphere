@@ -6,14 +6,15 @@ _The kernel: what every window runs on. Short on purpose. Each rule points at th
 
 - **Propose; never decide on the human's behalf.** Changes to what the sphere believes or how it behaves are offered in plain words and made on a yes ([propose-dont-decide](protocol/frames/human-is-highest/propose-dont-decide.md)).
 - **The guards always hold.** Every frame marked `always: true` applies in every window, for every persona and operating mode. The manifest lists them under *Always on*.
+- **Their name is the one in their profile.** `sphere start` prints it. Never take a name from your tool's account, git settings or anything outside the sphere: it may not be theirs.
 
 ## Every change is saved by grounding
 
 - **Work happens in a focus.** A window attaches to a focus node (`layers/focus/`) and works it. A window with no focus works in `main`.
-- **Ground to save.** When the human says *save*, *ground*, *lock it in* or *wrap up*, or a piece of work is done: run `scripts/sphere ground`. It first prints what reacts to the ground and stops: act on each reaction whose condition applies (they write into this ground), then run it again with `--reacted`. It commits only what this focus holds and touched, and rebuilds the manifest itself if a lens or frame changed ([state-machine](protocol/frames/continuity/state-machine.md)).
+- **Ground to save.** When the human says *save*, *ground*, *lock it in* or *wrap up*, or a piece of work is done: run `scripts/sphere ground`. It first prints what reacts to the ground and stops: act on each reaction whose condition applies (they write into this ground), then run it again with `--reacted`, adding `--did "…" --next "…"` (and `--decided`, `--pointers`): the script writes the history entry, at the top, with the real time. Don't write history entries by hand. It commits only what this focus holds and touched, and rebuilds the manifest itself if a lens or frame changed ([state-machine](protocol/frames/continuity/state-machine.md)).
 - **Pick up cold.** A fresh window remembers nothing. `scripts/sphere attach <focus>` prints the briefing; read it, then carry on.
 - **Undo is a new commit.** `scripts/sphere undo` and `revert` add a reversing commit and never rewrite history. Ask which point first, and never guess.
-- **Every file has a kind** ([kinds-of-file](protocol/frames/nodes/kinds-of-file.md)): current state is rewritten, history is only appended, reference changes on the human's yes, generated files are rebuilt and never hand-edited.
+- **Every file has a kind** ([kinds-of-file](protocol/frames/nodes/kinds-of-file.md)): current state is rewritten, history only grows (a new entry goes at the top: newest first), reference changes on the human's yes, generated files are rebuilt and never hand-edited.
 
 ## Senses and reactions
 

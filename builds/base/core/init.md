@@ -82,7 +82,7 @@ Then run `scripts/sphere manifest` (their principle changed a lens), `scripts/st
 
 First, retire this conversation: remove the `@core/init.md` line from `CLAUDE.md` (leave its other lines) and the whole *First run* section from `AGENTS.md`, the setup-started line included. From now on, a window starts from `sphere.md`.
 
-Then ground: `scripts/sphere ground` (act on what it prints, then again with `--reacted`). Tag it with the first version: `git tag sphere-<version>`.
+Then ground: `scripts/sphere ground` (act on what it prints, then again with `--reacted --did "…" --next "…"`, saying in a line what the first conversation did). Tag it with the first version: `git tag sphere-<version>`.
 
 ## 9. Show them, and how to come back
 

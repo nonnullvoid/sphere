@@ -160,6 +160,8 @@ class ScriptDeliversTest(BuildCase):
         alone = self.sphere("start")
         self.assertIn("f0-main open · the sphere", alone.out)
         self.assertIn("sense: focus-attached\n", alone.out)
+        self.assertIn("== using the sphere: skimmed", alone.out)  # how much to explain, handed over
+        self.assertIn("== you are companion", alone.out)
         self.sphere("open", "garden", "-i", "Plant a garden")
         one = self.sphere("start")
         self.assertIn("== f1-garden", one.out)  # the one open focus, attached once
@@ -177,6 +179,31 @@ class ScriptDeliversTest(BuildCase):
         self.assertIn("literacy:sphere → layers/literacy/sphere", self.sphere("attach", "f1").out)
         structure = run([os.path.join(self.root, "scripts", "structure-check")], cwd=self.root)
         self.assertEqual(structure.out.strip(), "structure-check: clean")
+
+    def test_start_names_the_human_from_their_profile(self):
+        self.sphere("init", "--git")
+        profile = self.read("core/user/profile.md")
+        self.write(
+            "core/user/profile.md", profile.replace("## In a few lines\n", "## In a few lines\n\nI'm Kane.\n", 1)
+        )
+        self.assertIn("== who you're working with (their profile): I'm Kane.", self.sphere("start").out)
+
+    def test_ground_writes_its_own_entry_with_the_clocks_time(self):
+        self.sphere("init", "--git")
+        self.write("layers/focus/f0-main/history.md", "\n## 2099-01-01 09:00 — invented\n\n**Did:** Old.\n", "a")
+        grounded = self.sphere("ground", "main", "--reacted", "--did", "Planted the tomatoes.", "--next", "Water them.")
+        self.assertEqual(grounded.code, 0, grounded.text)
+        self.assertEqual(
+            run(["git", "log", "-1", "--format=%s"], cwd=self.root).out.strip(),
+            "ground [f0-main] — Planted the tomatoes.",
+        )
+        top = self.read("layers/focus/f0-main/history.md").split("\n")[0]
+        self.assertRegex(
+            top, r"^## \d{4}-\d{2}-\d{2} \d{2}:\d{2} — grounded$"
+        )  # the newest entry is first, stamped now
+        self.assertIn(
+            "**Next:** Water them.", self.sphere("attach", "main").out + self.read("layers/focus/f0-main/history.md")
+        )
 
     def test_a_ground_stops_until_its_reactions_are_handled(self):
         self.sphere("init", "--git")

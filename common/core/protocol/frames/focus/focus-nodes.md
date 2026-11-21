@@ -74,6 +74,7 @@ Tried the city's licensed list first; it doesn't show availability.
 ```
 
 - **Did** is the story. **Decided** holds the judgment calls that are expensive to re-derive, including what was tried and ruled out, so the next window doesn't try it again. **Next** is a concrete first action (*"Chase the Thursday visit"*), not a topic (*"plumbing"*).
+- **The script writes it:** `sphere ground --did "…" --decided "…" --next "…" --pointers "…"` puts the entry at the top with the clock's time. *Why:* written by hand, entries land at the bottom or carry a made-up time, and the next window's briefing reads the wrong one.
 - **Write it for a reader with no memory of this conversation.** No "as discussed", no "the thing from earlier". Name things.
 - **Pointers, not copies.** Point at the work's progress; never repeat it. Don't name the commit: it doesn't exist yet, and its `[fNN-` subject finds it.
 - **Closing writes a last entry:** how it ended (done, or dropped) and why.
