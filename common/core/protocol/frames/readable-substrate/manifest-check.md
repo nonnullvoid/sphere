@@ -5,7 +5,7 @@ derives_from: [readable-substrate@1, sphere-framework@1]
 version: 1
 version_note: First draft. The manifest and the protocol registry, checked against lenses and frames.
 status: drafting
-updated: 2026-11-19
+updated: 2026-11-20
 sharing: public
 reads: [core/protocol, core/manifest.md]
 writes: []
@@ -30,7 +30,7 @@ The [capability manifest](../sphere-framework/capability-manifest.md) and the [p
 | **The set stands alone** | Every link in a lens or frame resolves to a file inside the protocol folder. A lens and its frames describe an idea completely, so they never lean on anything outside it: not the architecture's spec, not this sphere's data |
 | **Data locations exist** | Every path in a frame's `reads:` and `writes:` exists in this sphere |
 | **Senses are wired** | Every sense a When/do row reacts to, or a frame fires, is in that frame's `protocol:` list; every core moment has a frame that reacts to it |
-| **The reactions table is complete** | For each sense, the manifest's reactions table names every frame whose When/do rows react to it |
+| **The manifest stays small** | It's within its size budget. It's loaded in every window, so a manifest that grows past it costs every window |
 
 The shape of each lens and frame file (its keys, in order) is a node's shape, so the [structure-check](structure-check.md) covers it.
 
@@ -38,7 +38,7 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 
 ## Rules
 
-- **It reports; it never rewrites.** Drift in the manifest or the registry is rebuilt by the AI, following their own frames, and the check runs again until it's clean.
+- **It reports; it never rewrites.** A stale manifest is rebuilt with `scripts/sphere manifest`; drift in the registry is rebuilt by the AI, following its frame, and the check runs again until it's clean.
 - **A frame behind its lens isn't bumped.** Changing the number would hide the question. The frame is re-read against the new lens: often nothing changes and the version it names moves up; when something does, the change is proposed to the human.
 - **It never blocks the ground,** and a finding isn't dropped: it's fixed this ground or put to the human.
 - **A missing data location is asked about,** not created. It may be a layer this sphere doesn't have, or a frame copied from another sphere that needs adapting.
@@ -48,7 +48,8 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 | When | Do |
 |---|---|
 | `focus-grounding`, if a lens or frame changed | Run the check after the manifest and registry are rebuilt |
-| Coverage or freshness fails | Fire `stale-found` for the manifest; rebuild the entries it names, then check again |
+| Coverage or freshness fails | Fire `stale-found` for the manifest; run `scripts/sphere manifest`, then check again |
+| The manifest is over its budget | Propose tightening the longest **Applies to:** lines, in sphere authoring |
 | A lens and its frames disagree | Offer the one-line fix to whichever list is wrong |
 | `lens-shifted` | Re-read each frame derived from it against the lens; propose any change; then move its `derives_from` up |
 | A registry row has no frame, or a frame's entry has no row | Add the row, or retire it, following the protocol registry |

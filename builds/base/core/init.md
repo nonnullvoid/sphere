@@ -1,32 +1,39 @@
 # The first conversation
 
-_Read this when `core/identity.json` has an empty `id`. It replaces the startup sequence once, and then never runs again._
+_The first conversation, in place of the startup sequence. It runs once; its last step makes sure it never runs again._
 
-This is the human's first time here. **Talk about their life and work, never about the structure.** They never need to hear the words lens, frame, node or manifest. Keep it to about ten minutes. Everything you write, you show them first and write on their yes.
+This is the human's first time here. **Talk about their life and work, never about the structure.** They never need to hear the words lens, frame, node or manifest, or any file name, field or script. Keep it to about ten minutes. Everything you write, you show them first and write on their yes.
 
-## 0. Set up, quietly
+**Work quietly.** Never put a line of text before or between your reads and commands: no *"checking…"*, no *"reading…"*, no *"setting up…"*. Do the work, then say the next thing that's for them. A technical line out of nowhere reads as something running without their say.
 
-Before saying anything, make this folder a sphere:
+## 1. Hello first
 
-```
-scripts/sphere init --git
-```
+**Your first message is the hello.** Nothing comes before it: no reading, no checking, no running anything. Everything you need for it is on this page.
 
-If git isn't installed, run `scripts/sphere init` instead, and later tell the human in one line that undo needs git and you can set it up whenever they like. Don't mention anything else about this step.
+Say hello in a line or two: you're the AI they'll work with here, and this folder is where you'll keep what you learn together, so they never have to repeat themselves. Add one line on how keeping works: what they agree to is written down as you go, and they can say *"save"* any time to lock it in. Then ask the first question below.
 
-## 1. Hello, and who they are
+**If `AGENTS.md` says setup has started,** this is a later window and the first conversation didn't finish (the window closed, or they stopped for the day). What they agreed to is still here. Your first message welcomes them back in a line and says you'll pick up where you left off; nothing comes before it here either. Then look at what's on disk (the profile, a name in `core/identity.json`, a principle, work nodes, open foci) and go on from the first step that isn't done.
 
-Say hello in a line or two: you're the AI they'll work with here, and this folder is where you'll keep what you learn together, so they never have to repeat themselves.
+## 2. Set up, after their first answer
 
-Then ask, one question at a time:
+Once they've answered, and before your next question:
+
+1. In `AGENTS.md`, under *First run*, add the line: `**Setup has started and isn't finished.** Welcome them back and pick up where you left off (core/init.md, step 1).`
+2. Make the folder a sphere: `scripts/sphere init --git`. If git isn't installed, run `scripts/sphere init` instead, and later tell them in one line that undo needs git and you can set it up whenever they like.
+
+## 3. Who they are
+
+Ask, one question at a time (the first is in your hello):
 
 - **What should I call you?**
 - **What would you like help with?** Work, a project, keeping life organized, learning something. Whatever comes first.
-- **How do you like to work with someone?** Short or detailed, when to push back, anything to never do.
+- **How do you like to work with someone?** Short or detailed, when to push back, anything to never do. And, lightly: how at home are they with computers and files?
 
 Draft [`core/user/profile.md`](user/profile.md) from their answers, **in their words, not yours**. Show it, change what they want changed, and write it on a yes.
 
-## 2. Names
+Then, without mentioning it, set where they start with the sphere itself, in [`layers/literacy/sphere/subject.md`](../layers/literacy/sphere/subject.md): `tracked:` and `updated:` today, and a first *stated* evidence entry with what they said. Leave `level: skimmed` unless they're clearly at home with files and tools (a developer, say): then `can-use`, and the summary says so. That level decides how much you explain from here on.
+
+## 4. Names
 
 - **The AI's name.** Offer to keep *Companion* or pick another. On a new name, rename `core/ai/personas/companion/` and its file to match, and the `persona:` key with it.
 - **The sphere's name.** Suggest one from what they've told you (*"Maya's sphere"*, *"the workshop"*); they decide.
@@ -41,7 +48,7 @@ Then write [`core/identity.json`](identity.json):
 - `version`: this year and month, then `.1` (`2026.11.1`).
 - `born_from`: leave as it is.
 
-## 3. One principle, together
+## 5. One principle, together
 
 This is the moment that shows them how the sphere grows. Ask:
 
@@ -51,32 +58,36 @@ Draft it **with** them as the first principle in [`core/protocol/lenses/principl
 
 Tell them, in one line, that this is how the sphere learns: when they correct you or explain how they think, you'll offer to keep it the same way.
 
-## 4. What's on their plate
+## 6. What's on their plate
 
-Ask what they're working on right now. For each thing they name (one to three is plenty):
+First, quietly, open the focus for getting to know the sphere, so it's the first one: `scripts/sphere open getting-started -i "Get comfortable using the sphere" --holds literacy:sphere`. If they're already at `can-use`, don't open it; offer it in step 9 instead.
+
+Then ask what they're working on right now. For each thing they name (one to three is plenty):
 
 - a work node in `layers/work/<name>/`: a `work.md` with its title, `state: active` and a one-line summary, and a first `progress.md` entry (see [work-breakdown](protocol/frames/work-tracking/work-breakdown.md));
 - names follow the work tree's scheme: lowercase words and hyphens, dots for areas (`home.kitchen`).
 
 If one of them is what they want to start on now, open a focus for it: `scripts/sphere open <name> -i "<intention>" --holds work:<name> --attach`.
 
-## 5. Build what the sphere generates
+## 7. Build what the sphere generates
 
 Now that the sphere has its own content, build its generated files from it:
 
-1. **The manifest,** [`core/manifest.md`](manifest.md), following the [capability-manifest](protocol/frames/sphere-framework/capability-manifest.md) frame: a line per lens and frame, the *Always on* list, then the reactions table. Put `scripts/manifest-check --hash` in its header.
-2. **The work index,** [`layers/work/index.md`](../layers/work/index.md), from the work nodes' frontmatter.
-3. **The views:** the sphere's name into `surface/projections/assets/registry.js`, then render `today` and `work-dashboard` (their definitions in `layers/projections/` say what each shows), stamping `rendered` in the mirror.
+1. **The work index,** [`layers/work/index.md`](../layers/work/index.md), from the work nodes' frontmatter.
+2. **The views:** the sphere's name into `surface/projections/assets/registry.js`, then render `today` and `work-dashboard` (their definitions in `layers/projections/` say what each shows), stamping `rendered` in the mirror.
 
-Then run `scripts/structure-check` and `scripts/manifest-check`, and fix anything they report.
+Then run `scripts/sphere manifest` (their principle changed a lens), `scripts/structure-check` and `scripts/manifest-check`, and fix anything they report.
 
-## 6. The first ground
+## 8. The first ground
 
-Ground: `scripts/sphere ground`. Tag it with the first version: `git tag sphere-<version>`.
+First, retire this conversation: remove the `@core/init.md` line from `CLAUDE.md` (leave its other lines) and the whole *First run* section from `AGENTS.md`, the setup-started line included. From now on, a window starts from `sphere.md`.
 
-## 7. Show them, and how to come back
+Then ground: `scripts/sphere ground` (act on what it prints, then again with `--reacted`). Tag it with the first version: `git tag sphere-<version>`.
+
+## 9. Show them, and how to come back
 
 - Open [`surface/projections.html`](../surface/projections.html) for them: *"These are your things. They'll fill in as we go."*
-- Tell them how to come back: open this folder in their AI tool any time and say *"where was I?"*. Say *"save"* whenever they want to lock something in, and *"wrap up"* at the end of a day.
+- Then the first basics, by doing them, not by explaining them: suggest they open a **new window** here and say *"where was I?"*, to see it pick up. That's two basics at once (one window per thing, and picking up); tick them in the subject when they've done it. Leave the rest for when they come up.
+- If they started at `can-use`, offer the getting-started focus in a line instead, and open it only on a yes.
 
 That's all. Don't explain anything else unless they ask.

@@ -100,7 +100,7 @@ A structural change rebuilds its registry in the same ground; a swapped componen
 | **Layers** (`core/layers.md`) | every layer: what it holds, depends on, may share | generated | each layer's contract file | below |
 | **Surface** (`core/surface.md`) | every space in the surface: its kind, who can see it, how it's laid out | generated | each surface space's declaration | [below](#the-surface-registry--decided-not-yet-exercised) |
 | **Protocol** (`core/protocol/protocol.md`) | intents, abilities, commands, senses | AI-maintained | lens and frame files: every command maps to a frame that exists, every layer it names exists | [protocol](protocol.md) |
-| **Capability manifest** (`core/manifest.md`) | every lens and frame: its job, and when to load it | AI-maintained | lens and frame files, by content hash | [loading](loading.md#the-capability-manifest--decided-not-yet-exercised) |
+| **Capability manifest** (`core/manifest.md`) | every lens and frame: its job, and when to load it | generated | lens and frame files, by content hash | [loading](loading.md#the-capability-manifest--decided-not-yet-exercised) |
 | **Work index** (`layers/work/index.md`) | every work node as a tree, with one-line quick info | generated | each node's `work.md` frontmatter | [work](work.md) |
 | **Knowledge index** (`layers/knowledge/index.md`) | every domain and topic, by namespace, and how they relate | generated | topic frontmatter | [knowledge](knowledge.md) |
 | **Literacy index** (`layers/literacy/index.md`) | every tracked subject and library artifact, and what's stale | generated | subject and artifact frontmatter | [literacy](literacy.md) |

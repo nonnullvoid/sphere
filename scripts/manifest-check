@@ -11,14 +11,13 @@ row is listed by a frame and points at frames that exist; every sense a When/do 
 to, or a frame fires, is in that frame's protocol list; every core moment has a frame that
 reacts to it; every link in a lens or frame resolves to a file inside the protocol folder,
 so the set describes itself and travels whole. With a manifest: every lens and frame has
-an entry, the header hash matches the lens and frame files, and its reactions table names
-every frame that reacts to each sense. In a sphere (not a common set), every path in reads: and writes: exists.
+an entry, the header hash matches the lens and frame files, and it's within its size
+budget. In a sphere (not a common set), every path in reads: and writes: exists.
 Standard library only; runs on Python 3.9.
 """
 
 import argparse
 import glob
-import hashlib
 import os
 import re
 import subprocess
@@ -27,12 +26,14 @@ from dataclasses import dataclass, field
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from sphere_protocol import protocol_hash, section  # noqa: E402
 from sphere_shapes import Finding, frontmatter_value, parse_list  # noqa: E402
 
 ROW = re.compile(r"^\| `([^`]+)` \|(.*)$")
 LINK = re.compile(r"\[([a-z0-9-]+)\]\(([^)]+)\)")
 REACTS = re.compile(r"^\| `([a-z][a-z0-9-]*)(?: ([a-z][a-z0-9-]*))?`")
 FIRES = re.compile(r"[Ff]ire `([a-z][a-z0-9-]*)`")
+MANIFEST_BUDGET = 12 * 1024  # loaded whole in every window, so it has to stay small
 HASH_LINE = re.compile(r"Hash: ([0-9a-f]+)")
 ANY_LINK = re.compile(r"\]\(([^)\s]+)\)")
 FENCE = re.compile(r"```.*?```", re.S)
@@ -65,12 +66,6 @@ class RegistryRow:
     home: str  # the first frame linked in the row's third column
     links: list[tuple[str, str]]  # every (name, target) the row links to
     core: bool
-
-
-def section(text: str, heading: str) -> str:
-    """The body of a `## heading` section, up to the next `## `; "" when absent."""
-    match = re.search(rf"\n## {re.escape(heading)}\n(.*?)(?=\n## |\Z)", text, re.S)
-    return match.group(1) if match else ""
 
 
 def read_frames(protocol: str) -> dict[str, Frame]:
@@ -133,17 +128,6 @@ def read_registry(path: str) -> list[RegistryRow]:
 
 def is_sense(entry: str) -> bool:
     return not entry.startswith(("I-", "A-"))
-
-
-def protocol_hash(protocol: str) -> str:
-    """sha256 over every lens and frame file (path, then content), sorted by path; the first 12 hex digits."""
-    digest = hashlib.sha256()
-    paths = glob.glob(f"{protocol}/lenses/**/*", recursive=True) + glob.glob(f"{protocol}/frames/**/*", recursive=True)
-    for path in sorted(p for p in paths if os.path.isfile(p)):
-        digest.update(os.path.relpath(path, protocol).encode())
-        with open(path, "rb") as handle:
-            digest.update(handle.read())
-    return digest.hexdigest()[:12]
 
 
 def check_lenses(lenses: dict[str, Lens], frames: dict[str, Frame], protocol: str) -> list[Finding]:
@@ -225,18 +209,15 @@ def check_manifest(manifest: str, lenses: dict[str, Lens], frames: dict[str, Fra
         findings.append(
             Finding(manifest, f"stale: built from {stamped.group(1)}, the lens and frame files are now {current}")
         )
-    blocks: dict[str, set[str]] = {}
-    sense = ""
-    for line in section(text, "Reactions").splitlines():
-        if re.match(r"^[a-z]", line):
-            sense = line.split()[0]
-            blocks.setdefault(sense, set())
-        elif sense and line.strip():
-            blocks[sense].add(line.split()[0])
-    for frame in frames.values():
-        for reacted in sorted(frame.reacts):
-            if frame.name not in blocks.get(reacted, set()):
-                findings.append(Finding(manifest, f"reactions table: {reacted} is missing {frame.name}"))
+    size = len(text.encode())
+    if size > MANIFEST_BUDGET:
+        findings.append(
+            Finding(
+                manifest,
+                f"{size // 1024} KB, over the {MANIFEST_BUDGET // 1024} KB budget: it's loaded in every window."
+                " Tighten the longest Applies to lines",
+            )
+        )
     return findings
 
 
@@ -317,7 +298,7 @@ def main(argv: list[str]) -> int:
         if os.path.isfile(manifest):
             findings += check_manifest(manifest, lenses, frames, protocol)
         else:
-            findings.append(Finding(manifest, "no manifest yet: build it from the lenses and frames"))
+            findings.append(Finding(manifest, "no manifest yet: scripts/sphere manifest builds it"))
         findings += check_data(frames, protocol)
 
     for finding in findings:

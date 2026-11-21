@@ -6,7 +6,7 @@ The sphere's vocabulary: every intent, ability, command and sense, each tied to 
 
 ### Core moments
 
-Every build has these. Frames hook them; the reactions table in the manifest says what each frame does.
+Every build has these. Frames hook them; `scripts/sphere reactions <sense>` prints what each frame does.
 
 | Sense | Fires when | Produced by | Reacted to by |
 |---|---|---|---|
@@ -173,7 +173,7 @@ Something the sphere can do for an intent. An ability can also run on a sense in
 | `A-promote-item` | promote a list item to a node | [work-breakdown](frames/work-tracking/work-breakdown.md) | `I-work-as-one-tree` | — |
 | `A-propose-change` | propose a change to what the sphere believes or does | [propose-dont-decide](frames/human-is-highest/propose-dont-decide.md) | `I-nothing-changes-without-me` | — |
 | `A-propose-sphere-change` | queue a change to internals as an idea or offer | [sphere-authoring](frames/modes/sphere-authoring.md) | `I-nothing-changes-without-me` | — |
-| `A-react` | act on a sense through the reactions table | [reactions](frames/sphere-framework/reactions.md) | `I-know-what-it-can-do` | — |
+| `A-react` | act on a sense's reactions, as the script prints them | [reactions](frames/sphere-framework/reactions.md) | `I-know-what-it-can-do` | — |
 | `A-recalibrate` | catch the human up on what changed since the morning | [daily-cadence](frames/human-rhythm/daily-cadence.md) | `I-daily-rhythm` | — |
 | `A-record-win` | append a win the human names | [growth-ledger](frames/growth-tracking/growth-ledger.md) | `I-see-myself-grow` | — |
 | `A-refine-idea` | reshape an idea with the human | [idea-nodes](frames/idea-capture/idea-nodes.md) | `I-never-lose-an-idea` | — |

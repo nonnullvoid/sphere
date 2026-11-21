@@ -3,9 +3,9 @@ frame: reactions
 lens: [sphere-framework]
 derives_from: [sphere-framework@1]
 version: 1
-version_note: First draft. Senses, who produces them, and the reactions table that says what follows each.
+version_note: First draft. Senses, who produces them, and the reactions that follow each, computed from the frames when a sense fires.
 status: drafting
-updated: 2026-11-17
+updated: 2026-11-20
 sharing: public
 reads: [core/protocol, core/manifest.md]
 writes: [core/manifest.md]
@@ -16,13 +16,13 @@ protocol: [I-know-what-it-can-do, A-react, stale-found]
 
 **Applies to:** a sense firing, writing a When/do row that reacts to one, adding a sense, and offering a habit as a new reaction.
 
-A sphere has no event bus. A **sense** is the name of a moment the AI is told to watch for, and what follows it is a lookup, not a load: the **reactions table** in the [manifest](capability-manifest.md) says, for each sense, which frames react, when, and what they do.
+A sphere has no event bus. A **sense** is the name of a moment the AI is told to watch for, and what follows it is a lookup, not a load: the **reactions** to a sense are the When/do rows, across every frame, that start with it. `scripts/sphere reactions <sense>` prints them: which frames react, when, and what they do.
 
 ## Where senses come from
 
 | Producer | Examples | How reliable |
 |---|---|---|
-| **The `sphere` script** | `focus-opened`, `focus-attached` | Certain. The script prints the sense name as its last line, so it lands in context at the moment it happens |
+| **The `sphere` script** | `focus-opened`, `focus-attached` | Certain. The script prints the sense name and its reactions, so they land in context at the moment it happens, whether or not the AI has read anything |
 | **A check** (shape, drift, manifest) | `stale-found`, `check-failed`, `dirty-detected` | Certain. A finding *is* the condition |
 | **The AI, as it begins something** | `focus-grounding`, `focus-closing`, `day-wrapped`, `reflection-started` | Certain once the AI is doing it: the row that starts the operation fires the sense |
 | **The AI's judgment** | `waiting-on-human`, `work-stalled`, `gap-detected`, `new-territory` | Best effort. The AI notices because the manifest's trigger line tells it to look |
@@ -74,28 +74,31 @@ A condition about a node carries the node's **link**, and the link's tree picks 
 
 A condition about something that isn't a node names the thing instead: `stale-found manifest`, `stale-found work-index`.
 
-So the reactions table is keyed **by sense, then by tree**. A row written `` `stale-found` `` with no tree reacts to every kind.
+So reactions are looked up **by sense, then by tree**. A row written `` `stale-found` `` with no tree reacts to every kind.
 
-## The reactions table
+## Looking up the reactions
 
-Built by the AI as part of the [manifest](capability-manifest.md), never by hand, from the reacting rows in every frame:
+**Computed when the sense fires, never kept as a table.** The rows live in their frames, so there's nothing to rebuild and nothing to go stale:
 
 ```
-## Reactions
-
-focus-grounding
-  knowledge-capture   with facts to offer                 offer them as one batch
-  work-registry       if the ground touched work          rebuild the index
-  reaching-the-human  if anything is waiting              add the ground line
+$ scripts/sphere reactions focus-grounding
+reactions: focus-grounding
+  knowledge-capture (with facts to offer): Offer them as one batch; write what's confirmed
+  work-registry (if the ground touched work): Rebuild the index
+  reaching-the-human (if anything is waiting): Add the ground line
   …
-stale-found knowledge
-  plans               if a plan's assumption points at it flag the plan for review
-  skill-progress      if a tracked subject rests on it    mark the subject stale
+$ scripts/sphere reactions stale-found knowledge:money.taxes
+reactions: stale-found
+  plans (if a plan's assumption points at the topic): Flag the plan for review
+  skill-progress (if a tracked subject rests on the topic): Mark the subject stale: check lightly next time
 ```
 
-**When a sense fires,** the AI reads its block (it's already in context), skips rows whose guard doesn't apply, and does each one-line action. It opens a frame only when the action needs that frame's mechanics. Loading every reacting frame instead would cost more than anything else in a window: nearly twenty frames react to a ground.
+- **The script delivers what it produces.** `sphere start`, `open` and `attach` print each sense followed by its reactions. *Why:* an instruction to go and look something up is the first thing a model in a hurry skips; output it has already been handed isn't.
+- **A ground or a close won't commit until its reactions are handled.** `sphere ground` and `sphere close` print `focus-grounding` (and `focus-closing`) with their reactions and stop; the AI acts on them, then runs the command again with `--reacted`. The most important moment in a window is enforced, not remembered.
+- **The AI looks up the rest of what it fires.** For any other sense the AI produces (the day wrapping, a reflection starting), it runs `scripts/sphere reactions <sense>` as it begins.
+- **Then, for each row:** skip it if its guard doesn't apply; otherwise do the one-line action. Open a frame only when the action needs that frame's mechanics. Loading every reacting frame instead would cost more than anything else in a window: nearly twenty frames react to a ground.
 
-The [manifest-check](../readable-substrate/manifest-check.md) confirms the table matches the frames, and that every sense a row names is in the [registry](protocol-registry.md).
+The [manifest-check](../readable-substrate/manifest-check.md) confirms that every sense a row names is in its frame's `protocol:` list and in the [registry](protocol-registry.md).
 
 ## Common sense
 
@@ -117,7 +120,7 @@ What the sphere can author, from closest to instinct to furthest:
 |---|---|---|
 | **Reflex** | Mechanical; no judgment involved | Tooling: `sphere` printing a sense, commit checks, the manifest and shape checks |
 | **Second nature** | Always present; applied without deciding to look | The floor: guards marked `always: true`, in context in every window |
-| **Reaction** | A practised response, found by name | This frame's table |
+| **Reaction** | A practised response, found by name | When/do rows, looked up when the sense fires |
 | **Skill** | Thought through, step by step | A frame's body, loaded when it's needed |
 
 - **Moving a reaction to the floor is how a habit becomes second nature.** It costs context in every window, so it's rare and reviewed (`floor-grew`).
@@ -138,19 +141,18 @@ Then: a row in the [registry](protocol-registry.md), the producing frame's *Fire
 
 | When | Do |
 |---|---|
-| A sense fires | Read its block in the reactions table; act on each row whose guard applies; open a frame only to run it |
+| A sense fires | Act on its reactions (printed by the script, or `scripts/sphere reactions <sense> [link]`): each row whose guard applies; open a frame only to run it |
 | A check finds something stale | Fire `stale-found` with the thing's link or name |
 | Writing a row that reacts to a moment | Start the When cell with the sense in backticks, then the guard; list the sense in the frame's `protocol:` |
 | The human does the same thing at the same moment a third time | Offer it as a reaction, once. The human decides |
 | Two or more frames react to one sense the same way | Propose one shared row, at the next reflection |
 | A new sense is proposed | Ask the three questions above; prefer a new tree on an existing sense to a new name |
-| A frame's reacting rows change | Rebuild that sense's block in the manifest, in the same ground |
 
 ## Works with
 
-- [capability-manifest](capability-manifest.md): holds the reactions table, in every window.
+- [capability-manifest](capability-manifest.md): says what exists; the reactions are looked up, not listed there.
 - [protocol-registry](protocol-registry.md): defines each sense once, with its home frame.
-- [manifest-check](../readable-substrate/manifest-check.md): confirms the table, the frames and the registry agree.
+- [manifest-check](../readable-substrate/manifest-check.md): confirms the frames and the registry agree on every sense.
 - [node-names](../nodes/node-names.md): the `tree:name` link a condition carries.
 
 ## Senses

@@ -124,6 +124,16 @@ There's no lighter version. *Why:* a window that finds the focus but skips the r
 
 **Every change to a focus is reported in one line** (*"f21-plumbing-quotes open · foreground"*), so a focus that was meant to open and didn't shows on the very next turn. A non-technical build says it plainly, or says nothing when nothing changed.
 
+## Explaining it to the human
+
+**They never need the word *node*, and they may never need the word *focus*.** What they need is what it lets them do:
+
+- *"Each thing you're working on gets its own window. To switch, open a new window and say 'let's work on job search'. I'll pick it up there."*
+- *"Say 'where was I?' in any new window and I'll tell you what's open and where each one stands."*
+- *"Several can be open at once, one per window. Closing a window loses nothing that's been saved."*
+
+Say it the first time a focus opens, or when they ask; once is enough unless they ask again.
+
 ## Main: the root focus
 
 **`f0-main` (`aka: sphere`) is the root of the focus tree: always open, never closed, and where every window is until it attaches to something else.** Create it with the sphere. Top-level foci have `parent: f0`.
@@ -186,6 +196,7 @@ Reconciliation runs in the tooling, never from memory. **But a ground asks only 
 | It drifted out, old intention finished | Suggest closing and opening a new focus |
 | A window not attached to a focus writes and grounds | Ground into main; append to main's history |
 | The same window grounds into main a second time | Offer a focus once |
+| `focus-opened`, if it's the first focus the human has seen opened, or they ask what one is | Tell them in a line what it lets them do: its own window, *"let's work on …"* in a new one to switch, *"where was I?"* to pick up |
 | `focus-grounding` | Ask only about this focus's own touched files |
 | `stale-found focus` | Say so in one line at the next window; offer to recover |
 | A focus's heartbeat lapses with unsaved work | Fire `stale-found` with the focus's link |

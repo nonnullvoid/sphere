@@ -73,7 +73,7 @@ Every registry is the same thing:
 |---|---|
 | [capability-manifest](../frames/sphere-framework/capability-manifest.md) | The routing table of every lens and frame: its entries, how it's rebuilt, and how it's used |
 | [protocol-registry](../frames/sphere-framework/protocol-registry.md) | The one registry of intents, abilities, commands and senses, each tied to the frame that defines it |
-| [reactions](../frames/sphere-framework/reactions.md) | Senses, who produces them, and the reactions table that says what follows each |
+| [reactions](../frames/sphere-framework/reactions.md) | Senses, who produces them, and the reactions that say what follows each |
 | [structure-check](../frames/readable-substrate/structure-check.md) | Shared with [readable-substrate](readable-substrate.md): the anatomy registries, node shapes, links and views, checked at ground |
 | [manifest-check](../frames/readable-substrate/manifest-check.md) | Shared with [readable-substrate](readable-substrate.md): the manifest and protocol registry, checked against lenses and frames |
 

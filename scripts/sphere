@@ -27,6 +27,7 @@ from typing import NoReturn, Optional
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.insert(0, HERE)
+from sphere_protocol import MANIFEST, build_manifest, format_reactions, protocol_hash, reactions_to  # noqa: E402
 from sphere_shapes import (  # noqa: E402
     ARCHIVE,
     FOCUS,
@@ -47,8 +48,10 @@ usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's
 
   init [--git]                 make this folder a sphere: f0-main, core/shapes, .gitattributes, .gitignore
   open <name> -i <intention>   open a focus under --parent (default f0); --holds a,b; --attach
+  start [focus]                the whole startup: the sphere, what's open, and the briefing to work from
   attach <focus>               foreground it and print its briefing
-  ground [focus]               commit this focus's held files, its own files and history appends
+  ground [focus] [--reacted]   commit this focus's held files, its own files and history appends
+                               (first prints what reacts to the ground; act on it, then --reacted)
   detach <focus>               ground, then send to the background
   close <focus> -m <why>       ground, write the last entry, give its holds back, archive
   list                         what's in focus: the tree, needs-attention first
@@ -56,6 +59,8 @@ usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's
   undo <focus> [--yes]         reverse this focus's last ground, as a new commit
   revert <focus> [--to <commit>] [--yes]    reverse this focus's grounds after <commit>
   revert --sphere --to <commit> [--yes]     reverse everything after <commit>
+  reactions <sense> [link]     what the frames do when a sense fires (link: tree:name, for a condition)
+  manifest                     rebuild core/manifest.md from the lenses and frames
 
 A focus is named by number (f21 or 21), reference (f21-plumbing-quotes), name, or aka.
 Environment: SPHERE_FOCUS (this window's focus; every command refreshes its heartbeat),
@@ -63,6 +68,7 @@ SPHERE_CLIENT (the window's label), SPHERE_ROOT (where to look for the sphere).
 Exit codes: 0 done · 1 error · 2 ambiguous name · 3 needs the human's answer · 4 read-only (without git)."""
 
 MAIN = "f0-main"
+PROTOCOL = "core/protocol"
 HEARTBEATS = "surface/state/focus"
 GITLESS_LOCK = HEARTBEATS + "/LOCK"
 SHAPES_IN_SPHERE = "core/shapes"
@@ -708,20 +714,70 @@ Main holds nothing. Quick work grounds here by appending to history.md; real wor
 
 
 def sense(name: str) -> None:
-    """Name the moment that just happened, as the last line, so the AI reads its block
-    in the reactions table (frames/sphere-framework/reactions.md). Only open and attach
-    print one: their reactions come after. A ground's and a close's run before the
-    command, so the AI fires those itself as it begins."""
+    """Name the moment that just happened, then what the frames do about it, so the reactions
+    reach the AI whether or not it has read anything (frames/sphere-framework/reactions.md).
+    Only open and attach print one: their reactions come after. A ground's and a close's run
+    before the command, so the AI fires those itself, with `sphere reactions`, as it begins."""
     print(f"sense: {name}")
+    if os.path.isdir(PROTOCOL):
+        rows = reactions_to(PROTOCOL, name)
+        if rows:
+            print("\n".join(format_reactions(name, rows).splitlines()[1:]))
+
+
+def cmd_reactions(args: argparse.Namespace) -> None:
+    """Print what the frames do when a sense fires: each reacting row, its guard and its action."""
+    if not os.path.isdir(PROTOCOL):
+        fail(f"no {PROTOCOL} here, so no frames to react")
+    print(format_reactions(args.sense, reactions_to(PROTOCOL, args.sense, args.about)))
+
+
+def cmd_manifest(_args: argparse.Namespace) -> None:
+    """Rebuild core/manifest.md from the lenses and frames: always the same for the same files."""
+    if not os.path.isdir(PROTOCOL):
+        fail(f"no {PROTOCOL} here to build a manifest from")
+    text = build_manifest(PROTOCOL, today())
+    write_text(MANIFEST, text)
+    print(f"{MANIFEST} rebuilt · {len(text.encode()) // 1024} KB · hash {protocol_hash(PROTOCOL)}")
+
+
+def refresh_manifest() -> bool:
+    """Rebuild the manifest if a lens or frame changed since it was built. True when it did."""
+    if not os.path.isdir(PROTOCOL):
+        return False
+    current = protocol_hash(PROTOCOL)
+    if os.path.isfile(MANIFEST) and f"Hash: {current}" in read_text(MANIFEST):
+        return False
+    write_text(MANIFEST, build_manifest(PROTOCOL, today()))
+    return True
+
+
+def reactions_gate(senses: list[str], reacted: bool) -> None:
+    """Before a ground or a close commits, hand over what reacts to it, and stop until it's been acted on.
+    Reactions write into the ground they belong to, so they have to run before the commit, not after."""
+    if reacted or not os.path.isdir(PROTOCOL):
+        return
+    found = [(name, rows) for name in senses if (rows := reactions_to(PROTOCOL, name))]
+    if not found:
+        return
+    for name, rows in found:
+        print(f"sense: {name}")
+        print("\n".join(format_reactions(name, rows).splitlines()[1:]))
+    ask(
+        "Act on each reaction whose condition applies (what it writes lands in this ground),"
+        " then run this again with --reacted."
+    )
 
 
 def cmd_init(args: argparse.Namespace) -> None:
-    """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes and .gitignore."""
+    """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes and .gitignore.
+    With --git in a folder that isn't a repository yet, the first commit takes everything in the folder."""
     global SHAPES
     main_dir = f"{FOCUS}/{MAIN}"
     if os.path.exists(main_dir):
         fail("this is already a sphere (layers/focus/f0-main exists)")
-    if args.git and not os.path.isdir(".git"):
+    created_repo = bool(args.git and not os.path.isdir(".git"))
+    if created_repo:
         git("init", "-q")
     os.makedirs(main_dir)
     write_text(f"{main_dir}/focus.md", MAIN_FOCUS_MD.format(opened=today()))
@@ -742,9 +798,14 @@ def cmd_init(args: argparse.Namespace) -> None:
 
     top = run_git(["rev-parse", "--show-toplevel"])
     if top.returncode == 0 and os.path.realpath(top.stdout.strip()) == os.path.realpath("."):
-        paths = [main_dir, SHAPES_IN_SPHERE, ".gitattributes", ".gitignore"]
-        git("add", "--", *paths)
-        git("commit", "-q", "-m", f"ground [{MAIN}] — sphere created", "--", *paths)
+        if created_repo:
+            # A new repository: everything in the folder (an assembled build, say) is the sphere being created.
+            git("add", "-A")
+            git("commit", "-q", "-m", f"ground [{MAIN}] — sphere created")
+        else:
+            paths = [main_dir, SHAPES_IN_SPHERE, ".gitattributes", ".gitignore"]
+            git("add", "--", *paths)
+            git("commit", "-q", "-m", f"ground [{MAIN}] — sphere created", "--", *paths)
         print(f"Sphere ready: f0-main open · {short('HEAD')}")
     else:
         print("Sphere ready: f0-main open.")
@@ -863,6 +924,34 @@ def cmd_open(args: argparse.Namespace) -> None:
         sense("focus-attached")
 
 
+def cmd_start(args: argparse.Namespace) -> None:
+    """The whole startup in one command: the sphere, what's open, and the briefing to work from.
+    Attaches once: the focus named; else the one open focus besides main; else, with several, asks."""
+    name = ""
+    if os.path.isfile("core/identity.json"):
+        with open("core/identity.json", encoding="utf-8") as handle:
+            name = str(json.load(handle).get("name", ""))
+    print(f"== {name or 'this sphere'} · {today()}")
+    literacy = "layers/literacy/sphere/subject.md"
+    if os.path.isfile(literacy):  # how much to explain: the human's level with the sphere itself
+        level, summary = frontmatter_value(literacy, "level"), frontmatter_value(literacy, "summary")
+        print(f"== using the sphere: {level}" + (f" · {summary}" if summary else ""))
+    if refresh_manifest():
+        print(f"{MANIFEST} rebuilt: a lens or frame changed since it was built (save it with the next ground)")
+    if args.focus:
+        ref = resolve(args.focus)
+    else:
+        others = [ref for ref in open_refs() if ref != MAIN]
+        if len(others) > 1:
+            cmd_list(args)
+            print("Several are open: ask which one to work on (or stay in main), then: sphere attach <focus>")
+            return
+        ref = others[0] if others else MAIN
+    if ref != MAIN:
+        cmd_list(args)
+    cmd_attach(argparse.Namespace(focus=ref, take_over=False))
+
+
 def cmd_attach(args: argparse.Namespace) -> None:
     """Bring a focus to the foreground (a heartbeat) and print its briefing material."""
     ref = resolve(args.focus or MAIN)
@@ -917,7 +1006,11 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
         print(f"Saved {ref} (no git: files written, nothing committed; undo isn't available).")
         return
 
+    rebuilt = refresh_manifest()
     sorting = sort_changes(ref, changes_now(), also)
+    protocol_changed = ref == MAIN or any(path.startswith(PROTOCOL + "/") for path in sorting.mine)
+    if rebuilt and protocol_changed and MANIFEST not in sorting.mine:
+        sorting.mine.append(MANIFEST)  # rebuilt from the lens and frame changes this ground commits
     if not sorting.mine and not report:
         beat(number_of(ref))
         print(f"Nothing to ground in {ref}.")
@@ -967,6 +1060,7 @@ def print_left_for_main(ref: str, sorting: Sorting) -> None:
 def cmd_ground(args: argparse.Namespace) -> None:
     """Commit this focus's held files, its own files and history appends."""
     ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
+    reactions_gate(["focus-grounding"], args.reacted)
     ground_focus(ref, args.m, args.report, clean_paths(args.also))
 
 
@@ -979,6 +1073,7 @@ def cmd_detach(args: argparse.Namespace) -> None:
     ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
     if ref == MAIN:
         fail("main can't be detached: it's always open, and has no heartbeat")
+    reactions_gate(["focus-grounding"], args.reacted)
     try:
         ground_focus(ref, args.m, args.report, clean_paths(args.also))
     except Stop as stop:
@@ -1015,6 +1110,8 @@ def decide_holds(ref: str, holds: list[str], parent: str, choice: Optional[str])
 def cmd_close(args: argparse.Namespace) -> None:
     """Ground, write the last entry, give the holds back to the parent (or release them), and archive."""
     ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
+    if ref != MAIN:
+        reactions_gate(["focus-closing", "focus-grounding"], args.reacted)
     close_focus(ref, args.m, args.outcome, args.children, args.holds, clean_paths(args.also))
 
 
@@ -1448,6 +1545,9 @@ def build_parser() -> argparse.ArgumentParser:
             metavar="PATH",
             help="include a changed file no focus holds (repeatable)",
         )
+        sub.add_argument(
+            "--reacted", action="store_true", help="the reactions it printed have been acted on: go ahead and commit"
+        )
 
     sub = verb("init", cmd_init)
     sub.add_argument("--git", action="store_true", help="run git init first")
@@ -1463,6 +1563,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("--persona", default="")
     sub.add_argument("--points-at", default="", help="comma-separated")
     sub.add_argument("--attach", action="store_true", help="bring it to the foreground too")
+
+    verb("start", cmd_start, "the focus to work on (default: the one that's open)")
 
     sub = verb("attach", cmd_attach, "the focus (default main)")
     sub.add_argument("--take-over", action="store_true", help="without git: take the one foreground slot")
@@ -1482,6 +1584,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     verb("list", cmd_list)
 
+    sub = verb("reactions", cmd_reactions)
+    sub.add_argument("sense", help="the sense that fired, as the registry names it")
+    sub.add_argument("about", nargs="?", default="", help="for a condition: the link (tree:name) or tree it's about")
+
+    verb("manifest", cmd_manifest)
+
     sub = verb("peek", cmd_peek)
     sub.add_argument("--today", action="store_true", help="today's commits instead of the last five")
 
@@ -1493,6 +1601,13 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("--sphere", action="store_true", help="every focus, not one")
     sub.add_argument("--yes", action="store_true", help="do it (without it, only show what would be reversed)")
     return parser
+
+
+def in_a_sphere() -> bool:
+    root = os.path.abspath(os.environ.get("SPHERE_ROOT") or os.getcwd())
+    while not os.path.isdir(f"{root}/{FOCUS}/{MAIN}") and root != os.path.dirname(root):
+        root = os.path.dirname(root)
+    return os.path.isdir(f"{root}/{FOCUS}/{MAIN}")
 
 
 def enter_sphere() -> None:
@@ -1520,6 +1635,9 @@ def main(argv: list[str]) -> int:
         print(USAGE)
         return 0
     args = build_parser().parse_args(argv)
+    if args.verb == "start" and not in_a_sphere():
+        print("This sphere hasn't been set up yet: follow core/init.md.")
+        return 0
     if args.verb != "init":
         enter_sphere()
         this_focus = os.environ.get("SPHERE_FOCUS")

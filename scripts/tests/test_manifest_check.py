@@ -201,9 +201,9 @@ class SphereTest(ManifestCheckCase):
         self.bend("core/protocol/frames/house/dust.md", "| Dust |", "| Dust, then polish |")
         self.assertIn("core/manifest.md: stale: built from", self.check())
 
-    def test_the_reactions_table_must_name_every_reacting_frame(self):
-        self.manifest(reactions="room-entered\n")
-        self.assertIn("reactions table: room-entered is missing dust", self.check())
+    def test_a_manifest_over_its_budget(self):
+        self.manifest(reactions="x" * 13 * 1024 + "\n")
+        self.assertIn("over the 12 KB budget", self.check())
 
     def test_every_lens_and_frame_has_an_entry(self):
         self.manifest()

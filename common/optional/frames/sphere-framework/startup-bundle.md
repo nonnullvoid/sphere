@@ -27,7 +27,7 @@ In this order, each under a heading that names its source file:
 3. **The default persona:** the persona file marked `default: true`, without its journal.
 4. **The engine:** `core/engine.md`, whole.
 5. **The guards:** every frame marked `always: true`, whole.
-6. **The manifest:** `core/manifest.md`, whole, reactions table included.
+6. **The manifest:** `core/manifest.md`, whole.
 
 Its first line carries the hash of everything it was built from. **Nothing goes in it that isn't already in those files.** It's a copy, never a source: no one edits it, and no rule lives only there.
 

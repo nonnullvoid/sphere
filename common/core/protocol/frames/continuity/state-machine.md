@@ -79,7 +79,7 @@ Each kind of file is reversed the way it's written: current state is reversed; a
 
 | When | Do |
 |---|---|
-| The human asks to save, ground, or *lock it in* | Fire `focus-grounding` and let its reactions write; then run `ground` for the focus this window is attached to. If it isn't attached to one, ground into [main](../focus/focus-nodes.md#main-the-root-focus) |
+| The human asks to save, ground, or *lock it in* | Run `ground` for the focus this window is attached to: it prints `focus-grounding`'s reactions and stops; let them write, then run it again with `--reacted`. If it isn't attached to one, ground into [main](../focus/focus-nodes.md#main-the-root-focus) |
 | The human asks what's changed, or what happened today | Run `peek`. Report, and write nothing |
 | The human asks to undo | Say what this focus's last ground was and what undoing it reverses. Then add the reversing commit |
 | The human asks to go back to an earlier point | Show the recent grounds and let the human pick one. Never guess which. Then add the reversing commit |
