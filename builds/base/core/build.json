@@ -1,0 +1,23 @@
+{
+  "build": "base",
+  "version": "1.0.0",
+  "architecture": "SPHERE-ARCH 1.0",
+  "summary": "The week-one starter: focus, work, knowledge, ideas, literacy, growth and two views. Every other build derives from it.",
+  "lenses": "all",
+  "layers": [
+    "focus",
+    "work",
+    "knowledge",
+    "ideas",
+    "literacy",
+    "witness",
+    "projections"
+  ],
+  "projections": [
+    "today",
+    "work-dashboard"
+  ],
+  "words": {
+    "save": "ground"
+  }
+}

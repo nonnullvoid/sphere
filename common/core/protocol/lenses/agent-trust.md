@@ -54,7 +54,7 @@ Until an agent has shown it does a kind of work well, **the human is the one who
 
 - **Not a score.** Trust is the human's judgment of an agent, informed by evidence. It isn't computed into a number that decides by itself.
 - **Not freedom from review forever.** Checking every run is the low-trust way of working, not the only one. As trust grows, the human sees results instead of steps. They can always look closer.
-- **Not trust between spheres.** That's [replication](../../../../spec/replication.md#trusted-spheres--decided-not-yet-exercised).
+- **Not trust between spheres.** That's [replication](replication.md).
 - **Not designing teams in advance.** Agents working together are registered once they've actually run together. Shapes nobody has needed yet stay unspecified.
 
 ## What follows from it
@@ -68,4 +68,4 @@ Until an agent has shown it does a kind of work well, **the human is the one who
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [agent trust](../../../../spec/agent-trust.md).
+- **v1:** First draft. Spec chapter *agent trust*.

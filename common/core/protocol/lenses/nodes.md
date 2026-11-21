@@ -49,4 +49,4 @@ Expect new parts of a sphere to mirror it. That's not a constraint to work aroun
 
 ## Revision history
 
-- **v1:** First draft. Named as the sphere's meta lens; spec chapter [nodes](../../../../spec/nodes.md).
+- **v1:** First draft. Named as the sphere's meta lens; spec chapter *nodes*.

@@ -51,7 +51,7 @@ Every registry is the same thing:
 ## What it gives
 
 - **A seed that comes up working.** A new sphere started from another one follows the same conventions, so nothing needs reconfiguring. A layer lists what it `requires` (its contract, its helper scripts), so it arrives able to maintain itself. The machinery that builds registries travels; the built registries don't, because they describe someone else's sphere.
-- **Self-knowledge, cheaply.** Reading a few short registries tells the sphere what it can do and where things are, without loading any of it. See [loading](../../../../spec/loading.md).
+- **Self-knowledge, cheaply.** Reading a few short registries tells the sphere what it can do and where things are, without loading any of it. See [capability-manifest](../frames/sphere-framework/capability-manifest.md).
 - **Room to grow its own way.** Spheres diverge in how they implement things and still work with each other, because the interfaces hold.
 
 ## How it shows up
@@ -79,4 +79,4 @@ Every registry is the same thing:
 
 ## Revision history
 
-- **v1:** First draft. What a sphere is: one unit of humans and AIs doing meaningful work. Spec chapters [registries](../../../../spec/registries.md), [protocol](../../../../spec/protocol.md) and [loading](../../../../spec/loading.md).
+- **v1:** First draft. What a sphere is: one unit of humans and AIs doing meaningful work. Spec chapters *registries*, *protocol* and *loading*.

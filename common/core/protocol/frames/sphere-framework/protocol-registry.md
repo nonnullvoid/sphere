@@ -62,5 +62,4 @@ An ability can also run on a sense instead of being asked for: that's a [reactio
 - [capability-manifest](capability-manifest.md): the manifest's frame triggers are this registry's commands and senses.
 - [manifest-check](../readable-substrate/manifest-check.md): confirms this registry and the frames agree.
 - [propose-dont-decide](../human-is-highest/propose-dont-decide.md): a new command, or a lens for a framed skill, is proposed to the human.
-- [protocol](../../../../../spec/protocol.md#the-registry--proven): the vocabulary, the cascade and framing a skill, in full.
 

@@ -74,7 +74,7 @@ A sphere with a scheduler can run the end-of-day check on its own. **It runs und
 
 ## Weekly
 
-On the human's chosen day: what got done (foci closed, work finished, from history and git), what stalled, what the coming week has on it. A good moment to suggest a [reflection](../../../../../spec/evolution.md#reflection-how-the-sphere-stays-healthy--proven) if signals have built up.
+On the human's chosen day: what got done (foci closed, work finished, from history and git), what stalled, what the coming week has on it. A good moment to suggest a [reflection](../evolution/reflection.md) if signals have built up.
 
 **A build may keep the day or the week as a long-lived background focus,** brought forward by the morning and grounded at the wrap. It's an option, not a requirement.
 
@@ -86,7 +86,7 @@ On the human's chosen day: what got done (foci closed, work finished, from histo
 
 **Noticed, not asked for.** When the human's days usually start, which days differ, when they stop: these are read from when mornings and grounds actually happened, which git already records. Nothing is collected for it.
 
-- **It's kept only on a yes.** The first time a pattern is clear, offer it as a fact for the [knowledge](../../../../../spec/knowledge.md) layer, graded *inferred*: *"Your days seem to start around nine. Keep that?"* Like any fact, it waits for the human.
+- **It's kept only on a yes.** The first time a pattern is clear, offer it as a fact for the [knowledge](../../lenses/knowledge.md) layer, graded *inferred*: *"Your days seem to start around nine. Keep that?"* Like any fact, it waits for the human.
 - **It's soft.** It sets when the forgotten wrap fires and what counts as after hours. Nothing else.
 - **It's never held against the human.** An unusual day is just an unusual day. A missed morning is never mentioned.
 - **Until there's a pattern,** a build's defaults stand in (for example, an end of day at six).

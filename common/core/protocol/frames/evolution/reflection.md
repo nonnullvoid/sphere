@@ -57,7 +57,7 @@ Fire `reflection-started` whenever a reflection starts, targeted or deep.
 
 **The signal is read, not stored.** It comes from what's already in the sphere: the open `sphere` ideas and their dates, and when the last reflection was (its record in `core/records/`). There's no schedule to keep up.
 
-When the signal fires, **suggest a reflection at a good moment,** usually an [anchor](../../../../../spec/rhythm.md#anchors--proven) like the weekly look, in one line: *"A few things about how we plan have piled up. Look at them this week?"* The human doesn't have to remember to ask, and can always say not now.
+When the signal fires, **suggest a reflection at a good moment,** usually an [anchor](../human-rhythm/daily-cadence.md#the-anchors) like the weekly look, in one line: *"A few things about how we plan have piled up. Look at them this week?"* The human doesn't have to remember to ask, and can always say not now.
 
 ## Reviewing the sphere's own ideas
 

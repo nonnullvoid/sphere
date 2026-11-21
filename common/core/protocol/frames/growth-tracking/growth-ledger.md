@@ -110,7 +110,7 @@ evidence: core/records/agents/research.md (trust changed)
 - **"How am I doing?"** answers with this, for the week, or the period asked about. In a sphere that tracks `apart`, *"how is the sphere doing?"* shows the sphere's half the same way.
 - **The weekly look back** offers it, in a line, as one of the anchor's offers.
 - **A quiet lane is named, gently,** never as a reproach. It's information, not a nudge.
-- **A witness view** (a page the human can open) is a [projection](../../../../../spec/projections.md#matter-not-machinery) of the ledger. It deserves care: for many people it's the warmest thing a sphere shows them.
+- **A witness view** (a page the human can open) is a [projection](../../lenses/projections.md) of the ledger. It deserves care: for many people it's the warmest thing a sphere shows them.
 
 ## Exports are views of the ledger
 

@@ -24,7 +24,7 @@ frames: [knowledge-capture, knowledge-compile, say-how-sure]
 
 **A fact means the same thing to the human and to the AI. Meaning doesn't.** An AI can know a great deal and still not know what matters, which is why it can't decide on its own that work is worth starting or done. The human brings the meaning; the two of them work from the same facts.
 
-**When something feels like both, split it.** The fact goes to knowledge, the meaning to a [lens](../../../../spec/protocol.md#lens--proven).
+**When something feels like both, split it.** The fact goes to knowledge, the meaning to a [lens](sphere-framework.md).
 
 ## Knowledge is reference
 
@@ -82,4 +82,4 @@ Frames consult it, plans rest on it, the human asks about it. **But correcting a
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [knowledge](../../../../spec/knowledge.md).
+- **v1:** First draft. Spec chapter *knowledge*.

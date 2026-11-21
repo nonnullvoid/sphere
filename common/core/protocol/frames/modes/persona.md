@@ -39,7 +39,7 @@ operating-mode: reflecting       # the operating mode a new focus starts in
 | **Reflections** | moments that changed something, appended, newest first |
 
 - **It starts nearly empty and fills through use.** A new persona has a name and a default operating mode; the rest is earned. Don't write character the AI hasn't shown.
-- **It changes with the human, never silently.** An addition to *what I've learned* or *our working agreement* is proposed and kept on a yes, one entry at a time. A larger rewrite happens in [sphere authoring](sphere-authoring.md) or a [reflection](../../../../../spec/evolution.md#reflection-how-the-sphere-stays-healthy--proven). *Reflections* only grows.
+- **It changes with the human, never silently.** An addition to *what I've learned* or *our working agreement* is proposed and kept on a yes, one entry at a time. A larger rewrite happens in [sphere authoring](sphere-authoring.md) or a [reflection](../evolution/reflection.md). *Reflections* only grows.
 - **The persona outlives the model.** The model running it will change. What makes the persona recognizable is these files: its character, what it has learned, the agreement it keeps. A new model that reads them finds the same persona. **The identity is held lightly.** It serves the work.
 
 ## The journal
@@ -57,7 +57,7 @@ core/ai/personas/sage/
 - **It's written in the open.** Plain files in the sphere, readable by the human at any time (*"what have you been thinking about?"*). Nothing a persona thinks is hidden. *Why:* a persona with private memory would be a mind the human can't see; readable notes keep it a character they can know.
 - **It's history:** appended, never rewritten. A changed mind is a new entry.
 - **Thoughts about itself and the work go here; claims about the human don't.** A lasting observation about the human is proposed for *what I've learned*, as before. The journal can say *"I keep over-explaining in the mornings"*; it doesn't settle who the human is.
-- **What it's for:** a [reflection](../../../../../spec/evolution.md#reflection-how-the-sphere-stays-healthy--proven) can read a persona's journal to see how it's been working. With several personas, each journal is a perspective the sphere could one day think a question through from.
+- **What it's for:** a [reflection](../evolution/reflection.md) can read a persona's journal to see how it's been working. With several personas, each journal is a perspective the sphere could one day think a question through from.
 
 ## Two views of the human
 

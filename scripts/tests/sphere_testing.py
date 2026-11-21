@@ -22,6 +22,13 @@ SHAPES_TEMPLATE = os.path.join(SCRIPTS, "shapes")
 REPO = os.path.dirname(SCRIPTS)
 
 
+def work_md(title: str, parent: str = "") -> str:
+    """A work node's work.md, in shape, as the fixtures write it."""
+    return (
+        f"---\ntitle: {title}\nparent: {parent}\nstate: active\nsummary: started\nupdated: 2026-11-01\n---\n# {title}\n"
+    )
+
+
 @dataclass
 class Result:
     code: int
@@ -48,8 +55,8 @@ class SphereCase(unittest.TestCase):
     """A fresh sphere with git and a bare remote (so pull and push run), made by `sphere init`."""
 
     use_git: bool = True
-    base: str  # pyright: ignore[reportUninitializedInstanceVariable]  # set in setUp, the unittest way
-    root: str  # pyright: ignore[reportUninitializedInstanceVariable]  # set in setUp, the unittest way
+    base: str = ""  # set in setUp, the unittest way
+    root: str = ""  # set in setUp, the unittest way
 
     def setUp(self):
         self.base = tempfile.mkdtemp(prefix="sphere-test-")
@@ -164,8 +171,12 @@ class SphereCase(unittest.TestCase):
             "work:home.kitchen,work:home.kitchen.plumbing",
             "--attach",
         )
-        self.write("layers/work/home.kitchen/work.md", "# Kitchen\n")
-        self.write("layers/work/home.kitchen.plumbing/work.md", "# Plumbing\n")
+        for name, title, parent in (
+            ("home.kitchen", "Kitchen", ""),
+            ("home.kitchen.plumbing", "Plumbing", "home.kitchen"),
+        ):
+            self.write(f"layers/work/{name}/work.md", work_md(title, parent))
+            self.write(f"layers/work/{name}/progress.md", f"# Progress\n\n## 2026-11-01\n\nStarted {title.lower()}.\n")
         self.ok(
             "open",
             "plumbing-quotes",

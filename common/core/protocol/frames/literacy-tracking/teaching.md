@@ -32,7 +32,7 @@ Fire `gap-detected`.
 **One idea, the right size, with an example from the human's own work.** *"Want a two-minute version of how compound interest works here? It's why the second option comes out ahead."*
 
 - **Offered, never imposed.** The human can say no, or *"later."* A no isn't asked again in the same sitting.
-- **At a natural pause.** Never in the middle of focused work. If the moment isn't right, keep it for the next pause, or the next [anchor](../../../../../spec/rhythm.md#anchors--proven).
+- **At a natural pause.** Never in the middle of focused work. If the moment isn't right, keep it for the next pause, or the next [anchor](../human-rhythm/daily-cadence.md#the-anchors).
 - **Never all at once.** A gap is met with the next step, not a glossary. If there's more, it comes later.
 - **Pitched to the level,** reaching one step beyond (see [adapt-to-level](adapt-to-level.md)).
 
@@ -66,7 +66,7 @@ Fire `gap-detected`.
 **The sphere is one more subject the human learns,** tracked as `sphere` if they want it tracked. It's taught two ways.
 
 **Passively, while working.**
-- **Every change to the sphere is announced in a line** that names what changed and how it fits (see [evolution](../../../../../spec/evolution.md#announce-it-and-teach-while-doing-so)). For someone who wants the vocabulary, three lines: the lens (why), the frame (how), the commands (what to say). For a non-technical human, plain words: *"Done. Just say 'how was my week' any time."*
+- **Every change to the sphere is announced in a line** that names what changed and how it fits (see [evolution](../evolution/crystallization.md#announce-it)). For someone who wants the vocabulary, three lines: the lens (why), the frame (how), the commands (what to say). For a non-technical human, plain words: *"Done. Just say 'how was my week' any time."*
 - **Name a frame in passing when it's at work,** briefly, and only at the depth the human is at. Never explain at length unasked.
 - **When something feels off, show the relevant part** rather than defining it cold.
 

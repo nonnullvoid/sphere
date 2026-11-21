@@ -39,7 +39,7 @@ A file the human can read but can't trust is worse than no file. So a sphere kee
 
 ## How it shows up
 
-- **A screen is never the source.** A dashboard, a page or an app is a view of files kept elsewhere. It's rendered one way, from the files; editing the screen never changes the truth. See [projections](../../../../spec/projections.md).
+- **A screen is never the source.** A dashboard, a page or an app is a view of files kept elsewhere. It's rendered one way, from the files; editing the screen never changes the truth. See [projections](projections.md).
 - **Outside tools are inputs, not homes.** What matters from a ticket, a chat or a meeting is brought into the sphere, with the link kept as a citation. The sphere doesn't need the outside tool to still be there to make sense.
 - **An AI tool's own memory is scaffolding.** Anything durable lives in a sphere file the human can read. If something could go either place, the sphere file wins.
 - **Portable because readable.** A sphere can be copied, seeded and read by another AI because it's plain files. Anything that would tie it to one tool or one service breaks that.
@@ -59,4 +59,4 @@ A file the human can read but can't trust is worse than no file. So a sphere kee
 
 ## Revision history
 
-- **v1:** First draft, with the checks that keep the readable picture true. Spec chapters [registries](../../../../spec/registries.md#drift-checks--proven) and [nodes](../../../../spec/nodes.md#the-shape-check--decided-not-yet-exercised).
+- **v1:** First draft, with the checks that keep the readable picture true. Spec chapters *registries* and *nodes*.

@@ -41,6 +41,18 @@ Plain text search over files is fast; reading is what costs. So a layer that gro
 - **It's the one generated file that follows the nodes.** Ground updates only the lines for the nodes it touched (see [registries](registries.md)).
 - **A faster cache is a swappable part.** At very large sizes a build may add a database, such as an SQLite file with full-text search, for ranked and structured queries. It's only ever a **cache**: kept out of git, rebuilt from the files at any time, never the source. Delete it and nothing is lost; search falls back to the files.
 
+### A startup bundle, once startup is slow — _decided, not yet exercised_
+
+Startup reads the same slices in every window: identity, the first section of the profile, the default persona, the engine, the guards and the manifest. In a young sphere that's a few short reads. In one used daily for months, the guards and the manifest have grown and it can be a dozen or more, and two windows can start from slightly different pictures depending on what each read.
+
+The fix is a **startup bundle**: one generated file holding exactly those slices, in a fixed order, with a hash of its sources on its first line. A fresh window reads one file and starts from the same place every time.
+
+- **It arrives when it's needed:** when the cold-start measure above shows startup is the cost, or windows start unevenly. A fresh sphere doesn't have one.
+- **It's a cache, never a source.** Built by a script (not the AI, which would cost what it saves), gitignored, never exported. A stale bundle is never read: startup checks the hash and falls back to the files. Delete it and nothing is lost.
+- **It's an optional frame,** not part of the common set: [startup-bundle](../common/optional/frames/sphere-framework/startup-bundle.md) says what it holds and how a sphere adopts it.
+
+_The real test is a sphere in daily use for six months or more._ A fresh sphere's startup is short by construction, so a new build's first run can't show whether the bundle is needed.
+
 ---
 
 ## Four tiers — _decided, partly exercised_
@@ -116,7 +128,7 @@ stale-found knowledge
 
 ### The machinery travels; the caches don't
 
-A seed carries the **scripts and frames that build** the manifest and the startup bundle, never the built files. A new sphere builds its own on first start, from its own lenses and frames. A copied manifest would describe someone else's sphere.
+A seed carries the **frames and scripts that build** the manifest (and the startup bundle, where a sphere has one), never the built files. A new sphere builds its own on first start, from its own lenses and frames. A copied manifest would describe someone else's sphere.
 
 ---
 

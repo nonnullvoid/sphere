@@ -51,7 +51,7 @@ use → notice → propose → (the human decides) → crystallize → announce 
 ## How it shows up
 
 - **Asked, never assumed.** The AI may notice a repeated pattern and ask whether to capture it. It never writes a lens, a frame or a rule because it seemed like a good idea.
-- **Outside sphere authoring, the sphere's internals are read-only.** A change it notices is captured as a `sphere` idea and left for the next reflection. See [sphere authoring](../../../../spec/modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised).
+- **Outside sphere authoring, the sphere's internals are read-only.** A change it notices is captured as a `sphere` idea and left for the next reflection. See [sphere authoring](../frames/modes/sphere-authoring.md).
 - **A rhythm, not a schedule.** A sphere tends to need evolution every few weeks, starting at three to four and adjusted with experience. The sphere recognizes the signal itself (a concept with nowhere to live, a frame that feels stretched, friction with something that used to work) and suggests a reflection at a good moment.
 - **Plain words for a non-technical human.** They never hear *lens* or *frame*. *"Done. Just say 'how was my week' any time."*
 - **The story stays home.** A lens or frame keeps a short changelog of what changed. Why it changed (the incident, the people, the dates) lives in the sphere's private records, so what's learned can travel without the story behind it.
@@ -73,4 +73,4 @@ use → notice → propose → (the human decides) → crystallize → announce 
 
 ## Revision history
 
-- **v1:** First draft. Spec chapters [evolution](../../../../spec/evolution.md) and [guardrails](../../../../spec/guardrails.md).
+- **v1:** First draft. Spec chapters *evolution* and *guardrails*.

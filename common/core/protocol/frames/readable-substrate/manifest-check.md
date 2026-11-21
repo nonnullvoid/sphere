@@ -5,7 +5,7 @@ derives_from: [readable-substrate@1, sphere-framework@1]
 version: 1
 version_note: First draft. The manifest and the protocol registry, checked against lenses and frames.
 status: drafting
-updated: 2026-11-12
+updated: 2026-11-19
 sharing: public
 reads: [core/protocol, core/manifest.md]
 writes: []
@@ -27,6 +27,7 @@ The [capability manifest](../sphere-framework/capability-manifest.md) and the [p
 | **Lens and frame agree** | A lens's `frames:` lists exactly the frames whose `lens:` names it, both ways |
 | **Frames keep up with lenses** | A frame's `derives_from` names its lens's current version. One that names an older version is behind |
 | **Registry and frames agree** | Every entry in a frame's `protocol:` field has a row in the registry, and every row's frame exists |
+| **The set stands alone** | Every link in a lens or frame resolves to a file inside the protocol folder. A lens and its frames describe an idea completely, so they never lean on anything outside it: not the architecture's spec, not this sphere's data |
 | **Data locations exist** | Every path in a frame's `reads:` and `writes:` exists in this sphere |
 | **Senses are wired** | Every sense a When/do row reacts to, or a frame fires, is in that frame's `protocol:` list; every core moment has a frame that reacts to it |
 | **The reactions table is complete** | For each sense, the manifest's reactions table names every frame whose When/do rows react to it |
@@ -51,6 +52,7 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 | A lens and its frames disagree | Offer the one-line fix to whichever list is wrong |
 | `lens-shifted` | Re-read each frame derived from it against the lens; propose any change; then move its `derives_from` up |
 | A registry row has no frame, or a frame's entry has no row | Add the row, or retire it, following the protocol registry |
+| A lens or frame links outside the protocol folder | Say what it needs in the file itself, or link the frame that owns it |
 | A frame names a path this sphere doesn't have | Ask: adapt the frame, or create what it expects? |
 
 ## Works with
@@ -58,7 +60,6 @@ The shape of each lens and frame file (its keys, in order) is a node's shape, so
 - [capability-manifest](../sphere-framework/capability-manifest.md) and [protocol-registry](../sphere-framework/protocol-registry.md): what this check confirms, and how each is rebuilt.
 - [structure-check](structure-check.md): the same idea for the sphere's anatomy and nodes.
 - [propose-dont-decide](../human-is-highest/propose-dont-decide.md): a frame re-derived against a changed lens is proposed, not rewritten.
-- [loading](../../../../../spec/loading.md#the-capability-manifest--decided-not-yet-exercised) and [protocol](../../../../../spec/protocol.md#versioning-and-drift--decided-not-yet-exercised): the manifest and versioning, in the spec.
 
 ## Senses
 

@@ -92,5 +92,4 @@ It lives in its own small file, `core/identity.json`, so tooling can read it wit
 - [export-contract](export-contract.md): provenance carries the identity; init creates it.
 - [crystallization](../evolution/crystallization.md): the step that changes the protocol moves the version.
 - [state-machine](../continuity/state-machine.md): the version's tag sits on a ground.
-- [versions](../../../../../spec/VERSIONS.md#a-spheres-own-version--decided-not-yet-exercised): a sphere's own version beside the architecture's and the build's.
 

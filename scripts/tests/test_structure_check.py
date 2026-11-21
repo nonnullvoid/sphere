@@ -8,7 +8,7 @@ from sphere_testing import REPO, SHAPES_TEMPLATE, STRUCTURE_CHECK, SphereCase, r
 
 
 class StructureCheckTest(SphereCase):
-    focus: str  # pyright: ignore[reportUninitializedInstanceVariable]  # set in setUp, the unittest way
+    focus: str = ""  # set in setUp, the unittest way
 
     def setUp(self):
         super().setUp()

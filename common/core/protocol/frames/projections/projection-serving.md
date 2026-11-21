@@ -69,7 +69,6 @@ Live views are served. Snapshots are static. A refreshed view can be either: sta
 - [kinds-of-file](../nodes/kinds-of-file.md) and [focus-holds](../focus/focus-holds.md): who may write what, and offering a change to a holder.
 - [state-machine](../continuity/state-machine.md): each accepted input is a small ground.
 - [outbound-guard](../human-is-highest/outbound-guard.md): nothing leaves from a view without the human's yes.
-- [serving](../../../../../spec/projections.md#serving) and [views that accept input](../../../../../spec/projections.md#views-that-accept-input--decided-not-yet-exercised), in the spec.
 
 ## Senses
 

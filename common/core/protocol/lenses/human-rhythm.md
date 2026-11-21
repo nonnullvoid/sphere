@@ -49,7 +49,7 @@ Some work runs while the human is away: an agent working a focus supervised or u
 ## What it doesn't mean
 
 - **Not a scheduler.** The sphere prepares for the day; it doesn't plan the human's time.
-- **Not a habit tracker.** Anchors aren't streaks. Nothing is scored here; a [witness](../../../../spec/work.md#witness-optional) layer can listen at the anchors if a sphere has one.
+- **Not a habit tracker.** Anchors aren't streaks. Nothing is scored here; a [witness](growth-tracking.md) layer can listen at the anchors if a sphere has one.
 - **Not a calendar.** A sphere with a calendar reads it at the anchors. One without works just as well.
 - **Not a reason to interrupt.** Being able to reach the human is not permission to. Most things wait for the next anchor.
 
@@ -62,4 +62,4 @@ Some work runs while the human is away: an agent working a focus supervised or u
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [rhythm](../../../../spec/rhythm.md).
+- **v1:** First draft. Spec chapter *rhythm*.

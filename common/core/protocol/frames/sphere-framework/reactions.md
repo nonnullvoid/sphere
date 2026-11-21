@@ -152,7 +152,6 @@ Then: a row in the [registry](protocol-registry.md), the producing frame's *Fire
 - [protocol-registry](protocol-registry.md): defines each sense once, with its home frame.
 - [manifest-check](../readable-substrate/manifest-check.md): confirms the table, the frames and the registry agree.
 - [node-names](../nodes/node-names.md): the `tree:name` link a condition carries.
-- [protocol](../../../../../spec/protocol.md#senses-and-reactions--decided-not-yet-exercised): senses and reactions, in full.
 
 ## Senses
 

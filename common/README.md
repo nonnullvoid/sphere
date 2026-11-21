@@ -16,6 +16,7 @@ common/
 │   ├── lenses/<lens>.md
 │   └── frames/<lens>/<frame>.md       frames that live only in the sphere
 │       frames/<lens>/<skill>/SKILL.md skill frames, in the Agent Skills format
+├── optional/frames/<lens>/<frame>.md  frames for large or busy spheres; no build ships them
 ├── layers/projections/templates/      dashboard and one-shot (snapshot) templates
 └── surface/
     ├── projections.html               the index of the human's things, and the markdown viewer
@@ -46,3 +47,5 @@ common/
 | [evolution](core/protocol/lenses/evolution.md) | crystallization · reflection · rule-capture | v1 |
 | [replication](core/protocol/lenses/replication.md) | export-contract · sphere-identity | v1 |
 
+
+**Optional frames** for large or busy spheres are in [`optional/`](optional/README.md). No build ships them; a sphere adopts one when something measured slow.

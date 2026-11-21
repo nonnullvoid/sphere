@@ -87,4 +87,4 @@ The wrap is a natural moment to notice a win; the weekly look back is a natural 
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [work: witness](../../../../spec/work.md#witness-optional).
+- **v1:** First draft. Spec chapter *work: witness*.

@@ -41,7 +41,7 @@ updated: 2026-11-12
 ---
 ```
 
-The full key list, and what each may hold, is the work tree's declared shape in [the spec](../../../../../spec/work.md#workmd). **Write it exactly:** no invented keys, no free text in fields with fixed values.
+The full key list, and what each may hold, is the work tree's declared shape, in `scripts/shapes`. **Write it exactly:** no invented keys, no free text in fields with fixed values.
 
 **The body:**
 - **Now:** a few scannable lines: where it stands, what's next, what's blocking. The only section with a fixed shape, because views read it.

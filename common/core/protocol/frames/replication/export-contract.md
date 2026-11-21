@@ -43,13 +43,13 @@ No export, seed or published view includes these, unless the human names a speci
 - **Skill frames, as plain skills.** They need no translation.
 - **The sphere's identity,** `core/identity.json`, which names the sphere and nothing about its human (see [sphere-identity](sphere-identity.md)).
 
-**Generated files never travel.** The capability manifest, the startup bundle, every index and view: the receiving sphere rebuilds them from its own files. They describe the sphere that built them. A seeded view that shows nothing until that rebuild runs is the boundary working.
+**Generated files never travel.** The capability manifest, a startup bundle, every index and view: the receiving sphere rebuilds them from its own files. They describe the sphere that built them. A seeded view that shows nothing until that rebuild runs is the boundary working.
 
 **A frame's data locations stay home.** An exported frame keeps its `reads:` and `writes:` keys and drops their values. Its `protocol:` entries travel.
 
 ## Who it may go to
 
-Every lens and frame has a sharing level (see [sharing](../../../../../spec/protocol.md#sharing--decided-not-yet-exercised)):
+Every lens and frame has a sharing level:
 
 - **`public`:** anyone. **`protected`:** people the human names when sharing. **`private`:** no one.
 - **`until: <date>`** on a level more open than private: after that date, it's private again, and exports stop including it.
@@ -131,7 +131,7 @@ Then init **creates the sphere's identity** (see [sphere-identity](sphere-identi
 
 ## Not yet
 
-**Trusted spheres and the network** (one sphere helping look after another, spheres advertising and browsing what they offer) build on this contract and aren't framed yet. When they are, the same boundary holds: visibility is enforced where something is offered, and nothing enters a sphere except through absorb and the human's yes. See [trusted spheres](../../../../../spec/replication.md#trusted-spheres--decided-not-yet-exercised) and [the network](../../../../../spec/replication.md#the-network--unexercised).
+**Trusted spheres and the network** (one sphere helping look after another, spheres advertising and browsing what they offer) build on this contract and aren't framed yet. When they are, the same boundary holds: visibility is enforced where something is offered, and nothing enters a sphere except through absorb and the human's yes.
 
 ## When / do
 

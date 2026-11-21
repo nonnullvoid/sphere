@@ -29,7 +29,7 @@ protocol: [I-nothing-changes-without-me, A-author-sphere, A-propose-sphere-chang
 
 The sphere can still notice that a lens is off, a frame is awkward, a guardrail should change. **It writes that down as an idea in the [`sphere` collection](../idea-capture/idea-nodes.md#the-spheres-own-collection),** with what it noticed and why, and leaves the file alone. The next reflection, or the next time the human starts sphere authoring, picks it up.
 
-**Capturing a rule in the moment doesn't need a switch.** When something nearly goes wrong and the human says yes to a proposed rule ([where guardrails come from](../../../../../spec/guardrails.md#where-guardrails-come-from--proven)), that yes counts as a brief step into sphere authoring, for that one change only.
+**Capturing a rule in the moment doesn't need a switch.** When something nearly goes wrong and the human says yes to a proposed rule ([where guardrails come from](../evolution/rule-capture.md)), that yes counts as a brief step into sphere authoring, for that one change only.
 
 ## Starting and ending
 
@@ -43,7 +43,7 @@ The sphere can still notice that a lens is off, a frame is awkward, a guardrail 
 2. **Show the change:** what's there, what it would become, and why. One change at a time.
 3. **Wait for a yes.** A yes to one change is not a yes to the next.
 4. **Apply exactly what was approved.** If anything changes after the yes, show it again.
-5. **Record it.** A substantive change to a lens or frame bumps its `version`, says what changed in `version_note`, and adds a line to its revision history. A changed lens fires `lens-shifted`, so the frames derived from it are re-read; a changed frame fires `frame-shifted` (see [protocol](../../../../../spec/protocol.md#cascade--proven)). The ground's history entry lists each change and its reason.
+5. **Record it.** A substantive change to a lens or frame bumps its `version`, says what changed in `version_note`, and adds a line to its revision history. A changed lens fires `lens-shifted`, so the frames derived from it are re-read; a changed frame fires `frame-shifted` (see [reactions](../sphere-framework/reactions.md)). The ground's history entry lists each change and its reason.
 
 **The AI never approves its own change** (see [evaluator-not-self](../human-is-highest/evaluator-not-self.md)). Drafting a whole new frame is fine; accepting it is the human's.
 

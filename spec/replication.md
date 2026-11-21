@@ -44,7 +44,7 @@ Private by definition. No export, mirror, broadcast or published view includes t
 - **Empty slots** where private lenses and personal data go. A shared sphere shows *that* it has a principles lens, never *what's in it*.
 - **Skill frames as plain skills.** These export with no translation. See [framing a skill](protocol.md#framing-a-skill).
 
-**Derived caches never travel.** The capability manifest, the startup bundle and every other generated file are rebuilt by the receiving sphere at init. They describe the sphere that built them, not the one receiving them. A seeded dashboard shows zeros until that rebuild runs, which is the boundary working as intended.
+**Derived caches never travel.** The capability manifest, a startup bundle and every other generated file are rebuilt by the receiving sphere at init. They describe the sphere that built them, not the one receiving them. A seeded dashboard shows zeros until that rebuild runs, which is the boundary working as intended.
 
 ### Grains
 
@@ -148,7 +148,7 @@ With it, anything that later comes from this seed can say exactly which sphere, 
 
 A new sphere begins as a copy of a seed, usually a published build. **Init** is the first conversation, where the sphere learns who its human is and fills its empty slots: the human's persona, principles, a first piece of work. Init is co-authored like everything else: the human talks, the AI drafts, the human confirms. For a non-technical human, init asks about their life and never about structure.
 
-Init then **rebuilds every derived cache** (the manifest, the startup bundle, any generated views) from the new sphere's own files, and creates its identity (below).
+Init then **rebuilds every derived cache** (the manifest, any startup bundle or generated views) from the new sphere's own files, and creates its identity (below).
 
 ---
 

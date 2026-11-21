@@ -63,7 +63,7 @@ Rules:
 
 ## Designing something new
 
-When the human (or the sphere, in [sphere authoring](../../../../../spec/modes.md)) designs a new part, ask in order, and show the answers:
+When the human (or the sphere, in [sphere authoring](../modes/sphere-authoring.md)) designs a new part, ask in order, and show the answers:
 
 1. What's the node: the one thing with its own memory? If nothing, it's a field or a list line.
 2. Which tree? A new tree only if it answers a question no tree answers.

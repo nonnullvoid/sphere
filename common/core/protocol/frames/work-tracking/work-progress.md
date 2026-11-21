@@ -31,7 +31,7 @@ protocol: [I-honest-progress, A-set-work-state, A-measure-progress, work-stalled
 - **Paused always says why and on what:** `paused:` is blocked, waiting or on hold, and `waiting_on:` names the person, date or thing. *Why:* paused work without a reason quietly becomes forgotten work.
 - **`ongoing: true` marks work that never finishes:** every area, and some tasks, like a practice routine. It shows ♾️ alongside its state. **If someone marks ongoing work done, ask** whether it has really ended (a responsibility handed over, a routine retired) or whether something inside it finished. Usually it's the second: make that a child and finish it.
 - **Done means finished, with evidence.** Not marked, not nearly.
-- **The marks are display only.** The node stores the state. A [witness theme](../../../../../spec/work.md#witness-optional) can show it differently; the state underneath doesn't change.
+- **The marks are display only.** The node stores the state. A [witness theme](../growth-tracking/growth-themes.md) can show it differently; the state underneath doesn't change.
 - **State is not focus.** A paused node can be in focus; a planned one can be what the week is about. Focus is read from the focus tree, never stored here. See [work-registry](work-registry.md#whats-in-focus).
 
 ## Progress is measured from evidence

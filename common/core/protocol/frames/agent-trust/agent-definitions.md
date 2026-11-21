@@ -74,7 +74,7 @@ Missed the two notes filed under travel.
 - **One line per run:** the focus, the kind of work, the outcome, and a reason where there is one.
 - **Every trust change, with why.**
 - **Nothing about the work itself.** That's in the focus's history and the work's progress. *Why:* the record of an agent is about the agent; copying the work into it makes two stories that drift apart.
-- **It stays private.** `core/records/` never travels (see [replication](../../../../../spec/replication.md)), so an agent's definition can be shared without its run history.
+- **It stays private.** `core/records/` never travels (see [replication](../replication/export-contract.md#what-never-travels)), so an agent's definition can be shared without its run history.
 
 ## Where an agent is defined
 
@@ -129,7 +129,7 @@ Agents that watch continuously (a monitor, a standing assistant) keep the human 
 | *"Send the notes agent off to do this"* | Dispatch: an unattended child focus, reporting back when done |
 | A run ends | Append one outcome line to the agent's history (see [trust-ladder](trust-ladder.md#outcomes)) |
 | Agents have worked together | Offer to register the team, once it has actually run |
-| An agent is corrected for the same reason again and again | Offer a [reflection](../../../../../spec/evolution.md#reflection-how-the-sphere-stays-healthy--proven) finding on its definition |
+| An agent is corrected for the same reason again and again | Offer a [reflection](../evolution/reflection.md) finding on its definition |
 | *"What agents do I have?"* | Read the index: each agent, what it does, its rungs |
 
 ## Works with

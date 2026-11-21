@@ -185,7 +185,7 @@ Files the sphere rebuilds (generated or AI-maintained) come in two kinds, and th
 | Kind | Examples | Committed? | Why |
 |---|---|---|---|
 | **Human-facing views** | work index, world registry, layer registry | **Yes** | A person browsing the folder or the repository should be able to read them without running anything |
-| **Machine-only caches** | the startup bundle, a projection's derived data | **No**: gitignored, rebuilt when needed | Nobody reads them directly, and committing them only creates merge conflicts |
+| **Machine-only caches** | a startup bundle, a projection's derived data | **No**: gitignored, rebuilt when needed | Nobody reads them directly, and committing them only creates merge conflicts |
 
 The capability manifest is a human-facing view, so it's committed: a person can read it to see what their sphere knows how to do. See [loading](loading.md).
 

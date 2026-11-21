@@ -16,7 +16,7 @@ protocol: [I-know-what-it-can-do, A-build-manifest, floor-grew, focus-grounding,
 
 **Applies to:** every window at startup, and every change to a lens or frame.
 
-The manifest, `core/manifest.md`, is the sphere's routing table: one short file that says everything the sphere can do and when each thing applies, so nothing else has to be read until it's needed. It's the [registry pattern](../../../../../spec/registries.md#the-registry-pattern--proven) applied to capabilities.
+The manifest, `core/manifest.md`, is the sphere's routing table: one short file that says everything the sphere can do and when each thing applies, so nothing else has to be read until it's needed. It's the [registry pattern](../../lenses/sphere-framework.md#the-registry-pattern) applied to capabilities.
 
 ## What's in it
 
@@ -67,7 +67,6 @@ A header at the top says it's generated, when it was built, which files it was b
 - [protocol-registry](protocol-registry.md): the manifest's triggers come from the vocabulary registered there.
 - [manifest-check](../readable-substrate/manifest-check.md): the check that keeps the manifest true to its sources.
 - [kinds-of-file](../nodes/kinds-of-file.md): the manifest is generated; nobody writes it directly.
-- [loading](../../../../../spec/loading.md): the tiers this manifest sits in, and why bodies load late.
 
 ## Senses
 

@@ -81,6 +81,23 @@ values stage raw shaping ready
 values outcome graduated parked
 values change add refactor drop
 values horizon now soon someday
+skip contract.md
+
+tree work
+nodes folder layers/work
+scheme namespace
+current work.md
+history progress.md
+keys title kind? parent? state paused? waiting_on? ongoing? progress? summary plan? connects-to? updated
+values kind area project task
+values state planned active paused done dropped
+values paused blocked waiting on
+values ongoing true false
+format progress pattern ^\d+/\d+$
+format plan list
+format connects-to list ^([a-z]+:)?[a-z0-9-]+(\.[a-z0-9-]+)*$
+format updated date
+skip plans templates
 
 tree plan
 nodes folder layers/work/plans
@@ -139,7 +156,7 @@ values freshness on-open stale frozen
 values sharing public protected private
 format until date
 values legacy true false
-skip registry.md templates
+skip registry.md templates contract.md
 
 tree knowledge
 nodes folder layers/knowledge

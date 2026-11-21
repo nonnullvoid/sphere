@@ -59,7 +59,6 @@ A sphere is only as trustworthy as the picture it reads of itself. This check co
 - [node-shape](../nodes/node-shape.md): the parts every node has, which the shape check confirms.
 - [manifest-check](manifest-check.md): the same idea for the sphere's capabilities.
 - [state-machine](../continuity/state-machine.md): ground is when this check runs.
-- [registries](../../../../../spec/registries.md#drift-checks--proven) and [nodes](../../../../../spec/nodes.md#the-shape-check--decided-not-yet-exercised): the drift checks and the shape check, in the spec.
 
 ## Senses
 

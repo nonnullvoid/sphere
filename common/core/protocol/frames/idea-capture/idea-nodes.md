@@ -128,12 +128,12 @@ Split out the budget sheet idea; linked it as related.
 **A collection is every open idea that shares a topic,** found by reading `topics:`. It's computed, never a folder or a list to keep up. An idea can be in two collections; one with no topics is in none, and still shows in every list.
 
 - **"Check my ideas"** lists open ideas, newest first, one line each: title, topics, stage, and whether it has findings. **It's a read; nothing happens.** *"Check my home ideas"* lists one collection.
-- **At an [anchor](../../../../../spec/rhythm.md#anchors--proven)** (the morning, the weekly look), offer them in a line, never as a pile: *"6 open ideas, 1 ready, 2 untouched for a month. Look now?"*
+- **At an [anchor](../human-rhythm/daily-cadence.md#the-anchors)** (the morning, the weekly look), offer them in a line, never as a pile: *"6 open ideas, 1 ready, 2 untouched for a month. Look now?"*
 - **An idea untouched for a long time** is worth one question at an anchor: refine it, or park it?
 
 ## The sphere's own collection
 
-**Ideas tagged `sphere` are about the sphere itself:** a lens to sharpen, a frame that's awkward, a tool to add. It's where [evolution](../../../../../spec/evolution.md#evolution-as-work--decided-not-yet-exercised) keeps what it noticed but hasn't acted on.
+**Ideas tagged `sphere` are about the sphere itself:** a lens to sharpen, a frame that's awkward, a tool to add. It's where [evolution](../../lenses/evolution.md) keeps what it noticed but hasn't acted on.
 
 - **Evolution reviews the collection when evolution comes up.** Each idea is done on the spot, graduates, or is parked.
 - **Graduating from `sphere` means a proposed sphere change,** approved by the human like any other.

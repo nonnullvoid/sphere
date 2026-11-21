@@ -35,12 +35,12 @@ frames: [idea-nodes]
 
 **Ideas gather by topic,** the way a person keeps a notebook for the garden and another for work. **A collection is every open idea sharing a topic,** read from the ideas themselves, never kept as a list. An idea can belong to two.
 
-- **`sphere` is the topic for ideas about the sphere itself.** It's where [evolution](../../../../spec/evolution.md) keeps what it's noticed but not yet acted on.
+- **`sphere` is the topic for ideas about the sphere itself.** It's where [evolution](evolution.md) keeps what it's noticed but not yet acted on.
 - **A collection is somewhere ideas wait to be useful,** not a line to get through.
 
 ## An idea is none of the big three
 
-- **Not a fact.** It isn't checked, graded or sourced, and it never sits in [knowledge](../../../../spec/knowledge.md) looking like one.
+- **Not a fact.** It isn't checked, graded or sourced, and it never sits in [knowledge](knowledge.md) looking like one.
 - **Not work.** It isn't something the human is doing. A work tree full of maybes stops saying what the human is actually doing.
 - **Not a change to the sphere.** Though an idea may turn into one.
 
@@ -66,4 +66,4 @@ So ideas get a place of their own, and speculation stays out of the facts, the w
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [work: ideas come before work](../../../../spec/work.md#ideas-come-before-work--proven).
+- **v1:** First draft. Spec chapter *work: ideas come before work*.

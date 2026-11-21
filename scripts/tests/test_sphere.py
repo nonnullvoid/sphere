@@ -6,7 +6,7 @@ import subprocess
 import threading
 import unittest
 
-from sphere_testing import SHAPES_TEMPLATE, SphereCase
+from sphere_testing import SHAPES_TEMPLATE, SphereCase, work_md
 
 
 class InitTest(SphereCase):
@@ -394,7 +394,7 @@ class UndoRevertTest(SphereCase):
         self.assertIn("install booked", listing.out)
         self.ok("revert", "f2", "--to", mark, "--yes")
         self.assertTrue(self.subjects()[0].startswith(f"revert [f2-plumbing-quotes] — back to {mark} (reverses 2)"))
-        self.assertEqual(self.read("layers/work/home.kitchen.plumbing/work.md"), "# Plumbing\n")
+        self.assertEqual(self.read("layers/work/home.kitchen.plumbing/work.md"), work_md("Plumbing", "home.kitchen"))
 
     def test_reference_files_are_proposed_never_reversed(self):
         self.ok("open", "notes", "-i", "Keep notes", "--holds", "layers/knowledge/kitchen.md")
@@ -417,7 +417,7 @@ class UndoRevertTest(SphereCase):
         self.ok("detach", "f2")
         self.assertIn("Confirm with --yes", self.ok("revert", "--sphere", "--to", mark).out)
         self.ok("revert", "--sphere", "--to", mark, "--yes")
-        self.assertEqual(self.read("layers/work/home.kitchen.plumbing/work.md"), "# Plumbing\n")
+        self.assertEqual(self.read("layers/work/home.kitchen.plumbing/work.md"), work_md("Plumbing", "home.kitchen"))
         self.assertTrue(self.subjects()[0].startswith(f"revert [f0-main] — sphere back to {mark}"))
 
     def test_revert_sphere_takes_a_whole_focus_away_history_and_all(self):

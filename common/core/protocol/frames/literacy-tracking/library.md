@@ -33,7 +33,7 @@ layers/literacy/library/
 - **One file per artifact,** named by a short slug. Its frontmatter says what it is; its body is the explanation; its last section is a short list of revisions.
 - **Related artifacts can share a folder,** named by namespace the way subjects are: `math.infinite-series/`. One level only, so the shelf stays easy to scan. Start a group when a few artifacts clearly belong together; a single artifact stays at the top. Moving one into or out of a group changes nothing about it but its place.
 - **An artifact is a small node in one file,** like an idea: the explanation is current state, the revisions are history.
-- **A rendered version** (a page with diagrams, say) is a [projection](../../../../../spec/projections.md) built from the file. The file is the truth.
+- **A rendered version** (a page with diagrams, say) is a [projection](../../lenses/projections.md) built from the file. The file is the truth.
 
 ## Frontmatter
 
@@ -97,7 +97,7 @@ The literacy index (`layers/literacy/index.md`) is generated from subject and ar
 - **Opening an artifact up is an outbound act.** It's drafted, shown and approved like any message, and `sharing:` changes only on the human's yes.
 - **An artifact that mixes both** is personalized. To share the general part, make a generic copy without the human's situation in it, and share that.
 - **Facts about other people** never appear in an artifact that's shared.
-- **Between spheres,** a generic artifact the human has opened up is what a trusted sphere may read. A personalized one never travels. See [replication](../../../../../spec/replication.md#trusted-spheres--decided-not-yet-exercised).
+- **Between spheres,** a generic artifact the human has opened up is what a trusted sphere may read. A personalized one never travels. See [replication](../../lenses/replication.md).
 
 ## Retiring
 

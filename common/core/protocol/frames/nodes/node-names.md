@@ -48,7 +48,7 @@ A new scheme is a sphere change, made in [sphere authoring](../modes/sphere-auth
 
 ## Rules
 
-- **Unique across the tree, archive included.** A finished node keeps its name, and links resolve by name, so a name is never given to anything else. Group folders don't make a second namespace: a library artifact's name is unique across all its groups. _The one exception:_ a focus number freed by a revert can be used again (see [focus](../../../../../spec/focus.md#names-a-number-and-a-memorable-name)).
+- **Unique across the tree, archive included.** A finished node keeps its name, and links resolve by name, so a name is never given to anything else. Group folders don't make a second namespace: a library artifact's name is unique across all its groups. _The one exception:_ a focus number freed by a revert can be used again (see [focus](../focus/focus-nodes.md)).
 - **Says what it is.** Short, plain words a person would search for.
 - **Renaming is a refactor.** The tooling fixes links inside the sphere in the same commit. References written outside the sphere won't follow, so a stable name is worth choosing once. `number-name` exists for things that need renaming.
 

@@ -50,7 +50,7 @@ Underneath, the sphere's files are always in one of two states: **working** (cha
 - **Not saving after every message.** Grounds come at safe points: a finished step, a decision, a natural pause.
 - **Not recording every window.** A quick question or a scratch experiment never grounds, so it leaves nothing behind.
 - **Not the work's own history, or the focus's.** What happened to a piece of work lives with that work; what a pursuit did lives in its focus node. Continuity makes sure both get written and saved.
-- **Not how the sphere grows or travels.** How it learns new abilities is [evolution](../../../../spec/evolution.md); how it's shared with other spheres is [replication](../../../../spec/replication.md). Continuity is only about state surviving from one window to the next.
+- **Not how the sphere grows or travels.** How it learns new abilities is [evolution](evolution.md); how it's shared with other spheres is [replication](replication.md). Continuity is only about state surviving from one window to the next.
 
 ## What follows from it
 

@@ -39,7 +39,7 @@ is for before shaping it. Don't start building.
 
 **Two sides:**
 - **Behavior** (the body): tone and vocabulary, what to pay attention to, what to ask before acting, and any guardrails it adds.
-- **Loadout:** the frames to have ready for this kind of work. **A hint, never a gate.** Everything stays reachable; a frame outside the loadout loads when it's needed, at the cost of one extra read (see [loading](../../../../../spec/loading.md#operating-mode-loadout--decided-not-yet-exercised)).
+- **Loadout:** the frames to have ready for this kind of work. **A hint, never a gate.** Everything stays reachable; a frame outside the loadout loads when it's needed, at the cost of one extra read.
 
 **An operating mode composes; it doesn't understand.** It points at lenses and frames and says how to behave. Anything worth understanding belongs in a lens.
 
@@ -90,7 +90,7 @@ How a switch happens depends on what it changes:
 ## Refining through use
 
 - **Notice what each operating mode actually reaches for.** A frame loaded on demand in most planning focuses belongs in planning's loadout; one in the loadout that's never used doesn't. **Offer the change;** don't make it.
-- **A loadout that keeps missing is a [reflection](../../../../../spec/evolution.md#reflection-how-the-sphere-stays-healthy--proven) finding.**
+- **A loadout that keeps missing is a [reflection](../evolution/reflection.md) finding.**
 - **Operating-mode files are internals.** They change only in [sphere authoring](sphere-authoring.md), with the human confirming each edit.
 
 ## When / do

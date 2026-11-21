@@ -53,8 +53,8 @@ frames: [work-breakdown, work-progress, work-registry, plans]
 - **Not a to-do app.** It holds the work's real state and story, not a list of checkboxes.
 - **Not every thought.** A maybe isn't work until it graduates; until then it's an [idea](idea-capture.md), kept apart.
 - **Not the record of a pursuit.** What a window was in the middle of lives in its focus node. What happened to the work lives with the work.
-- **Not a mirror of someone else's tracker.** A sphere may push a summary out to a team's tool, but it never takes its own truth from one. See [mirrors](../../../../spec/work.md#advanced-mirrors--advanced).
-- **Not a scoreboard.** Showing growth back to the human is a separate, optional witness layer. See [witness](../../../../spec/work.md#witness-optional).
+- **Not a mirror of someone else's tracker.** A sphere may push a summary out to a team's tool, but it never takes its own truth from one.
+- **Not a scoreboard.** Showing growth back to the human is a separate, optional witness layer. See [witness](growth-tracking.md).
 
 ## What follows from it
 
@@ -67,4 +67,4 @@ frames: [work-breakdown, work-progress, work-registry, plans]
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [work](../../../../spec/work.md).
+- **v1:** First draft. Spec chapter *work*.

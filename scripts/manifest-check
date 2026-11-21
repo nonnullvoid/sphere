@@ -9,9 +9,10 @@ Checks: lenses and frames name each other both ways; a frame's derives_from name
 lens's current version; every protocol entry a frame lists has a registry row, and every
 row is listed by a frame and points at frames that exist; every sense a When/do row reacts
 to, or a frame fires, is in that frame's protocol list; every core moment has a frame that
-reacts to it. With a manifest: every lens and frame has an entry, the header hash matches
-the lens and frame files, and its reactions table names every frame that reacts to each
-sense. In a sphere (not a common set), every path in reads: and writes: exists.
+reacts to it; every link in a lens or frame resolves to a file inside the protocol folder,
+so the set describes itself and travels whole. With a manifest: every lens and frame has
+an entry, the header hash matches the lens and frame files, and its reactions table names
+every frame that reacts to each sense. In a sphere (not a common set), every path in reads: and writes: exists.
 Standard library only; runs on Python 3.9.
 """
 
@@ -33,6 +34,8 @@ LINK = re.compile(r"\[([a-z0-9-]+)\]\(([^)]+)\)")
 REACTS = re.compile(r"^\| `([a-z][a-z0-9-]*)(?: ([a-z][a-z0-9-]*))?`")
 FIRES = re.compile(r"[Ff]ire `([a-z][a-z0-9-]*)`")
 HASH_LINE = re.compile(r"Hash: ([0-9a-f]+)")
+ANY_LINK = re.compile(r"\]\(([^)\s]+)\)")
+FENCE = re.compile(r"```.*?```", re.S)
 
 
 @dataclass
@@ -237,10 +240,37 @@ def check_manifest(manifest: str, lenses: dict[str, Lens], frames: dict[str, Fra
     return findings
 
 
+def check_links(protocol: str) -> list[Finding]:
+    """A lens or frame never depends on anything outside the protocol folder: not the spec, not the sphere's data."""
+    findings: list[Finding] = []
+    root = os.path.abspath(protocol)
+    for path in sorted(glob.glob(f"{protocol}/lenses/*.md") + glob.glob(f"{protocol}/frames/**/*.md", recursive=True)):
+        with open(path, encoding="utf-8") as handle:
+            text = FENCE.sub("", handle.read())
+        for target in ANY_LINK.findall(text):
+            target = target.split("#")[0]
+            if not target or re.match(r"^[a-z][a-z0-9+.-]*:", target):
+                continue  # an anchor in the same file, or a web address
+            resolved = os.path.abspath(os.path.join(os.path.dirname(path), target))
+            if not resolved.startswith(root + os.sep):
+                reason = "outside the protocol set: say it here, or link a frame"
+                findings.append(Finding(path, f"links to {target}, {reason}"))
+            elif not os.path.exists(resolved):
+                findings.append(Finding(path, f"links to {target}, which isn't in this set"))
+    return findings
+
+
+# Made when they're first needed, so a fresh sphere doesn't have them yet: live state (never
+# committed, written by the first heartbeat), and the manifest (reported on its own above).
+MADE_AT_RUNTIME = ("surface/state", "core/manifest.md")
+
+
 def check_data(frames: dict[str, Frame], protocol: str) -> list[Finding]:
     findings: list[Finding] = []
     for frame in frames.values():
-        for path in frame.reads + frame.writes:
+        for path in dict.fromkeys(frame.reads + frame.writes):
+            if path.startswith(MADE_AT_RUNTIME):
+                continue
             if not glob.glob(path.split("{")[0].rstrip("/") or "."):
                 findings.append(Finding(f"{protocol}/{frame.path}", f"names '{path}', which this sphere doesn't have"))
     return findings
@@ -277,7 +307,7 @@ def main(argv: list[str]) -> int:
 
     frames, lenses = read_frames(protocol), read_lenses(protocol)
     registry = f"{protocol}/protocol.md"
-    findings = check_lenses(lenses, frames, protocol) + check_senses(frames, protocol)
+    findings = check_lenses(lenses, frames, protocol) + check_senses(frames, protocol) + check_links(protocol)
     if os.path.isfile(registry):
         findings += check_registry(read_registry(registry), frames, protocol, registry)
     else:

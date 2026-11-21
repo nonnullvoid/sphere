@@ -93,4 +93,4 @@ A new look is a template change. A new source is a definition change. A new audi
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [projections](../../../../spec/projections.md).
+- **v1:** First draft. Spec chapter *projections*.

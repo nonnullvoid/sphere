@@ -67,4 +67,4 @@ As spheres connect to each other, more can happen without the human watching: fi
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [replication](../../../../spec/replication.md).
+- **v1:** First draft. Spec chapter *replication*.

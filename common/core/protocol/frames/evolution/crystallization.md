@@ -30,7 +30,7 @@ protocol: [I-a-sphere-that-fits-how-i-work, A-evolve, A-plan-change, A-announce-
 - **A new frame** needs mechanics of its own, usually with their own data, senses or abilities, that won't fit an existing frame without stretching it.
 - **A new lens** needs a *why* that can't be derived from the lenses already there. Mechanics alone earn a frame, never a lens.
 - **A new layer is a separate decision.** A layer is a home for data, not a unit of understanding. It's warranted only when a capability needs data of its own **and** that data fits no existing layer.
-- **Fit it to the node shape first.** Before inventing structure, ask the questions in [designing with the shape](../../../../../spec/nodes.md#designing-with-the-shape). *Why:* a design that can't answer them is usually reaching for machinery (a queue, a second registry, a sync step) the shape makes unnecessary.
+- **Fit it to the node shape first.** Before inventing structure, ask the questions in [designing with the shape](../nodes/node-shape.md#designing-something-new). *Why:* a design that can't answer them is usually reaching for machinery (a queue, a second registry, a sync step) the shape makes unnecessary.
 
 ## Propose, in plain words
 
@@ -40,7 +40,7 @@ protocol: [I-a-sphere-that-fits-how-i-work, A-evolve, A-plan-change, A-announce-
 - *"What you're describing is its own mechanism. I'd set it up as a new frame that owns X and Y. Want me to draft it?"*
 - *"This keeps coming up and nothing we have holds it. I think it's a new piece of understanding: [one sentence]. Want to work it out together?"*
 
-**Then wait for a clear yes.** Changing the sphere's internals happens in [sphere authoring](../../../../../spec/modes.md#sphere-authoring-changing-the-sphere-itself--decided-not-yet-exercised), which only the human starts. A yes to one small change counts as a brief step into it, for that change only. Outside it, a change the sphere notices is captured as a `sphere` idea (see [idea-nodes](../idea-capture/idea-nodes.md#the-spheres-own-collection)) and the files are left alone.
+**Then wait for a clear yes.** Changing the sphere's internals happens in [sphere authoring](../modes/sphere-authoring.md), which only the human starts. A yes to one small change counts as a brief step into it, for that change only. Outside it, a change the sphere notices is captured as a `sphere` idea (see [idea-nodes](../idea-capture/idea-nodes.md#the-spheres-own-collection)) and the files are left alone.
 
 ## Make the change
 

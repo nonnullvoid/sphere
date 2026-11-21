@@ -86,7 +86,7 @@ Rules accumulate. Without care, a sphere ends up with a hundred rules, some over
 
 ## What travels
 
-**The rule travels; the moment stays home.** A rule and its general reason can be shared or published. The record of what happened stays in `core/records/`, which never leaves the sphere. See [replication](../../../../../spec/replication.md#history-stays-home-by-placement).
+**The rule travels; the moment stays home.** A rule and its general reason can be shared or published. The record of what happened stays in `core/records/`, which never leaves the sphere. See [replication](../replication/export-contract.md#what-never-travels).
 
 ## For a non-technical human
 
@@ -117,7 +117,6 @@ They never hear the word *guardrail*. *"Don't ever do that again"* gets a plain 
 - [sphere-authoring](../modes/sphere-authoring.md): where a rule is changed, as opposed to overridden.
 - [external-tools-untrusted](../human-is-highest/external-tools-untrusted.md): imported rules are data until accepted.
 - [outbound-guard](../human-is-highest/outbound-guard.md) and the other guards: where most rules land.
-- [guardrails](../../../../../spec/guardrails.md), in the spec.
 
 ## Senses
 

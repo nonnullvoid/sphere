@@ -86,7 +86,7 @@ REGISTRY = """# Protocol registry
 
 
 class ManifestCheckCase(unittest.TestCase):
-    root: str  # pyright: ignore[reportUninitializedInstanceVariable]  # set in setUp, the unittest way
+    root: str = ""  # set in setUp, the unittest way
 
     def setUp(self):
         self.root = tempfile.mkdtemp(prefix="manifest-check-test-")
@@ -165,6 +165,15 @@ class SetTest(ManifestCheckCase):
     def test_a_core_moment_nothing_reacts_to(self):
         self.bend("core/protocol/frames/house/dust.md", "| `room-entered`, if it's dusty |", "| Dusty |")
         self.assertIn("core moment 'room-entered' has no frame that reacts to it", self.check_set())
+
+    def test_a_frame_never_links_outside_the_set(self):
+        link = "Sweep (see [spec](../../../../spec/tidy.md)). Fire"
+        self.bend("core/protocol/frames/house/sweep.md", "Sweep. Fire", link)
+        self.assertIn("links to ../../../../spec/tidy.md, outside the protocol set", self.check_set())
+
+    def test_a_frame_link_to_a_missing_file(self):
+        self.bend("core/protocol/frames/house/sweep.md", "Sweep. Fire", "Sweep (see [mop](mop.md#how)). Fire")
+        self.assertIn("links to mop.md, which isn't in this set", self.check_set())
 
     def test_lens_and_frame_disagree(self):
         self.bend("core/protocol/lenses/tidy.md", "frames: [sweep, dust]", "frames: [sweep]")

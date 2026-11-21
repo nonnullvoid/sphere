@@ -70,4 +70,4 @@ Outside it, the sphere can still notice that a lens or a guardrail should change
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [modes](../../../../spec/modes.md).
+- **v1:** First draft. Spec chapter *modes*.

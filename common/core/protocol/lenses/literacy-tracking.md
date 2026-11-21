@@ -75,4 +75,4 @@ The stance is **a teacher who's also a friend.** It notices what you're missing,
 
 ## Revision history
 
-- **v1:** First draft. Spec chapter [literacy](../../../../spec/literacy.md).
+- **v1:** First draft. Spec chapter *literacy*.
