@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import webbrowser
 from collections.abc import Callable, Sequence
 from contextlib import contextmanager, nullcontext, suppress
 from dataclasses import dataclass
@@ -42,6 +43,7 @@ from sphere_shapes import (  # noqa: E402
     read_shapes,
     set_frontmatter_value,
 )
+from sphere_views import render_all  # noqa: E402
 
 USAGE = """\
 usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's options)
@@ -62,6 +64,8 @@ usage: sphere <verb> [focus] [options]        (sphere <verb> --help for a verb's
   revert --sphere --to <commit> [--yes]     reverse everything after <commit>
   reactions <sense> [link]     what the frames do when a sense fires (link: tree:name, for a condition)
   manifest                     rebuild core/manifest.md from the lenses and frames
+  render                       rebuild the declared indexes and views (ground and close do it themselves)
+  show [view]                  open the human's things in their default browser
 
 A focus is named by number (f21 or 21), reference (f21-plumbing-quotes), name, or aka.
 Environment: SPHERE_FOCUS (this window's focus; every command refreshes its heartbeat),
@@ -228,6 +232,23 @@ def entries_newest_first(path: str) -> list[str]:
     entries = [text[a:b].rstrip("\n") for a, b in zip(starts, [*starts[1:], len(text)])]
 
     return entries
+
+
+def first_entry(text: str) -> str:
+    """The first `## <date>` entry in a history text, "" when there's none."""
+    match = ENTRY_HEADING.search(text)
+    if not match:
+        return ""
+    end = text.find("\n## ", match.start() + 1)
+    return text[match.start() : end if end > 0 else len(text)].strip()
+
+
+def new_entry_on_top(path: str) -> bool:
+    """True when the file's first entry isn't the one it had at the last commit: a new entry went on top."""
+    shown = run_git(["show", f"HEAD:{path}"])
+    if shown.returncode != 0:
+        return True  # a new file: whatever it starts with is new
+    return first_entry(read_text(path)) != first_entry(shown.stdout)
 
 
 def latest_field(path: str, field_name: str) -> str:
@@ -749,6 +770,36 @@ def cmd_manifest(_args: argparse.Namespace) -> None:
     print(f"{MANIFEST} rebuilt · {len(text.encode()) // 1024} KB · hash {protocol_hash(PROTOCOL)}")
 
 
+def render_views() -> list[str]:
+    """Rebuild the declared indexes and rule-driven views; the files that changed."""
+    changed, _ = render_all(SHAPES)
+    return changed
+
+
+def cmd_render(_args: argparse.Namespace) -> None:
+    """Rebuild every index and view the sphere declares (core/shapes, and the rules in layers/projections)."""
+    changed, left = render_all(SHAPES)
+    print("Rendered: " + (", ".join(changed) if changed else "nothing changed"))
+    if left:
+        print("Left to the AI (a panel has no rule): " + ", ".join(left))
+
+
+def cmd_show(args: argparse.Namespace) -> None:
+    """Open the human's things (or one view) in their default browser."""
+    target = "surface/projections.html"
+    if args.view:
+        home = frontmatter_value(f"layers/projections/{args.view}.md", "home")
+        if not home:
+            fail(f"no view called {args.view} in layers/projections")
+        target = os.path.join(home, "index.html")
+    if not os.path.isfile(target):
+        fail(f"{target} doesn't exist")
+    url = "file://" + os.path.abspath(target)
+    if not webbrowser.open(url):
+        fail(f"couldn't open a browser; the page is at {url}")
+    print(f"Opened {target}")
+
+
 def refresh_manifest() -> bool:
     """Rebuild the manifest if a lens or frame changed since it was built. True when it did."""
     if not os.path.isdir(PROTOCOL):
@@ -932,15 +983,48 @@ def cmd_open(args: argparse.Namespace) -> None:
         sense("focus-attached")
 
 
-def profile_lead() -> str:
-    """The first section of the human's profile, as one line: their own words about who they are."""
-    path = "core/user/profile.md"
+CONTEXT_LINE = re.compile(r"^- \*\*(.+?):\*\* `([^`]+)`")
+
+
+def section_lines(path: str, heading: str) -> list[str]:
+    """The non-empty lines of a `## heading` section, placeholders (`_…_`) left out; [] when missing."""
     if not os.path.isfile(path):
-        return ""
-    sections = re.split(r"^## .*$", read_text(path), flags=re.M)
-    lead = sections[1] if len(sections) > 1 else ""
-    lines = [line.strip() for line in lead.split("\n") if line.strip() and not line.strip().startswith("_")]
-    return " ".join(lines)
+        return []
+    match = re.search(rf"^## {re.escape(heading)}\n(.*?)(?=^## |\Z)", read_text(path), re.M | re.S)
+    lines = [line.strip() for line in match.group(1).split("\n")] if match else []
+    return [line for line in lines if line and not line.startswith("_")]
+
+
+def startup_context() -> list[tuple[str, str]]:
+    """The lines sphere.md's *Startup context* list asks for: (label, text), skipping anything missing."""
+    if not os.path.isfile("sphere.md"):
+        return []
+    match = re.search(r"^### Startup context\n(.*?)(?=^#{2,3} |\Z)", read_text("sphere.md"), re.M | re.S)
+    persona = default_persona()
+    found: list[tuple[str, str]] = []
+    for line in (match.group(1) if match else "").split("\n"):
+        entry = CONTEXT_LINE.match(line.strip())
+        if not entry:
+            continue
+        label, spec = (part.replace("{persona}", persona) for part in entry.groups())
+        if "{persona}" in entry.group(2) and not persona:
+            continue
+        path, _, keys = spec.partition("@")
+        path, _, heading = path.partition("#")
+        if not os.path.isfile(path):
+            continue
+        if keys:
+            values = [frontmatter_value(path, key.strip()) for key in keys.split(",")]
+            text = " · ".join(value for value in values if value)
+        elif heading == "headings":
+            text = " · ".join(line[3:].strip() for line in read_text(path).split("\n") if line.startswith("## "))
+        elif heading:
+            text = " ".join(section_lines(path, heading))
+        else:
+            text = " ".join(line.strip() for line in read_text(path).split("\n") if line.strip())
+        if text:
+            found.append((label, text))
+    return found
 
 
 def cmd_start(args: argparse.Namespace) -> None:
@@ -951,16 +1035,8 @@ def cmd_start(args: argparse.Namespace) -> None:
         with open("core/identity.json", encoding="utf-8") as handle:
             name = str(json.load(handle).get("name", ""))
     print(f"== {name or 'this sphere'} · {today()}")
-    about = profile_lead()
-    if about:  # who the human is, in their own words: never a name from the tool or git
-        print(f"== who you're working with (their profile): {about}")
-    persona = default_persona()
-    if persona:
-        print(f"== you are {persona} (core/ai/personas/{persona}/{persona}.md)")
-    literacy = "layers/literacy/sphere/subject.md"
-    if os.path.isfile(literacy):  # how much to explain: the human's level with the sphere itself
-        level, summary = frontmatter_value(literacy, "level"), frontmatter_value(literacy, "summary")
-        print(f"== using the sphere: {level}" + (f" · {summary}" if summary else ""))
+    for label, text in startup_context():
+        print(f"== {label}: {text}")
     if refresh_manifest():
         print(f"{MANIFEST} rebuilt: a lens or frame changed since it was built (save it with the next ground)")
     if args.focus:
@@ -1032,7 +1108,9 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
         return
 
     rebuilt = refresh_manifest()
+    rendered = render_views()
     sorting = sort_changes(ref, changes_now(), also)
+    sorting.mine += [path for path in rendered if path not in sorting.mine]  # views follow the change they show
     protocol_changed = ref == MAIN or any(path.startswith(PROTOCOL + "/") for path in sorting.mine)
     if rebuilt and protocol_changed and MANIFEST not in sorting.mine:
         sorting.mine.append(MANIFEST)  # rebuilt from the lens and frame changes this ground commits
@@ -1041,7 +1119,13 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
         print(f"Nothing to ground in {ref}.")
         print_left_for_main(ref, sorting)
         return
-    if f"{folder}/history.md" not in sorting.mine:
+    history = f"{folder}/history.md"
+    if history in sorting.mine and not new_entry_on_top(history):
+        ask(
+            f"{ref}'s history changed, but its newest entry isn't at the top: entries go first, newest first."
+            f' Undo the hand edit, then: sphere ground {ref} --did "…" --next "…"'
+        )
+    if history not in sorting.mine:
         ask(
             f"{ref} has unsaved changes but no new history entry. Say what this ground did:"
             f' sphere ground {ref} --did "…" --next "…" (and --decided, --pointers when there are any).'
@@ -1053,7 +1137,8 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
 
     with ground_lock(ref):
         pull()
-        if not commit(f"ground [{ref}] — {summary}", sorting.mine):
+        title, body = title_and_body(summary)
+        if not commit(f"ground [{ref}] — {title}", sorting.mine, body):
             print(f"Nothing to ground in {ref}.")
             return
         push_note = push()
@@ -1080,6 +1165,13 @@ def print_left_for_main(ref: str, sorting: Sorting) -> None:
     left = sorting.for_main + [f"{path} (new)" for path in sorting.new_unheld]
     if left:
         print("Left for main (no open focus holds them): " + ", ".join(left))
+
+
+def title_and_body(summary: str, limit: int = 72) -> tuple[str, str]:
+    """A commit title from a summary: its first sentence, cut at a word to fit; the whole summary as the body."""
+    first = re.split(r"(?<=[.!?])\s", summary.strip(), maxsplit=1)[0]
+    title = first if len(first) <= limit else first[:limit].rsplit(" ", 1)[0].rstrip(",;:") + "…"
+    return title, (summary.strip() if title != summary.strip() else "")
 
 
 def write_ground_entry(ref: str, args: argparse.Namespace) -> str:
@@ -1147,7 +1239,7 @@ def cmd_close(args: argparse.Namespace) -> None:
     """Ground, write the last entry, give the holds back to the parent (or release them), and archive."""
     ref = resolve(args.focus or os.environ.get("SPHERE_FOCUS") or MAIN)
     if ref != MAIN:
-        reactions_gate(["focus-closing", "focus-grounding"], args.reacted)
+        reactions_gate(["focus-closing", "node-archived", "focus-grounding"], args.reacted)
     close_focus(ref, args.m, args.outcome, args.children, args.holds, clean_paths(args.also))
 
 
@@ -1233,6 +1325,7 @@ def close_focus(ref: str, why: str, outcome: str, children_choice: str, holds_ch
         if USE_GIT:
             paths += [c.path for c in changes_now() if is_under(c.path, folder) or is_under(c.path, f"{ARCHIVE}/{ref}")]
             paths += moved
+            paths += render_views()  # the views show it closed in the same commit
             changed = {c.path for c in changes_now()}
             subject = f"ground [{ref}] — closed ({outcome}): {why}"
             commit(subject, [path for path in paths if path in changed or path in sorting.mine])
@@ -1409,7 +1502,8 @@ def files_in_commit(sha: str) -> list[tuple[str, str]]:
 def build_reversal(shas: list[str], index_env: dict[str, str]) -> list[str]:
     """Stage the reversal of these commits (newest first) in a temporary index.
     Appended history stays; a history file created or deleted whole goes with its node.
-    Reference files are left alone and returned, to propose to the human."""
+    Reference files (what the sphere believes) are reversed like the rest: the preview named them,
+    and the human's yes to the undo covers them. They're returned so the report can say so."""
     reference: list[str] = []
     for sha in shas:
         if not git_ok("rev-parse", "-q", "--verify", f"{sha}^"):
@@ -1422,9 +1516,9 @@ def build_reversal(shas: list[str], index_env: dict[str, str]) -> list[str]:
                 elif status == "D":
                     blob = git("rev-parse", f"{sha}^:{path}")
                     git("update-index", "--add", "--cacheinfo", f"100644,{blob},{path}", env=index_env)
-            elif SHAPES.is_reference(path):
-                reference.append(path)
             else:
+                if SHAPES.is_reference(path):
+                    reference.append(path)
                 plain.append(path)
         if plain:
             patch = run_git_binary(["diff", "--binary", "--no-renames", sha, f"{sha}^", "--"] + plain).stdout
@@ -1460,7 +1554,7 @@ def reverse(ref: str, subject: str, shas: list[str]) -> None:
         reversed_list = "; ".join(git("log", "-1", "--format=%h (%s)", sha) for sha in shas)
         note = f"**Did:** Reversed: {reversed_list}. Appended history entries stay as they were."
         if reference:
-            note += "\n**Next:** Reference files weren't reversed. Propose restoring them to the human: "
+            note += "\n**Decided:** On the human's yes, this also took back what the sphere believes: "
             note += " ".join(reference)
         add_entry(history, "undone", note)
         body = "\n".join(f"Reverses: {git('rev-parse', sha)}" for sha in shas)
@@ -1475,7 +1569,7 @@ def reverse(ref: str, subject: str, shas: list[str]) -> None:
 
     print(f"Reversed {len(shas)} commit(s) for {ref} · {short('HEAD')}")
     if reference:
-        print("Not reversed (reference; propose restoring the old version): " + " ".join(reference))
+        print("Also taken back (what the sphere believes): " + " ".join(reference))
     if os.path.isfile(focus_file(ref)) and not shape_ok(focus_dir(ref)):
         warn(f"sphere: {ref}/focus.md is out of shape after the reversal (above)")
 
@@ -1492,9 +1586,14 @@ def cmd_undo(args: argparse.Namespace) -> None:
     sha = grounds[0]
     print(f"{ref}'s last ground:")
     show_commits([sha])
+    believed: list[str] = []
     for status, path in files_in_commit(sha):
         print(f"    {status}\t{path}")
+        if SHAPES.is_reference(path) and not SHAPES.is_history(path):
+            believed.append(path)
     if not args.yes:
+        if believed:
+            print("This also takes back what the sphere believes (say so to the human first): " + " ".join(believed))
         print("Undo reverses it with a new commit (history entries stay). Run again with --yes.")
         return
     was = git("log", "-1", "--format=%s", sha).split(" — ", 1)[-1]
@@ -1630,6 +1729,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("about", nargs="?", default="", help="for a condition: the link (tree:name) or tree it's about")
 
     verb("manifest", cmd_manifest)
+    verb("render", cmd_render)
+    sub = verb("show", cmd_show)
+    sub.add_argument("view", nargs="?", default="", help="one view by name (default: the index of all of them)")
 
     sub = verb("peek", cmd_peek)
     sub.add_argument("--today", action="store_true", help="today's commits instead of the last five")

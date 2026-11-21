@@ -27,7 +27,7 @@ from sphere_protocol import MANIFEST, build_manifest  # noqa: E402
 REPO = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 COMMON = os.path.join(REPO, "common")
 BUILDS = os.path.join(REPO, "builds")
-TOOLS = ["sphere", "structure-check", "manifest-check", "sphere_shapes.py", "sphere_protocol.py", "shapes"]
+TOOLS = ["sphere", "structure-check", "manifest-check", "sphere_shapes.py", "sphere_protocol.py", "sphere_views.py", "shapes"]
 LEFT_IN_REPO = {"README.md"}  # a build's own README describes it in the repo; it doesn't travel
 
 

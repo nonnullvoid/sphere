@@ -56,7 +56,7 @@ This is the moment that shows them how the sphere grows. Ask:
 
 Draft it **with** them as the first principle in [`core/protocol/lenses/principles.md`](protocol/lenses/principles.md): the principle in their words, then a line on why, then when it applies. Read it back. Adjust until they say it's right. Then set `verified: true` and today's date in `updated:`, because they've confirmed it.
 
-Tell them, in one line, that this is how the sphere learns: when they correct you or explain how they think, you'll offer to keep it the same way.
+Tell them, in one line, that this is how the sphere learns: when they correct you or tell you how they like to work, you'll offer to keep it, each in the place it belongs.
 
 ## 6. What's on their plate
 
@@ -73,8 +73,8 @@ If one of them is what they want to start on now, open a focus for it: `scripts/
 
 Now that the sphere has its own content, build its generated files from it:
 
-1. **The work index,** [`layers/work/index.md`](../layers/work/index.md), from the work nodes' frontmatter.
-2. **The views:** the sphere's name into `surface/projections/assets/registry.js`, then render `today` and `work-dashboard` (their definitions in `layers/projections/` say what each shows), stamping `rendered` in the mirror.
+1. **The sphere's name** into `surface/projections/assets/registry.js` (`name:`).
+2. **The work index and the views:** `scripts/sphere render`. It builds them from the work items and the rules in each view's definition; from here on, every ground does it.
 
 Then run `scripts/sphere manifest` (their principle changed a lens), `scripts/structure-check` and `scripts/manifest-check`, and fix anything they report.
 

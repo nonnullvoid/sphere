@@ -66,7 +66,7 @@ Commits from different foci interleave. Every commit names its node, so:
 - **`revert` to a focus's earlier ground** reverses that focus's commits after it.
 - **Reverting the whole sphere** to a point in time reaches into every focus: every foreground focus grounds or detaches first, and the human confirms.
 
-Each kind of file is reversed the way it's written: current state is reversed; appended history entries are never removed (an entry is appended saying what was reversed and why), though a history file created or deleted whole goes with its node; a reverted fact or lens change becomes a proposal to restore the old version; generated files are rebuilt.
+Each kind of file is reversed the way it's written: current state is reversed; appended history entries are never removed (an entry is appended saying what was reversed and why), though a history file created or deleted whole goes with its node; a fact or lens change (what the sphere believes) is reversed too, but the undo names it first, so the human's yes covers it knowingly; generated files are rebuilt.
 
 ## When the state isn't what was expected
 

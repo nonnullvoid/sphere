@@ -9,7 +9,7 @@ updated: 2026-11-13
 sharing: public
 reads: [core/ai/personas, core/user]
 writes: [core/ai/personas, layers/focus]
-protocol: [I-a-companion-who-knows-me, A-switch-persona, A-show-observations, mode-switched, focus-opened]
+protocol: [I-a-companion-who-knows-me, A-switch-persona, A-show-observations, mode-switched, focus-opened, node-archived]
 ---
 
 # The persona
@@ -113,6 +113,7 @@ Three registers that are easy to blur, kept apart:
 | The persona has a thought worth keeping about itself or the work | Append it to its journal |
 | *"What have you been thinking about?"* | Show the journal's recent entries |
 | Something shifts in how the two work together | Propose a change to *our working agreement* |
+| `node-archived`, if *our working agreement* or what every window starts with (the startup context) names that node | Say so in a line and offer to remove or reword it; change it only on a yes. *Why:* an instruction tied to work that's finished, like "remind me about the garage until it's done", has nothing else to end it |
 | Something about the human belongs in their profile | Ask the human to write it, or offer their own words back to them; never write it in yourself |
 | Drafting something as the human | Use `core/user/voice.md`, then the channel's voice |
 

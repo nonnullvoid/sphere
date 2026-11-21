@@ -396,16 +396,16 @@ class UndoRevertTest(SphereCase):
         self.assertTrue(self.subjects()[0].startswith(f"revert [f2-plumbing-quotes] — back to {mark} (reverses 2)"))
         self.assertEqual(self.read("layers/work/home.kitchen.plumbing/work.md"), work_md("Plumbing", "home.kitchen"))
 
-    def test_reference_files_are_proposed_never_reversed(self):
+    def test_reference_files_are_named_first_then_reversed_with_the_rest(self):
         self.ok("open", "notes", "-i", "Keep notes", "--holds", "layers/knowledge/kitchen.md")
         self.write("layers/knowledge/kitchen.md", "fact\n")
         self.entry("f3-notes", "Wrote a fact.")
         self.ok("ground", "f3")
+        preview = self.ok("undo", "f3")
+        self.assertIn("This also takes back what the sphere believes (say so to the human first):", preview.out)
         result = self.ok("undo", "f3", "--yes")
-        self.assertIn(
-            "Not reversed (reference; propose restoring the old version): layers/knowledge/kitchen.md", result.out
-        )
-        self.assertTrue(self.exists("layers/knowledge/kitchen.md"))
+        self.assertIn("Also taken back (what the sphere believes): layers/knowledge/kitchen.md", result.out)
+        self.assertFalse(self.exists("layers/knowledge/kitchen.md"))
 
     def test_revert_sphere_refused_while_a_focus_is_foreground(self):
         mark = self.git("rev-parse", "--short", "HEAD")

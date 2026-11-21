@@ -46,6 +46,8 @@ class Tree:
     scheme: str = ""  # the naming scheme its names follow (node-names); its pattern comes from a `naming` line
     name_pattern: str = ""  # node names (file name without .md, or folder name), from the scheme
     skip: list[str] = field(default_factory=list)
+    index_file: str = ""  # a generated index of the tree's nodes, built by `sphere render`
+    index_show: list[str] = field(default_factory=list)  # the keys each index line shows
 
     @property
     def archive(self) -> str:
@@ -160,6 +162,8 @@ def apply_tree_line(tree: Tree, word: str, rest: list[str]) -> None:
         tree.scheme = rest[0]
     elif word == "skip":
         tree.skip = rest
+    elif word == "index":
+        tree.index_file, tree.index_show = rest[0], rest[1:]
 
 
 # ---------------------------------------------------------------- frontmatter: one-line `key: value`

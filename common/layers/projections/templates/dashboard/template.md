@@ -11,6 +11,8 @@
 
 The page reads `data.js` with a `<script>` tag, so it opens with a double-click and works offline. A render rewrites `data.js` only; the page stays as it is.
 
+**Who renders it:** when every row of the definition's Panels table has a **Rule**, `scripts/sphere render` does, and `sphere ground` runs it whenever a source changes. A row with no rule leaves the view to the AI, which renders it the same way by hand. Prefer rules: they keep the view current without anyone remembering to.
+
 ## Placeholders
 
 | Placeholder | In | Filled with |

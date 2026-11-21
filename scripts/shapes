@@ -19,6 +19,8 @@
 #   scheme <scheme>             the naming scheme its node names follow (file name without .md, or folder name)
 #   Names are unique across each tree, archive included; that one rule is checked for every tree.
 #   skip <name>...              folders or files under <dir> that aren't nodes of this tree
+#   index <file> <key>...       a generated index of the nodes, built by `sphere render` at every ground that
+#                               changes one: a tree by `parent`, one line per node showing these keys
 #
 # structure-check reads frontmatter and folder listings only, never bodies, and skips <dir>/archived
 # unless asked (--archive). Rules beyond these lines (idea, plan, focus) live in sphere_shapes.py.
@@ -27,7 +29,7 @@
 #                               file name (anywhere), a folder/ (everything under it), or a path pattern (* ?).
 #                               `sphere init` writes a merge=union line for each into .gitattributes
 #                               (folder/ becomes folder/**), and structure-check expects them.
-#   kind reference <prefix>...  reference files: changed only on the human's yes; a revert proposes, never writes.
+#   kind reference <prefix>...  reference files: changed only on the human's yes; an undo names them before it reverses them.
 #                               A history file under a reference prefix is history.
 #
 #   naming <scheme> <pattern>   a naming scheme and the pattern its names match. Each scheme is described,
@@ -97,6 +99,7 @@ format progress pattern ^\d+/\d+$
 format plan list
 format connects-to list ^([a-z]+:)?[a-z0-9-]+(\.[a-z0-9-]+)*$
 format updated date
+index layers/work/index.md state progress summary
 skip plans templates
 
 tree plan
@@ -143,7 +146,7 @@ tree projection
 nodes either layers/projections
 scheme plain
 current {name}.md
-keys projection title namespace kind opens lifespan freshness sources writes home sharing until? template legacy
+keys projection title subtitle? namespace kind opens lifespan freshness sources writes home sharing until? template legacy
 archived retired
 format retired pattern ^\d{4}-\d{2}-\d{2} .+
 format projection name

@@ -75,7 +75,7 @@ A snapshot is built with the one-shot template: read across the sphere, compose 
 | When | Do |
 |---|---|
 | A projection is made | Render it according to its kind, with provenance stamped in. Snapshots go through the one-shot template |
-| `focus-grounding`, if it changed a refreshed view's sources | Render it again, as part of the ground |
+| `focus-grounding`, if it changed a refreshed view's sources | A view whose panels all have rules: nothing to do, `sphere ground` renders it. Any other: render it again, as part of the ground |
 | *"Refresh X"* | Render X from its sources. Refuse if X is a snapshot, and offer a new one |
 | *"Refresh all"* | Render every refreshed view; skip live views and snapshots |
 | A refreshed view is found stale outside a ground | Fire `stale-found` with the view's link |

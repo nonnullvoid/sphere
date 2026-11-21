@@ -18,25 +18,19 @@ protocol: [I-whats-on-my-plate, A-show-work, A-archive-work, node-archived, stal
 
 ## The index is generated
 
-`layers/work/index.md` is **built from each node's frontmatter alone,** never edited by hand, and rebuilt at ground. It adds nothing of its own: delete it, and the next rebuild brings it back. *Why frontmatter alone:* it stays fast with hundreds of nodes, and it's why everything a view needs lives in frontmatter.
+`layers/work/index.md` is **built from each node's frontmatter alone,** never edited by hand, by `scripts/sphere render`, which `sphere ground` and `sphere close` run whenever work changes. It adds nothing of its own: delete it, and the next render brings it back. *Why frontmatter alone:* it stays fast with hundreds of nodes, and it's why everything a view needs lives in frontmatter.
 
-It shows the work as a tree, one line per node:
+**What it shows is declared, not coded:** the work tree's `index` line in `core/shapes` names the file and the keys each line shows (`index layers/work/index.md state progress summary`). Change that line to change the index. It shows the work as a tree by `parent:`, one line per node, then the archive:
 
 ```
-[home.kitchen] Kitchen renovation  🔄  [2/5]  cabinets ordered
-├── [.plumbing] Get plumbing quotes  ⏳ waiting on the Thursday visit  two quotes in
-└── [.budget] Kitchen budget  🔄  over by 8%, trimming fixtures
-[health.running] Running  ♾️  [9/12]  three runs a week since October
+- **Kitchen renovation** `[home.kitchen]` · active · 2/5 · cabinets ordered
+  - **Get plumbing quotes** `[home.kitchen.plumbing]` · paused · two quotes in
+- **Running** `[health.running]` · active · 9/12 · three runs a week since October
+
+## Archived
+
+- Build a bookshelf `[bookshelf]` · done
 ```
-
-Children show their name relative to their parent. Folders on disk stay flat.
-
-| Section | What's in it |
-|---|---|
-| **Focused** | Work an open focus holds, then suggestions (marked as suggestions) |
-| **Active** | Everything else in motion: active, paused, planned |
-| **Done** | Finished, not yet archived |
-| **Archived** | Collapsed; listed on request |
 
 - **Reverse links are computed here, not stored.** Children are found from `parent:`; which nodes follow a plan, from `plan:`; which foci hold a node, from their `holds:`.
 - **If the index disagrees with the nodes, the nodes win.** Rebuild it; never fix the index by hand. Fire `stale-found` for the work index if it was found out of date outside a ground.
@@ -46,12 +40,12 @@ Children show their name relative to their parent. Folders on disk stay flat.
 **Work is in focus when an open [focus](../focus/focus-nodes.md) holds it,** foreground or background. That's read from the focus tree, never stored on the work.
 
 - **Keeping something in view on purpose** (what other tools call pinning) is keeping a focus that holds it open in the background. Closing that focus takes it out of view. Nothing on the work changes.
-- **The sphere may suggest focus** from signals: a deadline coming up, how recently and often something was touched, the week's plan. A suggestion is a suggestion to open a focus, shown in Focused and marked as one. It's never written into a node.
-- **Asking live** (*"what's in focus?"*) reads the open foci directly. The index's Focused section is as of its last rebuild.
+- **The sphere may suggest focus** from signals: a deadline coming up, how recently and often something was touched, the week's plan. A suggestion is a suggestion to open a focus, made in conversation and marked as one. It's never written into a node or the index.
+- **Asking live** (*"what's in focus?"*) reads the open foci directly, with `scripts/sphere list`.
 
 ## What's on my plate
 
-Answer from the index, in this order: Focused, then paused work whose `waiting_on:` may have resolved, then the rest of Active. **One line each,** from frontmatter. Read a node's Now only when the human asks about it. Never load bodies or history to draw a list.
+Answer in this order: what open foci hold (`sphere list`), then, from the index, paused work whose `waiting_on:` may have resolved, then the rest of Active. **One line each,** from frontmatter. Read a node's Now only when the human asks about it. Never load bodies or history to draw a list.
 
 ## Archiving
 
@@ -76,9 +70,9 @@ Then set the final state, write the last `progress.md` entry (how it ended, and 
 
 | When | Do |
 |---|---|
-| *"What's on my plate?"* | Focused, then paused work that may be unblocked, then Active. One line each, from the index |
+| *"What's on my plate?"* | What open foci hold, then paused work that may be unblocked, then active work. One line each, from `sphere list` and the index |
 | *"Show the tree"* | The index's tree. Archived only if asked |
-| `focus-grounding`, if it touched work | Rebuild the index from committed frontmatter plus this ground's changes |
+| `focus-grounding`, if it touched work | Nothing to do: `sphere ground` rebuilds the index, as `core/shapes` declares it |
 | The index disagrees with the nodes | Rebuild it. Fire `stale-found` for the work index if found outside a ground |
 | The human wants something kept in view | Open a focus that holds it, or keep its focus open |
 | Signals suggest something deserves attention | Show a suggestion to open a focus; write nothing to the node |

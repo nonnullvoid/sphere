@@ -15,6 +15,15 @@ Otherwise, reading only what each step names. **Don't read a file that's already
 5. **Where we are.** Run `scripts/sphere start`, unless its output is already in your context (Claude Code runs it when the window opens). It prints the sphere's name, what's open, and attaches **once**: the focus the human names (`scripts/sphere start <focus>`), else the one open focus besides `main`, else, with several open, it asks you to ask them which. The briefing ends with a sense and its reactions: act on each one whose condition applies.
 6. **Say hello in a line,** and nothing about the steps above.
 
+### Startup context
+
+What every window starts with, besides the briefing. `scripts/sphere start` prints each line here, so a window has it even if it reads nothing else. Change what a window knows at the start by editing this list: `path#Section` prints a section, `path#headings` its `##` headings, `path@key,key` frontmatter values; `{persona}` is the default persona. A line whose file or section is missing is skipped.
+
+- **who you're working with (their profile):** `core/user/profile.md#In a few lines`
+- **you are {persona}; our working agreement:** `core/ai/personas/{persona}/{persona}.md#Our working agreement`
+- **their principles:** `core/protocol/lenses/principles.md#headings`
+- **using the sphere:** `layers/literacy/sphere/subject.md@level,summary`
+
 Bodies of lenses and frames are read when they're used, never at startup. That's what keeps every window quick, however large the sphere grows.
 
 ## At a glance

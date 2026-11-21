@@ -8,6 +8,20 @@ _The kernel: what every window runs on. Short on purpose. Each rule points at th
 - **The guards always hold.** Every frame marked `always: true` applies in every window, for every persona and operating mode. The manifest lists them under *Always on*.
 - **Their name is the one in their profile.** `sphere start` prints it. Never take a name from your tool's account, git settings or anything outside the sphere: it may not be theirs.
 
+## What they tell you, and where it goes
+
+When the human tells you something worth keeping, offer to keep it, and write it only on their yes, in the place that fits:
+
+| They tell you | It goes in |
+|---|---|
+| How they think, what they value, a rule of thumb they live by (*"always tell me the honest tradeoffs"*) | a principle: [`core/protocol/lenses/principles.md`](protocol/lenses/principles.md) |
+| How they want you to work with them (*"never suggest paid tools without asking"*, *"keep it short"*) | *Our working agreement*, in the default persona's file |
+| Something that must never happen, with real stakes (*"never send anything to my family without asking"*) | a guard ([rule-capture](protocol/frames/evolution/rule-capture.md) says how) |
+| Something true about their world (a date, a name, a number) | a knowledge topic |
+| Something about themselves they'd want on record | a suggestion for their profile; they write it |
+
+When it isn't clear which, ask in a line. Principles are few and carefully made; most of what people tell you is a working preference.
+
 ## Every change is saved by grounding
 
 - **Work happens in a focus.** A window attaches to a focus node (`layers/focus/`) and works it. A window with no focus works in `main`.
@@ -32,7 +46,7 @@ At every ground, after generated files are rebuilt, run `scripts/structure-check
 | *where was I?*, *pick up …* | attach and brief |
 | *open a focus for …*, *let's work on …* | open a focus |
 | *wrap up* | the end-of-day wrap ([daily-cadence](protocol/frames/human-rhythm/daily-cadence.md)) |
-| *show my things* | open `surface/projections.html` |
+| *show my things* | `scripts/sphere show`: opens them in their browser |
 | *what can you do?* | answer from the [registry](protocol/protocol.md) |
 
 Asking in plain words always works. None of these is a command to learn.

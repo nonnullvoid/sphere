@@ -47,7 +47,7 @@ From softest to hardest:
 | Where | How it behaves | Good for |
 |---|---|---|
 | **A note in the AI tool's memory** | Soft. Read and applied with judgment | Habits and preferences. Most rules start here |
-| **A sphere file:** a guard frame, or a lens | Soft and durable. Read whenever its scope comes up; carried with the sphere; reviewed with everything else | Rules that belong to how this sphere works |
+| **A sphere file:** a guard frame, a lens, or the persona's *working agreement* (for how the human wants to be worked with) | Soft and durable. Read whenever its scope comes up; carried with the sphere; reviewed with everything else | Rules that belong to how this sphere works |
 | **An enforced check:** a hook or script the tool runs | Hard. No judgment | Things that must never happen: committing a secret, skipping the tests |
 
 **Use the softest place that does the job.** Soft rules bend to the case in front of them. Hard ones don't, which is exactly why they break in cases nobody foresaw.

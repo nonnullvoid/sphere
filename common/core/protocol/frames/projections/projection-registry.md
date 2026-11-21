@@ -141,7 +141,7 @@ This is [finishing a node](../nodes/node-shape.md#finishing-a-node) for projecti
 
 | When | Do |
 |---|---|
-| *"Show my things"* | Open `surface/projections.html`: the human's live projections, never machinery |
+| *"Show my things"* | `scripts/sphere show`: opens `surface/projections.html` in the human's own browser. The human's live projections, never machinery |
 | *"List projections"* | One line each from the registry: name, kind, freshness, home |
 | The human asks for a new view | Write the definition, confirm a sharing level, render it. |
 | A view is opened up to more people | Outbound: the human approves it, through the outbound guard |

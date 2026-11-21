@@ -146,13 +146,14 @@ class ScriptDeliversTest(BuildCase):
         return run([os.path.join(self.root, "scripts", "sphere"), *args], cwd=self.root, env=self.who)
 
     def write(self, path: str, text: str, mode: str = "w") -> None:
+        os.makedirs(os.path.dirname(os.path.join(self.root, path)), exist_ok=True)
         with open(os.path.join(self.root, path), mode, encoding="utf-8") as handle:
             handle.write(text)
 
     def entry(self, focus: str) -> None:
-        self.write(
-            f"layers/focus/{focus}/history.md", "\n## 2026-11-20 12:00 — a change\n\n**Did:** Changed it.\n", "a"
-        )
+        """A new history entry, on top: history files are newest first."""
+        path = f"layers/focus/{focus}/history.md"
+        self.write(path, "## 2026-11-20 12:00 — a change\n\n**Did:** Changed it.\n\n" + self.read(path))
 
     def test_start_before_and_after_setup(self):
         self.assertIn("hasn't been set up yet", self.sphere("start").out)
@@ -162,6 +163,8 @@ class ScriptDeliversTest(BuildCase):
         self.assertIn("sense: focus-attached\n", alone.out)
         self.assertIn("== using the sphere: skimmed", alone.out)  # how much to explain, handed over
         self.assertIn("== you are companion", alone.out)
+        self.assertIn("== you are companion; our working agreement: - I propose; you decide.", alone.out)
+        self.assertNotIn("== their principles", alone.out)  # none yet: the slot is empty until they write one
         self.sphere("open", "garden", "-i", "Plant a garden")
         one = self.sphere("start")
         self.assertIn("== f1-garden", one.out)  # the one open focus, attached once
@@ -204,6 +207,45 @@ class ScriptDeliversTest(BuildCase):
         self.assertIn(
             "**Next:** Water them.", self.sphere("attach", "main").out + self.read("layers/focus/f0-main/history.md")
         )
+
+    def test_startup_context_is_whatever_sphere_md_lists(self):
+        self.sphere("init", "--git")
+        self.write(
+            "sphere.md",
+            self.read("sphere.md").replace(
+                "- **their principles:**",
+                "- **what's in the kitchen:** `core/engine.md#headings`\n- **their principles:**",
+            ),
+        )
+        out = self.sphere("start").out
+        self.assertIn("== what's in the kitchen:", out)  # a line added in text, printed with no code change
+
+    def test_ground_and_close_keep_the_views_and_index_current(self):
+        self.sphere("init", "--git")
+        self.write(
+            "layers/work/shed/work.md",
+            "---\ntitle: Build a shed\nkind: project\nstate: active\n"
+            "summary: a garden shed\nupdated: 2026-11-21\n---\n",
+        )
+        self.write("layers/work/shed/progress.md", "## 2026-11-21 — added\n\nStarted.\n")
+        self.sphere("open", "shed", "-i", "Build the shed", "--holds", "work:shed")
+        grounded = self.sphere("ground", "f1", "--reacted", "--did", "Added the shed.")
+        self.assertEqual(grounded.code, 0, grounded.text)
+        self.assertIn("Build a shed", self.read("layers/work/index.md"))
+        self.assertIn('"text": "Build a shed"', self.read("surface/projections/work/work-dashboard/data.js"))
+        self.assertEqual(run(["git", "status", "--short"], cwd=self.root).out, "")  # committed with the change
+        self.write(
+            "layers/work/shed/work.md", self.read("layers/work/shed/work.md").replace("state: active", "state: done")
+        )
+        gate = self.sphere("close", "f1", "-m", "built it")
+        self.assertIn("sense: node-archived\n", gate.out)  # a finished node's reactions reach the AI at close
+        self.assertIn("persona (if our working agreement", gate.out)
+        closed = self.sphere("close", "f1", "-m", "built it", "--reacted")
+        self.assertEqual(closed.code, 0, closed.text)
+        self.assertNotIn('"text": "Build a shed"', self.read("surface/projections/work/work-dashboard/data.js"))
+
+    def test_show_names_the_page_it_opens(self):
+        self.assertIn("render", self.sphere("help").out)
 
     def test_a_ground_stops_until_its_reactions_are_handled(self):
         self.sphere("init", "--git")
