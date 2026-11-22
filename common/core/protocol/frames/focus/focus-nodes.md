@@ -161,10 +161,10 @@ Crossing stage with liveness gives a quick read of any focus. Three cells are wh
 | stage ↓ · liveness → | background | foreground | stale |
 |---|---|---|---|
 | **working** (unsaved changes) | Orphaned: ask, offer to ground | **Normal work** | Crashed mid-work: offer to recover, highest priority |
-| **grounded** | **Held**: attach any time | Just grounded, carrying on | Window died after saving: clear the heartbeat |
+| **grounded** | **Held**: attach any time | Just grounded, carrying on | Window closed after saving: nothing to do; attaching again refreshes it |
 | **closed** | **Done** | A window outlived the close: detach it | Leftover record: clear the heartbeat |
 
-- **How serious a stale focus is depends on unsaved work, not on how long it's been quiet.** With unsaved work: offer to recover it, never discard it. Clean: clear the heartbeat.
+- **How serious a stale focus is depends on unsaved work, not on how long it's been quiet.** With unsaved work: offer to recover it, never discard it. Clean: nothing to do, and nothing to mention to the human.
 
 ## Listing what's in focus
 

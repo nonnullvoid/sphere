@@ -1374,8 +1374,7 @@ def attention_items(refs: list[str], changes: list[Change]) -> list[str]:
             )
         elif live == "background" and stage == "working":
             items.append(f"! {ref}: unsaved changes with no window attached. Ground them?")
-        elif live == "stale":
-            items.append(f"· {ref}: its window went quiet after saving. Clear the heartbeat: sphere detach {number}")
+        # Saved, with its window closed: nothing to do. Attaching again refreshes it; the tree shows it as stale.
         last = latest_entry_date(history_file(ref))
         quiet = (datetime.date.today() - last).days if last else 0
         if live != "foreground" and quiet >= QUIET_DAYS:

@@ -2,120 +2,69 @@
 
 **Give your AI a persistent home.**
 
-A folder of markdown files your AI reads at startup — so every conversation begins oriented, not blank.
+A folder of plain files your AI reads when a conversation starts, so every conversation begins oriented, not blank. You can open, read and change every one of them.
 
 ---
 
 ## What it looks like
 
-Open your WorkSphere in Claude and this is what greets you — no prompting, no re-explaining:
+Open your sphere in a new window and ask *"where was I?"*:
 
 ```
-my-worksphere ready
-
-| Project        | Status      | Next action          |
-|----------------|-------------|----------------------|
-| product-launch | in-progress | Draft release notes  |
-| team-hiring    | blocked     | Waiting on recruiter |
-| q2-retro       | on hold     | —                    |
+Hi Kane. You're on the recipe app: the stack is still open, and you were
+leaning towards Next.js with SQLite. Next: decide who it's for. The kitchen
+renovation is waiting on the contractor's quote.
 ```
 
-Say `resume product-launch` and the AI picks up where you left off — what was done, what's next, open decisions. Say `ground` when you're done and the next conversation starts just as clean.
+No re-explaining. It knows who you are, what you're working on, how you like to work, and what you decided last time, because all of that is in the folder.
 
 ---
 
 ## How it works
 
-1. **Clone a template** — base or WorkSphere
-2. **Fill in `core/user/`** — your profile, principles, how you work. The AI walks you through it in conversation when you first open the sphere.
-3. **Every conversation starts oriented** — your AI reads the sphere at startup via `CLAUDE.md`. No plugins, no config, just files.
+1. **Make a sphere** from a build: `scripts/new-sphere base ~/my-sphere`.
+2. **Open it in your AI tool and say hello.** The first conversation sets it up with you: who you are, what you'd like help with, one principle in your own words, what's on your plate. About ten minutes.
+3. **Work, and say *save*.** Each thing you're working on gets its own window. Saving keeps it, so any new window can pick up where you left off.
 
-Everything is plain markdown you own. No servers, no accounts, no sync.
+Everything is plain markdown and a few small scripts. No servers, no accounts. Git keeps every change, and any save can be undone.
 
 ---
 
 ## Get started
 
 ```bash
-# Clone
 git clone https://github.com/nonnullvoid/sphere.git
-
-# Pick a template and copy it to where you work
-cp -r sphere/sphere-templates/base ~/my-sphere
-# or: cp -r sphere/sphere-templates/work-sphere ~/my-worksphere
-
-# Open in Claude Code — sphere loads automatically
-cd ~/my-worksphere && claude
-
-# The AI will offer to walk you through setup on first open
+sphere/scripts/new-sphere base ~/my-sphere
+cd ~/my-sphere && claude      # or open the folder in any AI tool that reads AGENTS.md
 ```
 
-**Want a guided setup?** Open the cloned `sphere/` folder with your AI. It reads `CLAUDE.md` automatically, understands what sphere is, and walks you through picking a template, installing layers, and running init — conversationally. See [`assemble.md`](assemble.md) for what it covers.
+Then say hello.
+
+Or open the cloned `sphere/` folder with your AI and ask it to set one up for you.
 
 ---
 
-## Templates
+## Builds
 
-| Template | What it is | Best for |
-|----------|-----------|---------|
-| [`sphere-templates/base/`](sphere-templates/base/) | Minimal — structure only, no layers | Starting from scratch |
-| [`sphere-templates/work-sphere/`](sphere-templates/work-sphere/) | Projects + domain + planning layers pre-installed | Professional work |
+| Build | What it is |
+|---|---|
+| [`base`](builds/base/) | Everything a sphere needs: focus, work, knowledge, ideas, literacy, a growth ledger, and two pages (Today and Work). Start here |
 
----
-
-## What's inside a sphere
-
-```
-[your-sphere]/
-├── CLAUDE.md          ← tells the AI to load the sphere on startup
-├── sphere.md          ← orchestrator: startup sequence, identity, layer registry
-├── core/
-│   ├── engine.md      ← runtime rules: layers, senses, reactions, evolution
-│   ├── protocol.md    ← operating vocabulary: what the sphere can do and why
-│   ├── init.md        ← initialization protocol: how the AI sets up a new sphere
-│   ├── records/       ← compacted history and long-term memory
-│   ├── ai/
-│   │   └── persona.md ← who the AI is in this sphere
-│   └── user/
-│       ├── profile.md    ← who you are
-│       ├── principles.md ← what you believe and how you operate
-│       └── preferences.md ← how you like to work with AI
-├── layers/            ← installed domain extensions
-└── surface/           ← projected artifacts and outputs
-```
-
-The AI reads `core/` at every startup. Layers load on-demand when a command needs them. Surface is for outputs — what the sphere produces, kept separate from what it is.
-
----
-
-## Layer catalog
-
-The [`layer-catalog/`](layer-catalog/) contains reusable extensions you can install into any sphere:
-
-| Layer | What it adds |
-|-------|-------------|
-| `projects/` | Track active work across conversations, with a handoff each time you ground |
-| `domain/` | Professional field context — makes the AI a peer, not a generalist |
-| `philosophy/` | Examined worldview — beliefs, frameworks, open questions. Install it into any template for whole-life context |
-| `wellness/` | Physical and mental health baseline — energy, routines, patterns |
-
-Each layer is self-contained: install by copying into your sphere's `layers/` directory and registering in `sphere.md`.
+Each build is assembled from [`common/`](common/): the lenses and frames that say how a sphere works, shared templates and pages, and the tools in [`scripts/`](scripts/).
 
 ---
 
 ## Going deeper
 
-The [Architecture doc](ARCHITECTURE.md) is the overview of the model, and [`spec/`](spec/) has a chapter per concern: focus, nodes, state, work, knowledge, the protocol of lenses and frames, and more. _SPHERE-ARCH 1.0 is in progress; the templates above are the earlier v0.1._
-
-[`assemble.md`](assemble.md) is a guided setup protocol for AI assistants — open the repo with your AI and it will use this to walk you through template selection, layer installation, and first-run init.
+[ARCHITECTURE.md](ARCHITECTURE.md) is the overview: what's in a sphere and how it runs. [`spec/`](spec/) has a chapter per concern: focus, nodes, state, work, knowledge, loading, the protocol of lenses and frames, and more. [BUILDING.md](BUILDING.md) is for making a build of your own.
 
 ---
 
 ## Requirements
 
-- **Claude Code** — or any AI that reads files when a conversation starts
-- **A text editor**
-- **A folder**
+- **An AI tool that can read files and run commands in a folder:** Claude Code, Codex, or similar
+- **Python 3.9 or later**, for the sphere's scripts
+- **git**, for undo and history (recommended)
 
 ---
 

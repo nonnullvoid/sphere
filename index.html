@@ -499,25 +499,15 @@
       </div>
 
       <div class="compare-col after">
-        <div class="compare-head">With WorkSphere</div>
+        <div class="compare-head">With a sphere</div>
         <div class="compare-body">
           <div class="chat-line">
-            <div class="chat-who ai">AI</div>
-            <pre style="font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.78rem; line-height: 1.6; margin: 0; color: var(--text); white-space: pre;">my-worksphere ready
-
-| Project        | Status      | Next                 |
-|----------------|-------------|----------------------|
-| product-launch | in-progress | Draft release notes  |
-| team-hiring    | blocked     | Waiting on recruiter |
-| q2-retro       | on hold     | —                    |</pre>
-          </div>
-          <div class="chat-line">
             <div class="chat-who you">You</div>
-            <div class="chat-text">resume product-launch</div>
+            <div class="chat-text">Where was I?</div>
           </div>
           <div class="chat-line">
             <div class="chat-who ai">AI</div>
-            <div class="chat-text">Picking up from Tuesday — landing page copy is approved, release notes are next. Left off at the "what's new" section. Continuing from there?</div>
+            <div class="chat-text">You're on the product launch. The landing page copy is approved; the release notes are next, and you'd left off at the "what's new" section. Hiring is waiting on the recruiter. Carry on with the release notes?</div>
           </div>
         </div>
       </div>
@@ -597,43 +587,38 @@
 <section id="start">
   <div class="section-inner">
     <div class="section-label">Get started</div>
-    <h2 class="section-title">Pick a template. The AI<br>sets it up with you.</h2>
+    <h2 class="section-title">Start from a build. The AI<br>sets it up with you.</h2>
     <p class="section-body">
-      Three starting points. The AI walks you through setup on first open — your profile, your principles, how you work. You talk; it writes.
+      The AI walks you through setup in the first conversation: who you are, what you'd like help with, one principle in your own words. You talk; it writes, and shows you first.
     </p>
 
     <div class="templates">
 
       <!-- BASE -->
-      <div class="template-card">
+      <div class="template-card featured">
         <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
           <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.6)"/>
         </svg>
         <h3>Base</h3>
-        <div class="template-desc">Minimal — <code>core/</code> only, no layers. Add layers from the catalog as your needs develop. The AI proposes them when patterns emerge.</div>
+        <div class="template-desc">Everything a sphere needs, ready to grow into whatever you use it for. Start here.</div>
         <ul class="template-features">
-          <li>Core identity and AI persona</li>
-          <li>Conversational setup on first open</li>
-          <li>Reflect and evolve as you go</li>
+          <li>A window per thing you're working on; pick up any of them cold</li>
+          <li>Work, knowledge, ideas, and what you're learning</li>
+          <li>Today and Work pages that keep themselves current</li>
+          <li>Every save undoable; nothing changes without your yes</li>
         </ul>
       </div>
 
       <!-- WORKSPHERE -->
-      <div class="template-card featured">
+      <div class="template-card">
         <svg class="template-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="26" cy="26" r="22" stroke="rgba(107,163,255,0.3)" stroke-width="1.5"/>
           <circle cx="26" cy="26" r="13" stroke="rgba(107,163,255,0.55)" stroke-width="1.5"/>
           <circle cx="26" cy="26" r="5" fill="rgba(107,163,255,0.85)"/>
         </svg>
-        <h3>WorkSphere</h3>
-        <div class="template-desc">For professional work. Opens with a project status table. Track work across sessions with <code>ground</code> and <code>resume</code>. Your AI knows your domain.</div>
-        <ul class="template-features">
-          <li>Projects layer — session handoff built in</li>
-          <li>Domain layer — field expertise and vocabulary</li>
-          <li>Planning layer — daily rhythm and priorities</li>
-          <li>Startup project table, automatic passive sync</li>
-        </ul>
+        <h3>Codesphere <span style="font-size: 0.75rem; color: var(--muted); font-weight: 500;">coming</span></h3>
+        <div class="template-desc">For engineering work: your domain, your planning rhythm, and guardrails for the changes you ship.</div>
       </div>
 
       <!-- LIFESPHERE -->
@@ -643,31 +628,24 @@
           <circle cx="26" cy="26" r="13" stroke="rgba(124,92,191,0.45)" stroke-width="1.5" stroke-dasharray="3 3"/>
           <circle cx="26" cy="26" r="5" fill="rgba(124,92,191,0.7)"/>
         </svg>
-        <h3>LifeSphere</h3>
-        <div class="template-desc">For whole-life context. Your AI understands your values, your wellbeing, and the thinking beneath your decisions — not just your tasks.</div>
-        <ul class="template-features">
-          <li>Philosophy layer — worldview and frameworks</li>
-          <li>Wellness layer — energy, routines, patterns</li>
-          <li>Roles and principles across life contexts</li>
-        </ul>
+        <h3>Lifesphere <span style="font-size: 0.75rem; color: var(--muted); font-weight: 500;">coming</span></h3>
+        <div class="template-desc">For whole-life context: your values, your wellbeing, and the thinking beneath your decisions, not just your tasks.</div>
       </div>
 
     </div>
 
     <!-- Code block -->
     <div style="margin-top: 3rem;">
-      <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--muted);">Clone and set up</h3>
+      <h3 style="font-size: 1rem; margin-bottom: 1rem; color: var(--muted);">Clone and make one</h3>
       <div class="code-block">
         <span class="code-comment"># Clone the repo</span><br>
         <span class="code-cmd">git clone</span> <span class="code-str">https://github.com/nonnullvoid/sphere.git</span><br>
         <br>
-        <span class="code-comment"># Copy the template you want</span><br>
-        <span class="code-cmd">cp -r</span> sphere/sphere-templates/work-sphere ~/my-worksphere<br>
-        <span class="code-comment"># or: cp -r sphere/sphere-templates/base ~/my-sphere</span><br>
-        <span class="code-comment"># or: cp -r sphere/sphere-templates/life-sphere ~/my-lifesphere</span><br>
+        <span class="code-comment"># Make a sphere from the base build</span><br>
+        <span class="code-cmd">sphere/scripts/new-sphere</span> base ~/my-sphere<br>
         <br>
-        <span class="code-comment"># Open in Claude Code — sphere loads and offers setup</span><br>
-        <span class="code-cmd">cd</span> ~/my-worksphere &amp;&amp; <span class="code-cmd">claude</span>
+        <span class="code-comment"># Open it in your AI tool and say hello: the first conversation sets it up</span><br>
+        <span class="code-cmd">cd</span> ~/my-sphere &amp;&amp; <span class="code-cmd">claude</span>
       </div>
     </div>
   </div>

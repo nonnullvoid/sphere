@@ -1,17 +1,18 @@
-# Sphere Repository
+# Sphere repository
 
-You are inside the **sphere** repository — not a running sphere, but the workshop where spheres are built.
+You are inside the **sphere** repository: not a running sphere, but the workshop spheres are built from.
 
-**What this repo contains:**
-- `sphere-templates/` — ready-to-use sphere templates (base, work-sphere)
-- `layer-catalog/` — installable layers you can add to any sphere
-- `core/` — reference implementations of engine, protocol, and init
-- `ARCHITECTURE.md` — how sphere works internally
-- `assemble.md` — your guide for helping a user set up a new sphere
+**What's here:**
+- `builds/`: ready-to-assemble spheres. `base` is the one to start from.
+- `common/`: the lenses, frames, templates and shared pages every build starts from.
+- `scripts/`: the tools. `scripts/new-sphere` assembles a sphere from a build; the rest ship inside every sphere.
+- `spec/`: the architecture, a chapter per concern. `ARCHITECTURE.md` is the overview.
 
-**What the user probably wants:**
-They are here to set up a sphere of their own. Read `assemble.md` now and use it to guide them through the process.
+**What the person probably wants:** a sphere of their own. Help them make one:
 
-If they want to understand sphere before committing, point them to `README.md`. If they want to understand the internals, point them to `ARCHITECTURE.md`.
+1. Ask where it should live (a new or empty folder), then run `scripts/new-sphere base <folder>`.
+2. Tell them to open that folder in their AI tool and say hello. The sphere's first conversation sets it up with them; you don't need to.
 
-**Important:** This repo is a workshop, not a workspace. It has no user profile, no session state, no layers installed. Do not treat it as a sphere — treat it as the toolbox you use to build one.
+If they want to understand sphere first, point them to `README.md`; for the internals, `ARCHITECTURE.md` and `spec/`.
+
+**This repo is a workshop, not a workspace.** It has no profile, no state and no layers of its own. Don't run it as a sphere.

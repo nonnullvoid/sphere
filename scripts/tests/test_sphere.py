@@ -498,9 +498,11 @@ class SeeingTest(SphereCase):
         out = self.ok("list").out
         self.assertRegex(out, r"\? f3-shed: quiet for \d+ days")
 
-    def test_saved_but_stale(self):
+    def test_saved_but_stale_needs_nothing(self):
         self.set_heartbeat_age("f2", 120)
-        self.assertIn("· f2-plumbing-quotes: its window went quiet after saving", self.ok("list").out)
+        out = self.ok("list").out
+        self.assertIn("f2-plumbing-quotes  stale · grounded", out)  # shown in the tree
+        self.assertNotIn("Needs attention", out)  # but it's saved: nothing to do
 
     def test_attach_prints_the_briefing(self):
         self.write("layers/work/home.kitchen/progress.md", "## 2026-11-01 — started\n\nMeasured.\n")
