@@ -234,6 +234,7 @@ class ScriptDeliversTest(BuildCase):
         self.assertIn("Build a shed", self.read("layers/work/index.md"))
         self.assertIn('"text": "Build a shed"', self.read("surface/projections/work/work-dashboard/data.js"))
         self.assertEqual(run(["git", "status", "--short"], cwd=self.root).out, "")  # committed with the change
+        self.assertNotIn("Left for main", grounded.out)  # and not reported as left behind
         self.write(
             "layers/work/shed/work.md", self.read("layers/work/shed/work.md").replace("state: active", "state: done")
         )

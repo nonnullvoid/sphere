@@ -1111,6 +1111,8 @@ def ground_focus(ref: str, summary: str = "", report: str = "", also: Optional[l
     rendered = render_views()
     sorting = sort_changes(ref, changes_now(), also)
     sorting.mine += [path for path in rendered if path not in sorting.mine]  # views follow the change they show
+    sorting.for_main = [path for path in sorting.for_main if path not in sorting.mine]
+    sorting.new_unheld = [path for path in sorting.new_unheld if path not in sorting.mine]
     protocol_changed = ref == MAIN or any(path.startswith(PROTOCOL + "/") for path in sorting.mine)
     if rebuilt and protocol_changed and MANIFEST not in sorting.mine:
         sorting.mine.append(MANIFEST)  # rebuilt from the lens and frame changes this ground commits
