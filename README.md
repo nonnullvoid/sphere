@@ -42,6 +42,8 @@ Then say hello.
 
 Or open the cloned `sphere/` folder with your AI and ask it to set one up for you.
 
+**Keeping it current:** after a `git pull` here, `sphere/scripts/update-sphere ~/my-sphere` brings your sphere's tools up to date. It changes nothing you and your AI have written.
+
 ---
 
 ## Builds

@@ -11,6 +11,8 @@ A build is a ready-to-assemble sphere: a folder of only what it adds, laid over 
 
 `new-sphere` assembles, in order: the common lenses and frames (`common/core/protocol` → `core/protocol`), the shared pages and templates (`common/surface`, `common/layers`), the build's own files, which win where both have one, and the tools (`scripts/`). It then builds the capability manifest from what it copied.
 
+After that, a sphere's files are its own. `scripts/update-sphere <folder>` refreshes only its tools, so script fixes reach spheres already in use; lenses, frames and everything written with the human stay as they are.
+
 - **`core/build.json`** says what the build is: its name and version, the architecture it was built for, the lenses it ships (`"all"` or a list), its layers, views and anchors, and its word for saving.
 - **`"extends": "<parent>"`** lays the build over another: the parent's files first, then its own. `lifesphere` extends `base`, so it holds only what it adds or changes.
 - **`core/build.md`** is what the sphere itself reads about its build. *What it adds*; *Setup*, the steps of base's first conversation it adds to (read during setup); *Anchors*; and *Startup context*, extra lines `sphere start` prints in every window. A build without one is base as it is.

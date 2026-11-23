@@ -5,7 +5,7 @@ You are inside the **sphere** repository: not a running sphere, but the workshop
 **What's here:**
 - `builds/`: ready-to-assemble spheres. `base` is the one to start from.
 - `common/`: the lenses, frames, templates and shared pages every build starts from.
-- `scripts/`: the tools. `scripts/new-sphere` assembles a sphere from a build; the rest ship inside every sphere.
+- `scripts/`: the tools. `scripts/new-sphere` assembles a sphere from a build, and `scripts/update-sphere <folder>` brings an existing sphere's tools up to date; the rest ship inside every sphere.
 - `spec/`: the architecture, a chapter per concern. `ARCHITECTURE.md` is the overview.
 
 **What the person probably wants:** a sphere of their own. Help them make one:

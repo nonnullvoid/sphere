@@ -20,6 +20,16 @@ APPLIES = re.compile(r"^\*\*Applies to:\*\* *(.+)$", re.M)
 TITLE = re.compile(r"^# (.+)$", re.M)
 MANIFEST = "core/manifest.md"
 LINE_LIMIT = 140  # characters of a frame's Applies-to the manifest keeps
+# The tools every sphere carries in scripts/: new-sphere ships them, update-sphere refreshes them.
+TOOLS = [
+    "sphere",
+    "structure-check",
+    "manifest-check",
+    "sphere_shapes.py",
+    "sphere_protocol.py",
+    "sphere_views.py",
+    "shapes",
+]
 
 
 @dataclass

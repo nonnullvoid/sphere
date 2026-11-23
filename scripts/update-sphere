@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""update-sphere: bring an existing sphere's tools (scripts/) up to this repo's.
+
+Only the tools change: the lenses, frames, pages and everything the sphere has written are
+its own, shaped with its human, and are never touched. A tool the sphere has edited and not
+saved stops the update, so nothing local is lost. In a sphere that uses git, the updated tools
+are committed on their own; otherwise they're copied and nothing else happens.
+Standard library only; runs on Python 3.9.
+"""
+
+import argparse
+import filecmp
+import os
+import shutil
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
+from sphere_protocol import TOOLS  # noqa: E402
+
+REPO = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+def git(folder: str, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(["git", "-C", folder, *args], capture_output=True, text=True, check=False)
+
+
+def repo_version() -> str:
+    result = git(REPO, "rev-parse", "--short", "HEAD")
+    if result.returncode != 0:
+        return ""
+    edited = git(REPO, "status", "--porcelain", "--", *[f"scripts/{tool}" for tool in TOOLS]).stdout.strip()
+    return result.stdout.strip() + (" with local edits" if edited else "")
+
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(prog="update-sphere", description=(__doc__ or "").split("\n\n")[1])
+    parser.add_argument("folder", help="the sphere to update")
+    args = parser.parse_args(argv)
+
+    target = os.path.abspath(os.path.expanduser(args.folder))
+    scripts = os.path.join(target, "scripts")
+    if not os.path.isfile(os.path.join(scripts, "sphere")) or not os.path.isfile(
+        os.path.join(target, "core", "identity.json")
+    ):
+        print(f"update-sphere: {args.folder} isn't a sphere (no scripts/sphere or core/identity.json)", file=sys.stderr)
+        return 2
+
+    uses_git = os.path.isdir(os.path.join(target, ".git")) and shutil.which("git") is not None
+    if uses_git:
+        edited = git(target, "status", "--porcelain", "--", *[f"scripts/{tool}" for tool in TOOLS]).stdout.strip()
+        if edited:
+            print("update-sphere: the sphere's own tools have unsaved edits; save or undo them first:", file=sys.stderr)
+            print(edited, file=sys.stderr)
+            return 3
+
+    changed: list[str] = []
+    for tool in TOOLS:
+        source = os.path.join(REPO, "scripts", tool)
+        destination = os.path.join(scripts, tool)
+        if os.path.isfile(destination) and filecmp.cmp(source, destination, shallow=False):
+            continue
+        shutil.copy2(source, destination)
+        changed.append(tool)
+
+    if not changed:
+        print(f"{args.folder}: its tools are already up to date.")
+        return 0
+    print(f"Updated {len(changed)} of the sphere's tools: {', '.join(changed)}.")
+    if uses_git:
+        version = repo_version()
+        title = "Update the sphere's tools" + (f" to sphere {version}" if version else "")
+        git(target, "add", "--", *[f"scripts/{tool}" for tool in changed])
+        result = git(target, "commit", "-q", "-m", title, "--", *[f"scripts/{tool}" for tool in changed])
+        if result.returncode != 0:
+            print(f"update-sphere: copied, but the commit failed:\n{result.stderr or result.stdout}", file=sys.stderr)
+            return 1
+        print(f"Committed: {title}.")
+    print("Lenses, frames and everything the sphere wrote are unchanged.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

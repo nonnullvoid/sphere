@@ -24,20 +24,11 @@ from typing import Optional, cast
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
-from sphere_protocol import MANIFEST, build_manifest  # noqa: E402
+from sphere_protocol import MANIFEST, TOOLS, build_manifest  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 COMMON = os.path.join(REPO, "common")
 BUILDS = os.path.join(REPO, "builds")
-TOOLS = [
-    "sphere",
-    "structure-check",
-    "manifest-check",
-    "sphere_shapes.py",
-    "sphere_protocol.py",
-    "sphere_views.py",
-    "shapes",
-]
 LEFT_IN_REPO = {"README.md"}  # a build's own README describes it in the repo; it doesn't travel
 
 

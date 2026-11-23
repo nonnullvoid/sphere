@@ -9,6 +9,7 @@ import unittest
 from sphere_testing import SCRIPTS, run
 
 NEW_SPHERE = os.path.join(SCRIPTS, "new-sphere")
+UPDATE_SPHERE = os.path.join(SCRIPTS, "update-sphere")
 LINK = re.compile(r"\]\(([^)\s]+)\)")
 
 
@@ -351,3 +352,50 @@ class LifesphereBuildTest(BuildCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UpdateSphereTest(BuildCase):
+    """An existing sphere gets the repo's tools; nothing it wrote changes."""
+
+    who: dict[str, str] = ScriptDeliversTest.who
+
+    def update(self):
+        return run([UPDATE_SPHERE, self.root], cwd=self.base, env=self.who)
+
+    def git(self, *args: str):
+        return run(["git", "-C", self.root, *args], cwd=self.root, env=self.who)
+
+    def init(self) -> None:
+        result = run([os.path.join(self.root, "scripts", "sphere"), "init", "--git"], cwd=self.root, env=self.who)
+        self.assertEqual(result.code, 0, result.text)
+
+    def append(self, path: str, text: str) -> None:
+        with open(os.path.join(self.root, path), "a", encoding="utf-8") as handle:
+            handle.write(text)
+
+    def test_refreshes_only_the_tools_and_commits_them(self):
+        self.init()
+        self.append("scripts/sphere", "# an older copy\n")
+        self.append("core/protocol/lenses/principles.md", "\nTheir own principle.\n")
+        self.git("commit", "-qam", "an older sphere")
+        before = self.git("rev-list", "--count", "HEAD").out.strip()
+
+        result = self.update()
+        self.assertEqual(result.code, 0, result.text)
+        self.assertIn("Updated 1 of the sphere's tools: sphere.", result.out)
+        with open(os.path.join(SCRIPTS, "sphere"), encoding="utf-8") as handle:
+            self.assertEqual(self.read("scripts/sphere"), handle.read())
+        self.assertIn("Their own principle.", self.read("core/protocol/lenses/principles.md"))
+        self.assertEqual(self.git("status", "--porcelain").out.strip(), "")
+        self.assertEqual(int(self.git("rev-list", "--count", "HEAD").out), int(before) + 1)
+        self.assertIn("already up to date", self.update().out)
+
+    def test_unsaved_edits_to_a_tool_stop_it(self):
+        self.init()
+        self.append("scripts/shapes", "# a local edit\n")
+        result = self.update()
+        self.assertEqual(result.code, 3)
+        self.assertIn("# a local edit", self.read("scripts/shapes"))
+
+    def test_refuses_a_folder_that_isnt_a_sphere(self):
+        self.assertEqual(run([UPDATE_SPHERE, self.base], cwd=self.base).code, 2)
