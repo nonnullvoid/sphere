@@ -192,6 +192,11 @@ def today() -> str:
     return datetime.date.today().isoformat()
 
 
+def local_now() -> str:
+    """The human's clock: weekday, date and time, so a greeting never guesses the hour."""
+    return datetime.datetime.now().strftime("%a %Y-%m-%d %H:%M")
+
+
 def utc_stamp() -> str:
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -996,13 +1001,16 @@ def section_lines(path: str, heading: str) -> list[str]:
 
 
 def startup_context() -> list[tuple[str, str]]:
-    """The lines sphere.md's *Startup context* list asks for: (label, text), skipping anything missing."""
-    if not os.path.isfile("sphere.md"):
-        return []
-    match = re.search(r"^### Startup context\n(.*?)(?=^#{2,3} |\Z)", read_text("sphere.md"), re.M | re.S)
+    """The lines a *Startup context* list asks for, in sphere.md and then the build's core/build.md:
+    (label, text), skipping anything missing."""
+    listed: list[str] = []
+    for source in ("sphere.md", "core/build.md"):
+        if os.path.isfile(source):
+            match = re.search(r"^#{2,3} Startup context\n(.*?)(?=^#{2,3} |\Z)", read_text(source), re.M | re.S)
+            listed += match.group(1).split("\n") if match else []
     persona = default_persona()
     found: list[tuple[str, str]] = []
-    for line in (match.group(1) if match else "").split("\n"):
+    for line in listed:
         entry = CONTEXT_LINE.match(line.strip())
         if not entry:
             continue
@@ -1034,7 +1042,7 @@ def cmd_start(args: argparse.Namespace) -> None:
     if os.path.isfile("core/identity.json"):
         with open("core/identity.json", encoding="utf-8") as handle:
             name = str(json.load(handle).get("name", ""))
-    print(f"== {name or 'this sphere'} · {today()}")
+    print(f"== {name or 'this sphere'} · {local_now()}")
     for label, text in startup_context():
         print(f"== {label}: {text}")
     if refresh_manifest():
@@ -1063,6 +1071,10 @@ def cmd_attach(args: argparse.Namespace) -> None:
     stale_alerts(ref)
     if ref == MAIN:
         cmd_list(args)
+        last = entries_newest_first(history_file(MAIN))
+        if last:
+            print("== last saved here")
+            print(last[0].rstrip("\n"))
         print("f0-main open · the sphere")
         sense("focus-attached")
         return

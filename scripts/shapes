@@ -197,5 +197,5 @@ values perspective generic personalized
 values sharing public protected private
 format until date
 
-kind history history.md progress.md core/records/ core/ai/personas/*/journal.md
+kind history history.md progress.md core/records/ core/ai/personas/*/journal.md layers/philosophy/realizations.md
 kind reference layers/knowledge/ core/protocol/ core/user/ core/ai/

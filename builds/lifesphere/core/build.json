@@ -1,0 +1,31 @@
+{
+  "build": "lifesphere",
+  "version": "1.0.0",
+  "architecture": "SPHERE-ARCH 1.0",
+  "extends": "base",
+  "summary": "Base, for a whole life: life areas and habits, a Life page, the morning and weekly anchors, and a place for what you come to see and value.",
+  "lenses": "all",
+  "layers": [
+    "focus",
+    "work",
+    "knowledge",
+    "ideas",
+    "literacy",
+    "witness",
+    "philosophy",
+    "projections"
+  ],
+  "projections": [
+    "life",
+    "today",
+    "work-dashboard"
+  ],
+  "anchors": [
+    "morning",
+    "wrap",
+    "weekly"
+  ],
+  "words": {
+    "save": "ground"
+  }
+}

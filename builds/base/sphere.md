@@ -17,7 +17,7 @@ Otherwise, reading only what each step names. **Don't read a file that's already
 
 ### Startup context
 
-What every window starts with, besides the briefing. `scripts/sphere start` prints each line here, so a window has it even if it reads nothing else. Change what a window knows at the start by editing this list: `path#Section` prints a section, `path#headings` its `##` headings, `path@key,key` frontmatter values; `{persona}` is the default persona. A line whose file or section is missing is skipped.
+What every window starts with, besides the briefing. `scripts/sphere start` prints each line here, so a window has it even if it reads nothing else. Change what a window knows at the start by editing this list: `path#Section` prints a section, `path#headings` its `##` headings, `path@key,key` frontmatter values; `{persona}` is the default persona. A line whose file or section is missing is skipped. A build can add its own lines, in the same form, under *Startup context* in `core/build.md`.
 
 - **who you're working with (their profile):** `core/user/profile.md#In a few lines`
 - **you are {persona}; our working agreement:** `core/ai/personas/{persona}/{persona}.md#Our working agreement`

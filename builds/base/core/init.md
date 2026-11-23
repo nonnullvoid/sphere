@@ -10,7 +10,7 @@ This is the human's first time here. **Talk about their life and work, never abo
 
 **Your first message is the hello.** Nothing comes before it: no reading, no checking, no running anything. Everything you need for it is on this page.
 
-Say hello in a line or two: you're the AI they'll work with here, and this folder is where you'll keep what you learn together, so they never have to repeat themselves. Add one line on how keeping works: what they agree to is written down as you go, and they can say *"save"* any time to lock it in. Then ask the first question below.
+Say hello in a line or two: you're the AI they'll work with here, and this folder is where you'll keep what you learn together, so they never have to repeat themselves. Add one line on how keeping works: what they agree to is written down as you go, and they can say *"save"* any time to lock it in. Say setting up is a few questions, about ten minutes. Then ask the first question below.
 
 **If `AGENTS.md` says setup has started,** this is a later window and the first conversation didn't finish (the window closed, or they stopped for the day). What they agreed to is still here. Your first message welcomes them back in a line and says you'll pick up where you left off; nothing comes before it here either. Then look at what's on disk (the profile, a name in `core/identity.json`, a principle, work nodes, open foci) and go on from the first step that isn't done.
 
@@ -20,6 +20,7 @@ Once they've answered, and before your next question:
 
 1. In `AGENTS.md`, under *First run*, add the line: `**Setup has started and isn't finished.** Welcome them back and pick up where you left off (core/init.md, step 1).`
 2. Make the folder a sphere: `scripts/sphere init --git`. If git isn't installed, run `scripts/sphere init` instead, and later tell them in one line that undo needs git and you can set it up whenever they like.
+3. If `core/build.md` exists, read it: this sphere's build adds to some steps below, and it says which.
 
 ## 3. Who they are
 
@@ -67,7 +68,7 @@ Then ask what they're working on right now. For each thing they name (one to thr
 - a work node in `layers/work/<name>/`: a `work.md` with its title, `state: active` and a one-line summary, and a first `progress.md` entry (see [work-breakdown](protocol/frames/work-tracking/work-breakdown.md));
 - names follow the work tree's scheme: lowercase words and hyphens, dots for areas (`home.kitchen`).
 
-If one of them is what they want to start on now, open a focus for it: `scripts/sphere open <name> -i "<intention>" --holds work:<name> --attach`.
+Don't start on any of them yet: setup isn't done. Starting comes at the end (step 9).
 
 ## 7. Build what the sphere generates
 
@@ -86,8 +87,10 @@ Then ground: `scripts/sphere ground` (act on what it prints, then again with `--
 
 ## 9. Show them, and how to come back
 
+Say plainly that setup is done: *"That's us set up."* Then:
+
 - Open [`surface/projections.html`](../surface/projections.html) for them: *"These are your things. They'll fill in as we go."*
-- Then the first basics, by doing them, not by explaining them: suggest they open a **new window** here and say *"where was I?"*, to see it pick up. That's two basics at once (one window per thing, and picking up); tick them in the subject when they've done it. Leave the rest for when they come up.
+- Then the first basics, by doing them, not by explaining them: suggest they open a **new window** here and say *"where was I?"*, to see it pick up, and start there on the thing they most want to get going (each thing gets its own window). That's two basics at once (one window per thing, and picking up); tick them in the subject when they've done it. Leave the rest for when they come up.
 - If they started at `can-use`, offer the getting-started focus in a line instead, and open it only on a yes.
 
 That's all. Don't explain anything else unless they ask.

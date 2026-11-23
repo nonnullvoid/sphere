@@ -4,6 +4,8 @@
 Copies, in order: the common protocol set (common/core/protocol → core/protocol), the shared
 surface and templates (common/surface, common/layers), the build's own files on top
 (builds/<build>/, which win where both have a file), and the sphere's tools (scripts/).
+A build that says "extends": "<parent>" in its build.json is laid over its parent: the
+parent's files first, then its own, which win where both have one.
 Then builds the capability manifest from what it copied, so the first window has it.
 The lenses a build ships are named in its core/build.json: "all", or a list; a frame comes
 with the first lens it names. Nothing is run and nothing is committed: the sphere's own
@@ -18,7 +20,7 @@ import os
 import shutil
 import sys
 from collections.abc import Callable
-from typing import Optional
+from typing import Optional, cast
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
@@ -73,6 +75,20 @@ def copy_tree(source: str, target: str, keep: Optional[Callable[[str], bool]] = 
     return count
 
 
+def build_chain(name: str) -> list[tuple[str, dict[str, object]]]:
+    """A build and the builds it extends: [(folder, build.json), …], the build itself first."""
+    chain: list[tuple[str, dict[str, object]]] = []
+    while name:
+        folder = os.path.join(BUILDS, name)
+        with open(os.path.join(folder, "core", "build.json"), encoding="utf-8") as handle:
+            manifest: dict[str, object] = json.load(handle)
+        if any(existing == folder for existing, _ in chain):
+            raise SystemExit(f"new-sphere: {name} extends itself, through {chain[0][0]}")
+        chain.append((folder, manifest))
+        name = str(manifest.get("extends", ""))
+    return chain
+
+
 def main(argv: list[str]) -> int:
     builds = sorted(name for name in os.listdir(BUILDS) if os.path.isdir(os.path.join(BUILDS, name)))
     parser = argparse.ArgumentParser(
@@ -88,15 +104,16 @@ def main(argv: list[str]) -> int:
     if os.path.exists(target) and (not os.path.isdir(target) or os.listdir(target)):
         print(f"new-sphere: {args.folder} already has something in it; pick a new or empty folder", file=sys.stderr)
         return 2
-    build = os.path.join(BUILDS, args.build)
-    with open(os.path.join(build, "core", "build.json"), encoding="utf-8") as handle:
-        manifest = json.load(handle)
-    lenses = manifest.get("lenses", "all")
+    chain = build_chain(args.build)  # the build itself, then what it extends, and so on
+    manifest = chain[0][1]
+    declared = next((m["lenses"] for _, m in chain if "lenses" in m), "all")
+    lenses: list[str] = [str(name) for name in cast(list[object], declared)] if isinstance(declared, list) else []
+    every_lens = not isinstance(declared, list)  # "all", or not said
 
     protocol = os.path.join(COMMON, "core", "protocol")
 
     def wanted(relative: str) -> bool:
-        if lenses == "all":
+        if every_lens:
             return True
         if relative.startswith("lenses" + os.sep):
             return os.path.splitext(os.path.basename(relative))[0] in lenses
@@ -112,7 +129,8 @@ def main(argv: list[str]) -> int:
     def travels(relative: str) -> bool:
         return relative not in LEFT_IN_REPO
 
-    copied += copy_tree(build, target, travels)
+    for build, _ in reversed(chain):  # the furthest parent first; each build's own files win
+        copied += copy_tree(build, target, travels)
     scripts = os.path.join(target, "scripts")
     os.makedirs(scripts, exist_ok=True)
     for tool in TOOLS:

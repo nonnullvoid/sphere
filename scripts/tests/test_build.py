@@ -13,19 +13,40 @@ LINK = re.compile(r"\]\(([^)\s]+)\)")
 
 
 class BuildCase(unittest.TestCase):
-    """A fresh sphere, assembled from the base build in a temporary folder."""
+    """A fresh sphere, assembled from a build (base, unless a subclass says) in a temporary folder."""
 
+    build_name: str = "base"
     base: str = ""  # set in setUp, the unittest way
     root: str = ""  # set in setUp, the unittest way
 
     def setUp(self):
         self.base = tempfile.mkdtemp(prefix="sphere-build-test-")
         self.root = os.path.join(self.base, "my-sphere")
-        result = run([NEW_SPHERE, "base", self.root], cwd=self.base)
+        result = run([NEW_SPHERE, self.build_name, self.root], cwd=self.base)
         self.assertEqual(result.code, 0, result.text)
 
     def tearDown(self):
         shutil.rmtree(self.base, ignore_errors=True)
+
+    def broken_links(self) -> list[str]:
+        broken: list[str] = []
+        for folder, _, names in os.walk(self.root):
+            for name in names:
+                if not name.endswith(".md"):
+                    continue
+                path = os.path.join(folder, name)
+                with open(path, encoding="utf-8") as handle:
+                    text = re.sub(r"```.*?```", "", handle.read(), flags=re.S)
+                for target in LINK.findall(text):
+                    target = target.split("#")[0]
+                    if not target or re.match(r"^[a-z]+:", target):
+                        continue
+                    resolved = os.path.normpath(os.path.join(folder, target))
+                    if resolved == os.path.join(self.root, "core", "manifest.md"):
+                        continue  # built in the first conversation
+                    if not os.path.exists(resolved):
+                        broken.append(f"{os.path.relpath(path, self.root)} → {target}")
+        return broken
 
     def read(self, path: str) -> str:
         with open(os.path.join(self.root, path), encoding="utf-8") as handle:
@@ -103,24 +124,7 @@ class BaseBuildTest(BuildCase):
         self.assertIn("scripts/sphere start", self.read(".claude/settings.json"))
 
     def test_links_inside_the_sphere_resolve(self):
-        broken: list[str] = []
-        for folder, _, names in os.walk(self.root):
-            for name in names:
-                if not name.endswith(".md"):
-                    continue
-                path = os.path.join(folder, name)
-                with open(path, encoding="utf-8") as handle:
-                    text = re.sub(r"```.*?```", "", handle.read(), flags=re.S)
-                for target in LINK.findall(text):
-                    target = target.split("#")[0]
-                    if not target or re.match(r"^[a-z]+:", target):
-                        continue
-                    resolved = os.path.normpath(os.path.join(folder, target))
-                    if resolved == os.path.join(self.root, "core", "manifest.md"):
-                        continue  # built in the first conversation
-                    if not os.path.exists(resolved):
-                        broken.append(f"{os.path.relpath(path, self.root)} → {target}")
-        self.assertEqual(broken, [])
+        self.assertEqual(self.broken_links(), [])
 
     def test_optional_frames_link_correctly_once_adopted(self):
         optional = os.path.join(SCRIPTS, "..", "common", "optional", "frames")
@@ -161,6 +165,8 @@ class ScriptDeliversTest(BuildCase):
         alone = self.sphere("start")
         self.assertIn("f0-main open · the sphere", alone.out)
         self.assertIn("sense: focus-attached\n", alone.out)
+        self.assertRegex(alone.out, r"^== .* · \w{3} \d{4}-\d{2}-\d{2} \d{2}:\d{2}\n")  # the clock, for the greeting
+        self.assertIn("== last saved here\n## ", alone.out)  # where they were, without a second read
         self.assertIn("== using the sphere: skimmed", alone.out)  # how much to explain, handed over
         self.assertIn("== you are companion", alone.out)
         self.assertIn("== you are companion; our working agreement: - I propose; you decide.", alone.out)
@@ -272,6 +278,75 @@ class ScriptDeliversTest(BuildCase):
             run([os.path.join(self.root, "scripts", "manifest-check")], cwd=self.root).out.strip(),
             "manifest-check: clean",
         )
+
+
+class LifesphereBuildTest(BuildCase):
+    """lifesphere extends base: base's files, then its own on top."""
+
+    build_name: str = "lifesphere"
+    who: dict[str, str] = {  # noqa: RUF012  # read-only
+        "GIT_AUTHOR_NAME": "Test",
+        "GIT_AUTHOR_EMAIL": "test@example.com",
+        "GIT_COMMITTER_NAME": "Test",
+        "GIT_COMMITTER_EMAIL": "test@example.com",
+    }
+
+    def sphere(self, *args: str):
+        return run([os.path.join(self.root, "scripts", "sphere"), *args], cwd=self.root, env=self.who)
+
+    def test_assembles_over_base(self):
+        for path in [
+            "AGENTS.md",  # from base
+            "core/init.md",  # from base
+            "core/build.md",
+            "core/protocol/lenses/philosophy.md",
+            "core/protocol/lenses/values.md",
+            "core/protocol/lenses/worldview.md",
+            "core/protocol/frames/philosophy/realizations.md",
+            "layers/philosophy/realizations.md",
+            "layers/projections/life.md",
+            "surface/projections/me/life/index.html",
+            "surface/projections/me/today/index.html",  # from base
+        ]:
+            self.assertTrue(os.path.isfile(os.path.join(self.root, path)), path)
+        self.assertIn('"build": "lifesphere"', self.read("core/build.json"))
+        self.assertIn('name: "life"', self.read("surface/projections/assets/registry.js"))
+        self.assertFalse(os.path.exists(os.path.join(self.root, "README.md")))
+
+    def test_inits_and_checks_clean(self):
+        self.assertEqual(self.sphere("init", "--git").code, 0)
+        structure = run([os.path.join(self.root, "scripts", "structure-check")], cwd=self.root)
+        self.assertEqual(structure.out.strip(), "structure-check: clean")
+        manifest = run([os.path.join(self.root, "scripts", "manifest-check")], cwd=self.root)
+        self.assertEqual(manifest.out.strip(), "manifest-check: clean")
+        self.assertIn("== anchors this sphere keeps:", self.sphere("start").out)  # its own startup lines
+
+    def test_links_inside_the_sphere_resolve(self):
+        self.assertEqual(self.broken_links(), [])
+
+    def test_the_life_page_follows_its_rules(self):
+        self.sphere("init", "--git")
+
+        def work(name: str, title: str, kind: str, parent: str, ongoing: str) -> None:
+            os.makedirs(os.path.join(self.root, "layers/work", name))
+            with open(os.path.join(self.root, "layers/work", name, "work.md"), "w", encoding="utf-8") as handle:
+                handle.write(
+                    f"---\ntitle: {title}\nkind: {kind}\nparent: {parent}\nstate: active\n"
+                    f"ongoing: {ongoing}\nsummary: s\nupdated: 2026-11-22\n---\n"
+                )
+
+        work("health", "Health", "area", "", "true")
+        work("health.sleep", "Sleep before eleven", "project", "health", "true")
+        work("home.shelves", "Put up shelves", "project", "", "false")
+        self.sphere("render")
+        life = self.read("surface/projections/me/life/data.js")
+        panels = {line.split('"')[1]: line for line in life.split("\n") if line.strip().startswith("{ title:")}
+        areas, habits, going = panels["Areas"], panels["Habits"], panels["On the go"]
+        self.assertIn("Health", areas)
+        self.assertIn("Sleep before eleven", habits)
+        self.assertNotIn("Health", habits)  # an area isn't a habit
+        self.assertIn("Put up shelves", going)
+        self.assertNotIn("Sleep before eleven", going)  # a habit isn't on the go
 
 
 if __name__ == "__main__":
