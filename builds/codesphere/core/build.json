@@ -1,0 +1,30 @@
+{
+  "build": "codesphere",
+  "version": "1.0.0",
+  "architecture": "SPHERE-ARCH 1.0",
+  "extends": "base",
+  "summary": "Base, for software engineering with AI: an agentic-engineering stance, the PR runbook, gates for agent code work, worktree lanes, meetings, channel voices, and a record of your codebases.",
+  "lenses": "all",
+  "layers": [
+    "focus",
+    "work",
+    "knowledge",
+    "ideas",
+    "literacy",
+    "witness",
+    "workflows",
+    "projections"
+  ],
+  "projections": [
+    "today",
+    "work-dashboard"
+  ],
+  "anchors": [
+    "morning",
+    "wrap",
+    "weekly"
+  ],
+  "words": {
+    "save": "ground"
+  }
+}

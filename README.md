@@ -52,8 +52,9 @@ Or open the cloned `sphere/` folder with your AI and ask it to set one up for yo
 |---|---|
 | [`base`](builds/base/) | Everything a sphere needs: focus, work, knowledge, ideas, literacy, a growth ledger, and two pages (Today and Work). Start here |
 | [`lifesphere`](builds/lifesphere/) | Base, for a whole life: life areas and habits, a Life page, the morning and weekly anchors, and a place for what you come to see and value |
+| [`codesphere`](builds/codesphere/) | Base, for software engineering with AI: an agentic-engineering stance, the PR runbook, gates for agents doing code work, worktree lanes, meetings, and a record of your codebases |
 
-Each build is assembled from [`common/`](common/) (and a build can extend another: lifesphere extends base): the lenses and frames that say how a sphere works, shared templates and pages, and the tools in [`scripts/`](scripts/).
+Each build is assembled from [`common/`](common/) (and a build can extend another: lifesphere and codesphere extend base): the lenses and frames that say how a sphere works, shared templates and pages, and the tools in [`scripts/`](scripts/).
 
 ---
 

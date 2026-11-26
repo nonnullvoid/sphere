@@ -281,10 +281,9 @@ class ScriptDeliversTest(BuildCase):
         )
 
 
-class LifesphereBuildTest(BuildCase):
-    """lifesphere extends base: base's files, then its own on top."""
+class ExtendsBase(BuildCase):
+    """Checks every build that extends base passes. Not run on its own: each build's case sets build_name."""
 
-    build_name: str = "lifesphere"
     who: dict[str, str] = {  # noqa: RUF012  # read-only
         "GIT_AUTHOR_NAME": "Test",
         "GIT_AUTHOR_EMAIL": "test@example.com",
@@ -294,6 +293,23 @@ class LifesphereBuildTest(BuildCase):
 
     def sphere(self, *args: str):
         return run([os.path.join(self.root, "scripts", "sphere"), *args], cwd=self.root, env=self.who)
+
+    def test_inits_and_checks_clean(self):
+        self.assertEqual(self.sphere("init", "--git").code, 0)
+        structure = run([os.path.join(self.root, "scripts", "structure-check")], cwd=self.root)
+        self.assertEqual(structure.out.strip(), "structure-check: clean")
+        manifest = run([os.path.join(self.root, "scripts", "manifest-check")], cwd=self.root)
+        self.assertEqual(manifest.out.strip(), "manifest-check: clean")
+        self.assertIn("== anchors this sphere keeps:", self.sphere("start").out)  # its own startup lines
+
+    def test_links_inside_the_sphere_resolve(self):
+        self.assertEqual(self.broken_links(), [])
+
+
+class LifesphereBuildTest(ExtendsBase):
+    """lifesphere extends base: base's files, then its own on top."""
+
+    build_name: str = "lifesphere"
 
     def test_assembles_over_base(self):
         for path in [
@@ -313,17 +329,6 @@ class LifesphereBuildTest(BuildCase):
         self.assertIn('"build": "lifesphere"', self.read("core/build.json"))
         self.assertIn('name: "life"', self.read("surface/projections/assets/registry.js"))
         self.assertFalse(os.path.exists(os.path.join(self.root, "README.md")))
-
-    def test_inits_and_checks_clean(self):
-        self.assertEqual(self.sphere("init", "--git").code, 0)
-        structure = run([os.path.join(self.root, "scripts", "structure-check")], cwd=self.root)
-        self.assertEqual(structure.out.strip(), "structure-check: clean")
-        manifest = run([os.path.join(self.root, "scripts", "manifest-check")], cwd=self.root)
-        self.assertEqual(manifest.out.strip(), "manifest-check: clean")
-        self.assertIn("== anchors this sphere keeps:", self.sphere("start").out)  # its own startup lines
-
-    def test_links_inside_the_sphere_resolve(self):
-        self.assertEqual(self.broken_links(), [])
 
     def test_the_life_page_follows_its_rules(self):
         self.sphere("init", "--git")
@@ -348,10 +353,6 @@ class LifesphereBuildTest(BuildCase):
         self.assertNotIn("Health", habits)  # an area isn't a habit
         self.assertIn("Put up shelves", going)
         self.assertNotIn("Sleep before eleven", going)  # a habit isn't on the go
-
-
-if __name__ == "__main__":
-    unittest.main()
 
 
 class UpdateSphereTest(BuildCase):
@@ -399,3 +400,40 @@ class UpdateSphereTest(BuildCase):
 
     def test_refuses_a_folder_that_isnt_a_sphere(self):
         self.assertEqual(run([UPDATE_SPHERE, self.base], cwd=self.base).code, 2)
+
+
+class CodesphereBuildTest(ExtendsBase):
+    """codesphere extends base: base's files, then its own on top."""
+
+    build_name: str = "codesphere"
+
+    def test_assembles_over_base(self):
+        for path in [
+            "AGENTS.md",  # from base
+            "core/init.md",  # from base
+            "core/build.md",
+            "core/user/channels.md",
+            "core/user/codebases.md",
+            "core/protocol/lenses/agentic-engineering.md",
+            "core/protocol/lenses/workflow.md",
+            "core/protocol/frames/workflow/pr-runbook.md",
+            "core/protocol/frames/workflow/code-gates.md",
+            "layers/knowledge/eng/topic.md",
+            "layers/workflows/meetings/agenda.md",
+            "surface/projections/me/today/index.html",  # from base
+        ]:
+            self.assertTrue(os.path.isfile(os.path.join(self.root, path)), path)
+        self.assertIn('"build": "codesphere"', self.read("core/build.json"))
+        self.assertFalse(os.path.exists(os.path.join(self.root, "README.md")))
+
+    def test_ships_no_page_or_work_of_its_own(self):
+        # Base's pages only, and an empty work tree: how work and reviews are tracked is the human's call.
+        self.assertNotIn('name: "engineering"', self.read("surface/projections/assets/registry.js"))
+        self.assertNotIn("reviews", os.listdir(os.path.join(self.root, "layers/work")))
+
+
+del ExtendsBase  # shared checks only; run through each build's case
+
+
+if __name__ == "__main__":
+    unittest.main()

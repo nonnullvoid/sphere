@@ -90,7 +90,7 @@ nodes folder layers/work
 scheme namespace
 current work.md
 history progress.md
-keys title kind? parent? state paused? waiting_on? ongoing? progress? summary plan? connects-to? updated
+keys title kind? parent? state paused? waiting_on? ongoing? progress? summary plan? connects-to? review? updated
 values kind area project task
 values state planned active paused done dropped
 values paused blocked waiting on

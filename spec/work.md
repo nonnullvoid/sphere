@@ -95,6 +95,7 @@ progress: 3/7                   # optional; see Plan vs progress
 summary: onsite scheduled, phone done    # one line, refreshed at ground
 plan: [jobhunt-strategy@2]      # optional; the plan(s) and version this node follows
 connects-to: [interview-practice, knowledge:career.offers]
+review:                         # optional: a link to the change under review (a pull request), while it's in review
 updated: 2026-10-26
 ---
 ```
