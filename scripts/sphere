@@ -495,6 +495,11 @@ class Sorting:
     new_unheld: list[str]  # new files no open focus holds: often scratch; staged only with --also
 
 
+def named_by(path: str, also: list[str]) -> bool:
+    """--also names a file, or a folder and everything in it."""
+    return any(path == name or path.startswith(name.rstrip("/") + "/") for name in also)
+
+
 def sort_changes(ref: str, changes: list[Change], also: list[str]) -> Sorting:
     sorting = Sorting([], [], [])
     parent = parent_ref(ref)
@@ -502,7 +507,7 @@ def sort_changes(ref: str, changes: list[Change], also: list[str]) -> Sorting:
     for change in changes:
         unheld = not change.owners
         # Three separate reasons a change is this focus's; kept apart so each rule reads on its own.
-        if change.path in also:  # noqa: SIM114
+        if named_by(change.path, also):  # noqa: SIM114
             sorting.mine.append(change.path)
         elif ref == MAIN and (MAIN in change.owners or (unheld and not change.new)):  # noqa: SIM114
             sorting.mine.append(change.path)
@@ -577,8 +582,11 @@ def commit(subject: str, paths: list[str], body: str = "") -> bool:
     paths = unique(paths)
     if not paths:
         return False
-    if not git_ok("add", "-A", "--", *paths):
-        fail("staging failed: " + run_git(["add", "-A", "--"] + paths).stderr.strip())
+    # A path gone from both disk and index (the old side of a `git mv`) can't be added; the commit still takes it.
+    tracked = set(git("ls-files", "-z", "--", *paths).split("\0"))
+    addable = [path for path in paths if os.path.lexists(path) or path in tracked]
+    if addable and not git_ok("add", "-A", "--", *addable):
+        fail("staging failed: " + run_git(["add", "-A", "--"] + addable).stderr.strip())
     if git_ok("diff", "--cached", "--quiet", "--", *paths):
         return False
     message = ["-m", subject] + (["-m", body] if body else [])
@@ -833,8 +841,30 @@ def reactions_gate(senses: list[str], reacted: bool) -> None:
     )
 
 
+IDENTITY = "core/identity.json"
+
+
+def uuid7() -> str:
+    """A UUID v7: the time in milliseconds, then random bits."""
+    data = bytearray(int(time.time() * 1000).to_bytes(6, "big") + os.urandom(10))
+    data[6] = (data[6] & 0x0F) | 0x70
+    data[8] = (data[8] & 0x3F) | 0x80
+    h = data.hex()
+    return f"{h[:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:]}"
+
+
+def give_identity_an_id() -> None:
+    """The sphere's id is made once, at init, and never changed: fill it only if it's empty."""
+    if not os.path.isfile(IDENTITY):
+        return
+    with open(IDENTITY, encoding="utf-8") as handle:
+        text = handle.read()
+    if re.search(r'"id":\s*""', text):
+        write_text(IDENTITY, re.sub(r'"id":\s*""', f'"id": "{uuid7()}"', text, count=1))
+
+
 def cmd_init(args: argparse.Namespace) -> None:
-    """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes and .gitignore.
+    """Make this folder a sphere: layers/focus/f0-main, core/shapes, .gitattributes, .gitignore and its id.
     With --git in a folder that isn't a repository yet, the first commit takes everything in the folder."""
     global SHAPES
     main_dir = f"{FOCUS}/{MAIN}"
@@ -857,6 +887,7 @@ def cmd_init(args: argparse.Namespace) -> None:
     for line in SHAPES.union_merge_lines():  # from `kind history` in core/shapes
         append_line_once(".gitattributes", line)
     append_line_once(".gitignore", "surface/state/")
+    give_identity_an_id()
     if not shape_ok(main_dir):
         fail("f0-main/focus.md is out of shape (above)")
 
@@ -1691,7 +1722,7 @@ def build_parser() -> argparse.ArgumentParser:
             action="append",
             default=[],
             metavar="PATH",
-            help="include a changed file no focus holds (repeatable)",
+            help="include a changed file, or a folder of them, no focus holds (repeatable)",
         )
         sub.add_argument(
             "--reacted", action="store_true", help="the reactions it printed have been acted on: go ahead and commit"

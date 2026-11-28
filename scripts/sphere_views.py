@@ -81,10 +81,28 @@ def focus_records() -> list[Record]:
     return records
 
 
+WITNESS = "layers/witness/ledger"
+
+
+def witness_records() -> list[Record]:
+    """The growth ledger's entries (`### <date> · <lane>`, then what happened): date as `updated`, lane, title."""
+    records: list[Record] = []
+    for path in sorted(glob.glob(f"{WITNESS}/*.md"), reverse=True):
+        with open(path, encoding="utf-8") as handle:
+            text = handle.read()
+        for match in re.finditer(r"^### (\d{4}-\d{2}-\d{2}) · (.+)\n((?:(?!### ).*\n?)*)", text, re.M):
+            body = [line.strip() for line in match.group(3).split("\n") if line.strip()]
+            what = next((line for line in body if not re.match(r"^(by|evidence):", line)), "")
+            records.append({"updated": match.group(1), "lane": match.group(2).strip(), "title": what})
+    return records
+
+
 def records_for(source: str, shapes: Shapes) -> list[Record]:
-    """`foci`, or a tree's name from core/shapes; `<tree>+archived` takes in its archive too."""
+    """`foci`, `witness` (the growth ledger), or a tree's name from core/shapes (`<tree>+archived`: with archive)."""
     if source == "foci":
         return focus_records()
+    if source == "witness":
+        return witness_records()
     name, _, extra = source.partition("+")
     tree = next((tree for tree in shapes.trees if tree.name == name), None)
     if tree is None:

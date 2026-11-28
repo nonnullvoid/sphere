@@ -162,6 +162,24 @@ class GroundTest(SphereCase):
         self.ok("ground", "--also", "scratch.txt")
         self.assertIn("scratch.txt", self.files_in())
 
+    def test_also_takes_a_folder(self):
+        self.write("layers/work/inner-joy/work.md", "joy\n")
+        self.write("layers/work/inner-joy/progress.md", "start\n")
+        self.entry("f0-main", "Kept the new work.")
+        self.ok("ground", "--also", "layers/work/inner-joy")
+        self.assertIn("layers/work/inner-joy/work.md", self.files_in())
+        self.assertIn("layers/work/inner-joy/progress.md", self.files_in())
+
+    def test_a_renamed_folder_grounds(self):
+        self.write("notes/old/a.md", "a\n")
+        self.git("add", "notes/old/a.md")
+        self.git("commit", "-q", "-m", "seed", "--", "notes/old/a.md")
+        self.git("mv", "notes/old", "notes/new")
+        self.entry("f0-main", "Renamed the notes.")
+        self.ok("ground", "--also", "notes/new")
+        self.assertEqual(self.git("status", "--porcelain", "--", "notes").strip(), "")
+        self.assertIn("notes/new/a.md", self.files_in())
+
     def test_report_adds_one_line_to_the_parent_once(self):
         self.append("layers/work/home.kitchen.plumbing/work.md", "- quote\n")
         self.assertEqual(self.sphere("ground", "f2", "--report", "two quotes in").code, 3)  # no entry yet

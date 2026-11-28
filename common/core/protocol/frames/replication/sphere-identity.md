@@ -78,7 +78,7 @@ It lives in its own small file, `core/identity.json`, so tooling can read it wit
 
 | When | Do |
 |---|---|
-| Init | Make a new UUID v7; record `born_from`; ask the human for a name, with a suggestion; set the first version |
+| Init | `sphere init` makes the UUID v7 (leave it); record `born_from`; ask the human for a name, with a suggestion; set the first version |
 | *"Which sphere is this?"* | Answer from `core/identity.json`: name, version, where it began |
 | The human renames the sphere | Change `name` only; the id stays |
 | `focus-grounding`, if a lens or frame landed, changed or retired | Compute the next version; write it; tag the ground `sphere-<version>`. |

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(scripts/sphere *)",
+      "Bash(scripts/structure-check *)",
+      "Bash(scripts/manifest-check *)",
+      "Bash(git tag *)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && scripts/sphere start; true"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "build": "homesphere",
+  "version": "1.0.0",
+  "architecture": "SPHERE-ARCH 1.0",
+  "extends": "base",
+  "summary": "Base, for someone who has never used a tool like this: plain words only, saving that just happens, and two pages to see their things.",
+  "lenses": "all",
+  "layers": [
+    "focus",
+    "work",
+    "knowledge",
+    "ideas",
+    "literacy",
+    "witness",
+    "projections"
+  ],
+  "projections": [
+    "today",
+    "work-dashboard"
+  ],
+  "words": {
+    "save": "save"
+  }
+}

@@ -1,5 +1,7 @@
 """Tests for scripts/new-sphere and the base build: a fresh sphere assembles, inits and checks clean."""
 
+import datetime
+import json
 import os
 import re
 import shutil
@@ -430,6 +432,58 @@ class CodesphereBuildTest(ExtendsBase):
         # Base's pages only, and an empty work tree: how work and reviews are tracked is the human's call.
         self.assertNotIn('name: "engineering"', self.read("surface/projections/assets/registry.js"))
         self.assertNotIn("reviews", os.listdir(os.path.join(self.root, "layers/work")))
+
+
+class HomesphereBuildTest(ExtendsBase):
+    """homesphere extends base: plain words, saving that just happens, Home and My things over base's pages."""
+
+    build_name: str = "homesphere"
+
+    def test_assembles_over_base(self):
+        for path in [
+            "AGENTS.md",  # from base
+            "core/init.md",  # from base
+            "core/build.md",
+            "core/operating-modes/non-technical.md",
+            "core/operating-modes/everyday.md",  # from base
+            ".claude/settings.json",
+        ]:
+            self.assertTrue(os.path.isfile(os.path.join(self.root, path)), path)
+        self.assertIn('"build": "homesphere"', self.read("core/build.json"))
+        self.assertIn("operating-mode: non-technical", self.read("core/ai/personas/companion/companion.md"))
+        registry = self.read("surface/projections/assets/registry.js")
+        self.assertIn('title: "Home"', registry)
+        self.assertIn('title: "My things"', registry)
+        self.assertFalse(os.path.exists(os.path.join(self.root, "README.md")))
+
+    def test_the_sphere_tools_are_pre_approved(self):
+        settings = json.loads(self.read(".claude/settings.json"))
+        self.assertIn("Bash(scripts/sphere *)", settings["permissions"]["allow"])
+        self.assertEqual(settings["permissions"]["defaultMode"], "acceptEdits")
+        self.assertIn("scripts/sphere start", json.dumps(settings["hooks"]))  # base's hook kept
+
+    def test_init_gives_the_sphere_its_id_once(self):
+        self.sphere("init", "--git")
+        made = json.loads(self.read("core/identity.json"))["id"]
+        self.assertRegex(made, r"^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+
+    def test_home_shows_wins_from_the_growth_record(self):
+        self.sphere("init", "--git")
+        today = datetime.date.today()
+        old = today - datetime.timedelta(days=40)
+        with open(
+            os.path.join(self.root, "layers/witness/ledger", f"{today.year}.md"), "w", encoding="utf-8"
+        ) as handle:
+            handle.write(
+                f"# {today.year}\n\n### {today.isoformat()} · health\nFirst 10k run.\nevidence: the human said so\n\n"
+                f"### {old.isoformat()} · home\nFixed the sink.\nevidence: the human said so\n"
+            )
+        self.sphere("render")
+        page = self.read("surface/projections/me/today/data.js")
+        panels = {line.split('"')[1]: line for line in page.split("\n") if line.strip().startswith("{ title:")}
+        self.assertIn("First 10k run.", panels["Done lately"])
+        self.assertNotIn("Fixed the sink.", panels["Done lately"])  # older than two weeks
+        self.assertIn('title: "Home"', page)
 
 
 del ExtendsBase  # shared checks only; run through each build's case

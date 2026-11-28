@@ -28,7 +28,7 @@ legacy: false
 | **Next up** | list | active work, each with its summary; at most five, most recently updated first | `list work where state=active order updated desc limit 5 show title, summary empty "No work yet. Tell me what you're working on."` |
 | **Ideas** | stats | open ideas, and how many are `ready` | `count idea as Open; count idea where stage=ready as Ready empty "No ideas caught yet."` |
 
-Each **Rule** is what `scripts/sphere render` follows. Change a rule (or add a row with one) to change the view: `list <source> [where …] [order <key> [desc]] [limit N] show <key>, <key> [empty "…"]`, or `count <source> [where …] as <label>; …`. A source is `foci` or a tree's name (`work`, `idea`; `work+archived` takes in the archive). Conditions: `key=a|b`, `key!=a`, `updated>=7d`, joined with `and`. A row with no rule leaves the whole view to the AI.
+Each **Rule** is what `scripts/sphere render` follows. Change a rule (or add a row with one) to change the view: `list <source> [where …] [order <key> [desc]] [limit N] show <key>, <key> [empty "…"]`, or `count <source> [where …] as <label>; …`. A source is `foci`, `witness` (the growth ledger: `updated`, `lane`, `title`), or a tree's name (`work`, `idea`; `work+archived` takes in the archive). Conditions: `key=a|b`, `key!=a`, `updated>=7d`, joined with `and`. A row with no rule leaves the whole view to the AI.
 
 ## Leave out
 

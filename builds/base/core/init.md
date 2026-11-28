@@ -41,10 +41,7 @@ Then, without mentioning it, set where they start with the sphere itself, in [`l
 
 Then write [`core/identity.json`](identity.json):
 
-- `id`: a new UUID v7, made once and never changed:
-  ```
-  python3 -c "import os,time;t=int(time.time()*1000);b=bytearray(t.to_bytes(6,'big')+os.urandom(10));b[6]=(b[6]&0x0F)|0x70;b[8]=(b[8]&0x3F)|0x80;h=b.hex();print(f'{h[:8]}-{h[8:12]}-{h[12:16]}-{h[16:20]}-{h[20:]}')"
-  ```
+- `id`: leave it. `sphere init` made it, once, and it never changes.
 - `name`: the sphere's name.
 - `version`: this year and month, then `.1` (`2026.11.1`).
 - `born_from`: leave as it is.
